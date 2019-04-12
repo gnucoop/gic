@@ -23,7 +23,7 @@ async function main() {
     // compile and verify packages
     await preparePackages(common.packages, version, install);
 
-    console.log(`\nionic ${version} prepared 🤖\n`);
+    console.log(`\ngic ${version} prepared 🤖\n`);
     console.log(`Next steps:`);
     console.log(`  Verify CHANGELOG.md`);
     console.log(`  git commit -m "${version}"`);
