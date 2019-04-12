@@ -1,4 +1,3 @@
-
 export interface GicGlobal {
   config?: any;
   ael?: (elm: any, eventName: string, cb: (ev: Event) => void, opts: any) => void;

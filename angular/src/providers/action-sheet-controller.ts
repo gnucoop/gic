@@ -1,7 +1,8 @@
 import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable } from '@angular/core';
 import { ActionSheetOptions } from '@gic/core';
-import { ɵd as OverlayBaseController } from '@ionic/angular';
+
+import { OverlayBaseController } from '../util/overlay';
 
 @Injectable({
   providedIn: 'root',

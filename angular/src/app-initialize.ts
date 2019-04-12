@@ -1,17 +1,18 @@
 import { defineCustomElements } from '@gic/core/loader';
 import { Config } from '@ionic/angular';
-import { IonicWindow } from '@ionic/angular/dist/types/interfaces';
+
+import { GicWindow } from './types/interfaces';
 
 export function appInitialize(config: Config, doc: Document) {
   return (): any => {
-    const win: IonicWindow | undefined = doc.defaultView as any;
+    const win: GicWindow | undefined = doc.defaultView as any;
     if (win) {
-      const Ionic = win.Ionic = win.Ionic || {};
+      const Gic = win.Gic = win.Gic || {};
 
-      Ionic.config = config;
-      Ionic.asyncQueue = false;
+      Gic.config = config;
+      Gic.asyncQueue = false;
 
-      Ionic.ael = (elm, eventName, cb, opts) => {
+      Gic.ael = (elm, eventName, cb, opts) => {
         if (elm.__zone_symbol__addEventListener && skipZone(eventName)) {
           elm.__zone_symbol__addEventListener(eventName, cb, opts);
         } else {
@@ -19,7 +20,7 @@ export function appInitialize(config: Config, doc: Document) {
         }
       };
 
-      Ionic.rel = (elm, eventName, cb, opts) => {
+      Gic.rel = (elm, eventName, cb, opts) => {
         if (elm.__zone_symbol__removeEventListener && skipZone(eventName)) {
           elm.__zone_symbol__removeEventListener(eventName, cb, opts);
         } else {
