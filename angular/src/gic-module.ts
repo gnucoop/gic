@@ -4,10 +4,12 @@ import { IonicModule, ɵa as ConfigToken } from '@ionic/angular';
 
 import { appInitialize } from './app-initialize';
 import { SelectValueAccessor } from './directives/control-value-accessors/select-value-accessor';
-import { GicSelect, GicSelectOption } from './directives/proxies';
+import { GicAutocomplete, GicAutocompleteOption, GicSelect, GicSelectOption } from './directives/proxies';
 
 const DECLARATIONS = [
   // proxies
+  GicAutocomplete,
+  GicAutocompleteOption,
   GicSelect,
   GicSelectOption,
 
