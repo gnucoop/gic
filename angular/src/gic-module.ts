@@ -1,6 +1,6 @@
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { APP_INITIALIZER, ModuleWithProviders, NgModule } from '@angular/core';
-import { IonicModule, ɵa as ConfigToken } from '@ionic/angular';
+import { IonicModule } from '@ionic/angular';
 
 import { appInitialize } from './app-initialize';
 import { AutocompleteValueAccessor } from './directives/control-value-accessors/autocomplete-value-accessor';
@@ -34,7 +34,6 @@ export class GicModule {
           useFactory: appInitialize,
           multi: true,
           deps: [
-            ConfigToken,
             DOCUMENT
           ]
         }

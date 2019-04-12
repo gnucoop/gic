@@ -1,15 +1,15 @@
 import { defineCustomElements } from '@gic/core/loader';
-import { Config } from '@ionic/angular';
 
 import { GicWindow } from './types/interfaces';
 
-export function appInitialize(config: Config, doc: Document) {
+export function appInitialize(doc: Document) {
   return (): any => {
     const win: GicWindow | undefined = doc.defaultView as any;
     if (win) {
-      const Gic = win.Gic = win.Gic || {};
+      const Gic = win.Gic || {};
+      const Ionic = win.Ionic || {};
 
-      Gic.config = config;
+      Gic.config = Ionic.config;
       Gic.asyncQueue = false;
 
       Gic.ael = (elm, eventName, cb, opts) => {
@@ -29,7 +29,7 @@ export function appInitialize(config: Config, doc: Document) {
       };
 
       return defineCustomElements(win, {
-        exclude: ['ion-tabs', 'ion-tab']
+        exclude: []
       });
     }
   };
