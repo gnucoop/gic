@@ -8,5 +8,6 @@ export interface GicGlobal {
 
 export interface GicWindow extends Window {
   Gic: GicGlobal;
+  Ionic: GicGlobal;
   __zone_symbol__requestAnimationFrame: (ts: number) => void;
 }
