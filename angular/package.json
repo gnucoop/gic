@@ -1,6 +1,6 @@
 {
   "name": "@gic/angular",
-  "version": "4.2.0",
+  "version": "4.2.1",
   "description": "Angular specific wrappers for @gic/core",
   "keywords": [
     "ionic",
@@ -12,7 +12,11 @@
     "capacitor",
     "cordova",
     "progressive web app",
-    "pwa"
+    "pwa",
+    "gnucoop",
+    "autocomplete",
+    "searchable",
+    "select"
   ],
   "license": "AGPL-3.0-or-later",
   "repository": {
@@ -46,7 +50,7 @@
   ],
   "dependencies": {
     "@ionic/angular": "4.2.0",
-    "@gic/core": "4.2.0",
+    "@gic/core": "4.2.1",
     "tslib": "^1.9.3"
   },
   "peerDependencies": {
