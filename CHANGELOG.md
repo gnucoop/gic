@@ -1,3 +1,12 @@
+## [4.2.2](https://github.com/gnucoop/gic/compare/v4.2.1...v4.2.2) (2019-04-12)
+
+
+### Bug Fixes
+
+* **angular:** missing value accessor for autocomplete input ([740d3ad](https://github.com/gnucoop/gic/commit/740d3ad))
+
+
+
 ## [4.2.1](https://github.com/gnucoop/gic/compare/v4.2.0...v4.2.1) (2019-04-12)
 
 
