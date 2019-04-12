@@ -34,6 +34,7 @@ export class AutoComplete implements ComponentInterface {
   private popoverId = `gic-acpopover-${autocompleteId++}`;
   private childOpts: HTMLGicAutocompleteOptionElement[] = [];
   private options: string[] = [];
+  private isOpen: boolean = false;
 
   private searchValue: string = '';
   // private filteredOptions: string[] = [];
@@ -94,13 +95,16 @@ export class AutoComplete implements ComponentInterface {
     if (this.options.indexOf(this.value || '') !== -1) {
       return;
     }
-    if (this.overlay == null) {
+    if (this.overlay == null && !this.isOpen) {
+      this.isOpen = true;
       this.overlay = await this.createOverlay(ev || this.evt);
       this.overlay.onDidDismiss().then(() => {
         this.overlay = undefined;
+        this.isOpen = false;
       });
       this.overlay.present();
     }
+    if (this.overlay == null) { return; }
     const popovers = this.overlay.getElementsByTagName('gic-autocomplete-popover');
     if (popovers.length > 0) {
       const popover = popovers.item(0) as HTMLGicAutocompletePopoverElement;

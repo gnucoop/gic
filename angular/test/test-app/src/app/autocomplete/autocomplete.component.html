@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Autocomplete test
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-list>
+    <ion-item>
+      <ion-label>Autocomplete</ion-label>
+      <gic-autocomplete [(ngModel)]="autocomplete">
+        <gic-autocomplete-option>No Game Console</gic-autocomplete-option>
+        <gic-autocomplete-option>NES</gic-autocomplete-option>
+        <gic-autocomplete-option>Nintendo64</gic-autocomplete-option>
+        <gic-autocomplete-option>PlayStation</gic-autocomplete-option>
+        <gic-autocomplete-option>Sega Genesis</gic-autocomplete-option>
+        <gic-autocomplete-option>Sega Saturn</gic-autocomplete-option>
+        <gic-autocomplete-option>SNES</gic-autocomplete-option>
+      </gic-autocomplete>
+      <ion-note slot="end" id="autocomplete-note">{{autocomplete}}</ion-note>
+    </ion-item>
+  </ion-list>
+</ion-content>

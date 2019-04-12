@@ -6,12 +6,14 @@ import { IonicModule } from '@ionic/angular';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { AutocompleteComponent } from './autocomplete/autocomplete.component';
 import { HomePageComponent } from './home-page/home-page.component';
 import { SelectComponent } from './select/select.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    AutocompleteComponent,
     HomePageComponent,
     SelectComponent,
   ],
