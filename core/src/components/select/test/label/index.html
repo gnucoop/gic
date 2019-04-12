@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html dir="ltr">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Select - Basic</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link href="../../../../../node_modules/@ionic/core/css/ionic.bundle.css" rel="stylesheet">
+  <link href="../../../../../css/gic.bundle.css" rel="stylesheet">
+  <link href="../../../../../scripts/testing/styles.css" rel="stylesheet">
+  <script src="../../../../../node_modules/@ionic/core/dist/ionic.js"></script>
+  <script src="../../../../../scripts/testing/scripts.js"></script>
+  <script src="../../../../../dist/gic.js"></script>
+</head>
+
+<body>
+  <ion-app>
+
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Select - Labels</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
+      <ion-list>
+        <ion-item>
+          <ion-label position="floating">Gender</ion-label>
+          <gic-select placeholder="Placeholder">
+            <gic-select-option value="fn">Female</gic-select-option>
+            <gic-select-option value="ml">Male</gic-select-option>
+          </gic-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Hair Color</ion-label>
+          <gic-select>
+            <gic-select-option value="brown">Brown</gic-select-option>
+            <gic-select-option value="" selected>Empty Value</gic-select-option>
+            <gic-select-option value="black">Black</gic-select-option>
+            <gic-select-option value="red">Red</gic-select-option>
+          </gic-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Hair Color</ion-label>
+          <gic-select selected-text="SelectedText prop">
+            <gic-select-option value="brown">Brown</gic-select-option>
+            <gic-select-option value="blonde">Blonde</gic-select-option>
+            <gic-select-option value="black">Black</gic-select-option>
+            <gic-select-option value="red">Red</gic-select-option>
+          </gic-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Hair Color</ion-label>
+          <gic-select>
+            <gic-select-option value="brown">Brown</gic-select-option>
+            <gic-select-option value="blonde">Blonde</gic-select-option>
+            <gic-select-option value="black">Black</gic-select-option>
+            <gic-select-option value="red">Red</gic-select-option>
+          </gic-select>
+        </ion-item>
+
+      </ion-list>
+
+    </ion-content>
+  </ion-app>
+</body>
+
+</html>

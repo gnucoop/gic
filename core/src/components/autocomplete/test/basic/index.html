@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html dir="ltr">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Autocomplete - Basic</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link href="../../../../../node_modules/@ionic/core/css/ionic.bundle.css" rel="stylesheet">
+  <link href="../../../../../css/gic.bundle.css" rel="stylesheet">
+  <link href="../../../../../scripts/testing/styles.css" rel="stylesheet">
+  <script src="../../../../../node_modules/@ionic/core/dist/ionic.js"></script>
+  <script src="../../../../../scripts/testing/scripts.js"></script>
+  <script src="../../../../../dist/gic.js"></script>
+</head>
+
+<body>
+  <ion-app>
+
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Autocomplete - Basic</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="outer-content test-content">
+      <ion-list>
+        <ion-item>
+          <ion-label>Country</ion-label>
+          <gic-autocomplete id="country" placeholder="Select One">
+            <gic-autocomplete-option>Foo</gic-autocomplete-option>
+            <gic-autocomplete-option>Bar</gic-autocomplete-option>
+            <gic-autocomplete-option>Baz</gic-autocomplete-option>
+          </gic-autocomplete>
+        </ion-item>
+    </ion-content>
+
+    <script>
+    </script>
+  </ion-app>
+</body>
+
+</html>

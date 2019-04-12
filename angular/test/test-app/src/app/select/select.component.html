@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Select test
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-list>
+    <ion-item>
+      <ion-label>Select</ion-label>
+      <gic-select [(ngModel)]="select">
+        <gic-select-option value="">No Game Console</gic-select-option>
+        <gic-select-option value="nes">NES</gic-select-option>
+        <gic-select-option value="n64" selected>Nintendo64</gic-select-option>
+        <gic-select-option value="ps">PlayStation</gic-select-option>
+        <gic-select-option value="genesis">Sega Genesis</gic-select-option>
+        <gic-select-option value="saturn">Sega Saturn</gic-select-option>
+        <gic-select-option value="snes">SNES</gic-select-option>
+      </gic-select>
+      <ion-note slot="end" id="select-note">{{select}}</ion-note>
+    </ion-item>
+  </ion-list>
+</ion-content>

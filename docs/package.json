@@ -1,0 +1,19 @@
+{
+  "name": "@gic/docs",
+  "version": "0.0.0",
+  "description": "Pre-packaged API documentation for the Gic docs.",
+  "main": "core.json",
+  "files": [
+    "core.json"
+  ],
+  "author": "Gnucoop",
+  "license": "AGPL-3.0-or-later",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gnucoop/gic-docs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gnucoop/gic-docs/issues"
+  },
+  "homepage": "https://github.com/gnucoop/gic-docs#readme"
+}

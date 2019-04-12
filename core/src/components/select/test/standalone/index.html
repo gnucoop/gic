@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html dir="ltr">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Select - Standalone</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link href="../../../../../node_modules/@ionic/core/css/ionic.bundle.css" rel="stylesheet">
+  <link href="../../../../../css/gic.bundle.css" rel="stylesheet">
+  <link href="../../../../../scripts/testing/styles.css" rel="stylesheet">
+  <script src="../../../../../node_modules/@ionic/core/dist/ionic.js"></script>
+  <script src="../../../../../scripts/testing/scripts.js"></script>
+  <script src="../../../../../dist/gic.js"></script>
+</head>
+
+<body>
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc tristique ipsum ipsum, eget hendrerit erat gravida vitae. Cras condimentum aliquam diam faucibus facilisis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Suspendisse potenti. Duis libero quam, varius ac quam et, pulvinar pretium libero. Suspendisse mollis eros a vehicula pellentesque. Sed viverra eros vel lorem lacinia, lobortis congue dolor dignissim. In congue tincidunt massa, sit amet elementum turpis eleifend in. Nullam laoreet condimentum pharetra. Donec cursus viverra eros nec lacinia. Sed dapibus nulla vel augue efficitur tincidunt. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce suscipit auctor sem et eleifend. Nullam vitae magna ex. Quisque dolor arcu, congue in nisi eu, ullamcorper tincidunt sapien. Praesent sed molestie ante, vitae tincidunt odio.</p>
+  <p>Duis quis rhoncus libero, vitae mollis tortor. Phasellus mollis tellus in auctor ullamcorper. Vivamus eget sagittis arcu, sed egestas dolor. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Integer mi sapien, pharetra ut sapien vulputate, congue dictum libero. Integer dapibus, arcu at ullamcorper tempus, nulla dolor vestibulum arcu, sit amet laoreet libero leo eu turpis. Nulla varius maximus molestie.</p>
+  <p>Phasellus interdum sem ut viverra bibendum. Vivamus vel turpis arcu. Maecenas ultricies pretium dolor id blandit. In nibh sapien, tristique quis purus vitae, placerat sollicitudin ante. Suspendisse venenatis libero rutrum odio ultricies blandit. Proin a fringilla sem. Etiam pretium metus sem, eu lacinia tellus blandit id.</p>
+  <p>Vestibulum aliquam sapien elementum hendrerit viverra. Vivamus vulputate ligula id dui accumsan, at pulvinar mauris lobortis. Integer a ultrices nulla. Cras ultricies sollicitudin erat. Nam nec dolor a enim vestibulum egestas id non dui. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Integer sodales libero congue magna dictum auctor. Duis vitae tellus tempor, tempus dolor semper, dictum eros. Etiam at suscipit lacus. Proin magna ipsum, pulvinar rhoncus vulputate vel, finibus nec nisi. Praesent felis neque, porttitor ac pellentesque et, mattis non lorem. Etiam et ex ultrices, posuere purus id, vestibulum massa.</p>
+
+  <gic-select id="gender" placeholder="Select One">
+    <gic-select-option value="f">Female</gic-select-option>
+    <gic-select-option value="m">Male</gic-select-option>
+  </gic-select>
+
+  <gic-select id="hairColor" ok-text="Okay" cancel-text="Dismiss">
+    <gic-select-option value="brown" selected>Brown</gic-select-option>
+    <gic-select-option value="blonde">Blonde</gic-select-option>
+    <gic-select-option value="black">Black</gic-select-option>
+    <gic-select-option value="red">Red</gic-select-option>
+  </gic-select>
+
+  <gic-select id="gaming" interface="popover" value="popover" ok-text="Okay" cancel-text="Dismiss">
+    <gic-select-option value="popover">Popover</gic-select-option>
+    <gic-select-option value="nes">NES</gic-select-option>
+    <gic-select-option value="n64">Nintendo64</gic-select-option>
+    <gic-select-option value="ps">PlayStation</gic-select-option>
+    <gic-select-option value="genesis">Sega Genesis</gic-select-option>
+    <gic-select-option value="saturn">Sega Saturn</gic-select-option>
+    <gic-select-option value="snes">SNES</gic-select-option>
+  </gic-select>
+
+  <gic-select placeholder="Month">
+    <gic-select-option value="01">January</gic-select-option>
+    <gic-select-option value="02">February</gic-select-option>
+    <gic-select-option value="03" selected="true">March</gic-select-option>
+    <gic-select-option value="04">April</gic-select-option>
+    <gic-select-option value="05">May</gic-select-option>
+    <gic-select-option value="06">June</gic-select-option>
+    <gic-select-option value="07">July</gic-select-option>
+    <gic-select-option value="08">August</gic-select-option>
+    <gic-select-option value="09">September</gic-select-option>
+    <gic-select-option value="10">October</gic-select-option>
+    <gic-select-option value="11">November</gic-select-option>
+    <gic-select-option value="12">December</gic-select-option>
+  </gic-select>
+
+  <gic-select placeholder="Year">
+    <gic-select-option>1989</gic-select-option>
+    <gic-select-option>1990</gic-select-option>
+    <gic-select-option>1991</gic-select-option>
+    <gic-select-option>1992</gic-select-option>
+    <gic-select-option>1993</gic-select-option>
+    <gic-select-option selected="true">1994</gic-select-option>
+    <gic-select-option>1995</gic-select-option>
+    <gic-select-option>1996</gic-select-option>
+    <gic-select-option>1997</gic-select-option>
+    <gic-select-option>1998</gic-select-option>
+    <gic-select-option>1999</gic-select-option>
+  </gic-select>
+
+  <gic-select class="custom" placeholder="Day">
+    <gic-select-option>Sunday</gic-select-option>
+    <gic-select-option>Monday</gic-select-option>
+    <gic-select-option>Tuesday</gic-select-option>
+    <gic-select-option>Wednesday</gic-select-option>
+    <gic-select-option>Thursday</gic-select-option>
+    <gic-select-option>Friday</gic-select-option>
+    <gic-select-option>Saturday</gic-select-option>
+  </gic-select>
+
+  <style>
+    .custom {
+      color: crimson;
+    }
+  </style>
+</body>
+</html>

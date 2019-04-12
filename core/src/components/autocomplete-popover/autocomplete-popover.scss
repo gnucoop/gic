@@ -1,0 +1,10 @@
+@import "./autocomplete-popover.vars";
+
+:host ion-list {
+  @include margin($autocomplete-popover-list-margin-top, $autocomplete-popover-list-margin-end, $autocomplete-popover-list-margin-bottom, $autocomplete-popover-list-margin-start);
+}
+
+:host ion-list-header,
+:host ion-label {
+  @include margin(0);
+}

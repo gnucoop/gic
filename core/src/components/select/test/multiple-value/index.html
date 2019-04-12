@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html dir="ltr">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Select - Multiple Value</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link href="../../../../../node_modules/@ionic/core/css/ionic.bundle.css" rel="stylesheet">
+  <link href="../../../../../css/gic.bundle.css" rel="stylesheet">
+  <link href="../../../../../scripts/testing/styles.css" rel="stylesheet">
+  <script src="../../../../../node_modules/@ionic/core/dist/ionic.js"></script>
+  <script src="../../../../../scripts/testing/scripts.js"></script>
+  <script src="../../../../../dist/gic.js"></script>
+</head>
+
+<body>
+  <ion-app>
+
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Select Item: Multiple Value</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="outer-content test-content">
+
+      <ion-item>
+        <ion-label>Toppings</ion-label>
+        <gic-select id="toppings" multiple="true" cancel-text="Nah" ok-text="Okay!">
+          <gic-select-option value="bacon">Bacon</gic-select-option>
+          <gic-select-option value="olives">Black Olives</gic-select-option>
+          <gic-select-option value="xcheese">Extra Cheese</gic-select-option>
+          <gic-select-option value="peppers">Green Peppers</gic-select-option>
+          <gic-select-option value="mushrooms">Mushrooms</gic-select-option>
+          <gic-select-option value="onions">Onions</gic-select-option>
+          <gic-select-option value="pepperoni">Pepperoni</gic-select-option>
+          <gic-select-option value="pineapple">Pineapple</gic-select-option>
+          <gic-select-option value="sausage">Sausage</gic-select-option>
+          <gic-select-option value="Spinach">Spinach</gic-select-option>
+        </gic-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Car Features</ion-label>
+        <gic-select id="carFeatures" multiple="true">
+          <gic-select-option value="backupcamera">Backup Camera</gic-select-option>
+          <gic-select-option value="heatedseats">Headted Seats</gic-select-option>
+          <gic-select-option value="keyless">Keyless Entry</gic-select-option>
+          <gic-select-option value="navigation">Navigation</gic-select-option>
+          <gic-select-option value="parkingassist">Parking Assist</gic-select-option>
+          <gic-select-option value="sunroof">Sun Roof</gic-select-option>
+        </gic-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Pets</ion-label>
+        <gic-select id="pets" multiple>
+          <gic-select-option value="cat">Cat</gic-select-option>
+          <gic-select-option value="dog">Dog</gic-select-option>
+          <gic-select-option value="turtle">Turtle</gic-select-option>
+          <gic-select-option value="fish">Fish</gic-select-option>
+        </gic-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Disabled</ion-label>
+        <gic-select id="disabled" multiple disabled>
+          <gic-select-option selected="true">Selected Text</gic-select-option>
+        </gic-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Statuses</ion-label>
+        <gic-select id="status" multiple>
+          <gic-select-option value="selected" selected="true">Selected</gic-select-option>
+          <gic-select-option value="default">Default</gic-select-option>
+          <gic-select-option value="disabled" disabled="true">Disabled</gic-select-option>
+        </gic-select>
+      </ion-item>
+
+      <p aria-hidden="true" padding>
+        <code>toppings: <span id="toppingsResult"></span></code>
+        <br>
+        <code>carFeatures: <span id="carFeaturesResult"></span></code>
+        <br>
+        <code>pets: <span id="petsResult"></span></code>
+        <br>
+      </p>
+
+      <form>
+        <ion-list padding-vertical>
+          <ion-item>
+            <ion-input type="text"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label>Select</ion-label>
+            <gic-select multiple="true">
+              <gic-select-option selected>1</gic-select-option>
+              <gic-select-option>2</gic-select-option>
+              <gic-select-option selected>3</gic-select-option>
+            </gic-select>
+          </ion-item>
+          <ion-button expand="block" type="submit">Submit</ion-button>
+        </ion-list>
+      </form>
+
+      <ion-item>
+        <ion-label position="floating">Floating label</ion-label>
+        <gic-select multiple="true">
+          <gic-select-option value="bacon">Bacon</gic-select-option>
+          <gic-select-option value="olives">Black Olives</gic-select-option>
+          <gic-select-option value="xcheese">Extra Cheese</gic-select-option>
+          <gic-select-option value="peppers">Green Peppers</gic-select-option>
+          <gic-select-option value="mushrooms">Mushrooms</gic-select-option>
+          <gic-select-option value="onions">Onions</gic-select-option>
+          <gic-select-option value="pepperoni">Pepperoni</gic-select-option>
+          <gic-select-option value="pineapple">Pineapple</gic-select-option>
+          <gic-select-option value="sausage">Sausage</gic-select-option>
+          <gic-select-option value="Spinach">Spinach</gic-select-option>
+        </gic-select>
+      </ion-item>
+
+    </ion-content>
+
+    <style>
+      .outer-content {
+        --background: #f2f2f2;
+      }
+    </style>
+
+    <script>
+      var toppings = document.getElementById('toppings');
+      toppings.value = ['bacon', 'xcheese'];
+
+      var carFeatures = document.getElementById('carFeatures');
+
+      var pets = document.getElementById('pets');
+      pets.value = ['cat', 'dog'];
+
+      setResults(toppings);
+      setResults(carFeatures);
+      setResults(pets);
+
+      toppings.addEventListener('ionChange', function (ev) {
+        setResults(toppings);
+      });
+      carFeatures.addEventListener('ionChange', function (ev) {
+        setResults(carFeatures);
+      });
+      pets.addEventListener('ionChange', function (ev) {
+        setResults(pets);
+      });
+
+      function setResults(select) {
+        if (select.id) {
+          var resultsEl = document.getElementById(select.id + 'Result');
+          if (resultsEl) {
+            resultsEl.innerHTML = select.value;
+          }
+        }
+      }
+    </script>
+  </ion-app>
+</body>
+
+</html>

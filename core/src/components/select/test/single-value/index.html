@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html dir="ltr">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Select - Single Value</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link href="../../../../../node_modules/@ionic/core/css/ionic.bundle.css" rel="stylesheet">
+  <link href="../../../../../css/gic.bundle.css" rel="stylesheet">
+  <link href="../../../../../scripts/testing/styles.css" rel="stylesheet">
+  <script src="../../../../../node_modules/@ionic/core/dist/ionic.js"></script>
+  <script src="../../../../../scripts/testing/scripts.js"></script>
+  <script src="../../../../../dist/gic.js"></script>
+</head>
+
+<body>
+  <ion-app>
+
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Select Item: Single Value</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="outer-content">
+      <ion-item>
+        <ion-label position="stacked">Gender</ion-label>
+        <gic-select id="gender">
+          <gic-select-option value="f">Female</gic-select-option>
+          <gic-select-option value="m">Male</gic-select-option>
+        </gic-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Popover</ion-label>
+        <gic-select interface="popover">
+          <gic-select-option value="select">Select</gic-select-option>
+          <gic-select-option value="action">Action Sheet</gic-select-option>
+          <gic-select-option value="popover">Popover</gic-select-option>
+        </gic-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Gaming</ion-label>
+        <gic-select id="gaming">
+          <gic-select-option value="nes">NES</gic-select-option>
+          <gic-select-option value="n64">Nintendo64</gic-select-option>
+          <gic-select-option value="ps">PlayStation</gic-select-option>
+          <gic-select-option value="genesis">Sega Genesis</gic-select-option>
+          <gic-select-option value="saturn">Sega Saturn</gic-select-option>
+          <gic-select-option value="snes">SNES</gic-select-option>
+        </gic-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Operating System</ion-label>
+        <gic-select id="os">
+          <gic-select-option value="dos">DOS</gic-select-option>
+          <gic-select-option value="lunix">Linux</gic-select-option>
+          <gic-select-option value="mac7">Mac OS 7</gic-select-option>
+          <gic-select-option value="mac8">Mac OS 8</gic-select-option>
+          <gic-select-option value="win3.1">Windows 3.1</gic-select-option>
+          <gic-select-option value="win95">Windows 95</gic-select-option>
+          <gic-select-option value="win98">Windows 98</gic-select-option>
+        </gic-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Notifications</ion-label>
+        <gic-select id="notifications">
+          <gic-select-option value="enable">Enable</gic-select-option>
+          <gic-select-option value="mute">Mute</gic-select-option>
+          <gic-select-option value="mute_week">Mute for a week</gic-select-option>
+          <gic-select-option value="mute_year" (ionSelect)="notificationSelect($event)">Mute for a year</gic-select-option>
+        </gic-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Edit</ion-label>
+        <gic-select>
+          <gic-select-option value="add_reaction">Add Reaction</gic-select-option>
+          <gic-select-option value="copy_text">Copy Text</gic-select-option>
+          <gic-select-option value="share_text">Share Text</gic-select-option>
+          <gic-select-option value="copy_link">Copy Link to Message</gic-select-option>
+          <gic-select-option value="remind_me">Remind Me</gic-select-option>
+          <gic-select-option value="pin_file">Pin File</gic-select-option>
+          <gic-select-option value="star_file">Star File</gic-select-option>
+          <gic-select-option value="mark_unread">Mark Unread</gic-select-option>
+          <gic-select-option value="edit_title">Edit Title</gic-select-option>
+          <gic-select-option value="save_image">Save Image</gic-select-option>
+          <gic-select-option value="copy_image">Copy Image</gic-select-option>
+          <gic-select-option value="delete_file">Delete File</gic-select-option>
+        </gic-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Music</ion-label>
+        <gic-select id="music" placeholder="Select Music">
+          <gic-select-option>Alice in Chains</gic-select-option>
+          <gic-select-option>Green Day</gic-select-option>
+          <gic-select-option>Nirvana</gic-select-option>
+          <gic-select-option>Pearl Jam</gic-select-option>
+          <gic-select-option>Smashing Pumpkins</gic-select-option>
+          <gic-select-option>Soundgarden</gic-select-option>
+          <gic-select-option (ionSelect)="musicSelect($event)">Stone Temple Pilots</gic-select-option>
+        </gic-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Date</ion-label>
+        <gic-select id="month">
+          <gic-select-option value="01">January</gic-select-option>
+          <gic-select-option value="02">February</gic-select-option>
+          <gic-select-option value="03">March</gic-select-option>
+          <gic-select-option value="04">April</gic-select-option>
+          <gic-select-option value="05">May</gic-select-option>
+          <gic-select-option value="06">June</gic-select-option>
+          <gic-select-option value="07">July</gic-select-option>
+          <gic-select-option value="08">August</gic-select-option>
+          <gic-select-option value="09">September</gic-select-option>
+          <gic-select-option value="10">October</gic-select-option>
+          <gic-select-option value="11">November</gic-select-option>
+          <gic-select-option value="12">December</gic-select-option>
+        </gic-select>
+        <gic-select id="year">
+        </gic-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Statuses</ion-label>
+        <gic-select id="status">
+          <gic-select-option value="selected" selected>Selected</gic-select-option>
+          <gic-select-option value="default">Default</gic-select-option>
+          <gic-select-option value="disabled" disabled="true">Disabled</gic-select-option>
+        </gic-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Currency</ion-label>
+        <gic-select id="currency">
+        </gic-select>
+      </ion-item>
+
+      <ion-button onclick="resetGender()">Reset Gender</ion-button>
+
+      <p aria-hidden="true" padding>
+        <code>gender: <span id="genderResult"></span></code>
+        <br>
+        <code>gaming: <span id="gamingResult"></span></code>
+        <br>
+        <code>os: <span id="osResult"></span></code>
+        <br>
+        <code>notifications: <span id="notificationsResult"></span></code>
+        <br>
+        <code>music: <span id="musicResult"></span></code>
+        <br>
+        <code>date: <span id="monthResult"></span>/<span id="yearResult"></span></code>
+        <br>
+        <code>status: <span id="statusResult"></span></code>
+        <br>
+        <code>currency: <span id="currencyResult"></span></code>
+        <br>
+      </p>
+    </ion-content>
+
+    <style>
+      .outer-content {
+        --background: #f2f2f2;
+      }
+    </style>
+
+    <script>
+      let selects = document.querySelectorAll('gic-select');
+      selects.forEach(function (select) {
+        select.addEventListener("ionChange", function () {
+          setResults(select);
+        });
+      });
+
+      function setResults(select) {
+        if (select.id) {
+          var resultsEl = document.getElementById(select.id + 'Result');
+          if (resultsEl) {
+            var value = typeof select.value === 'object' ? JSON.stringify(select.value) : select.value;
+            resultsEl.innerHTML = value;
+          }
+        }
+      }
+
+      var os = document.getElementById('os');
+      os.value = 'win3.1';
+      setResults(os);
+
+      var month = document.getElementById('month');
+      month.value = '12';
+      setResults(month);
+
+      var year = document.getElementById('year');
+
+      var years = [1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999];
+
+      for (var i = 0; i < years.length; i++) {
+        var option = document.createElement('gic-select-option');
+        option.value = option.innerHTML = years[i];
+
+        year.appendChild(option);
+      }
+
+      year.componentOnReady().then(() => {
+        year.value = 1994;
+      });
+
+      setResults(year);
+
+      var currencies = [
+        {
+          symbol: '$',
+          code: 'USD',
+          name: 'US Dollar'
+        },
+        {
+          symbol: '€',
+          code: 'EUR',
+          name: 'Euro'
+        },
+        {
+          symbol: '£',
+          code: 'FKP',
+          name: 'Falkland Islands Pound'
+        },
+        {
+          symbol: '¢',
+          code: 'GHS',
+          name: 'Ghana Cedi'
+        }
+      ];
+      var currency = document.getElementById('currency');
+
+      for (var i = 0; i < currencies.length; i++) {
+        var option = document.createElement('gic-select-option');
+        option.value = currencies[i];
+        option.innerHTML = `${currencies[i].symbol} (${currencies[i].code}) ${currencies[i].name}`;
+
+        currency.appendChild(option);
+      }
+      currency.value = currencies[0];
+      currency.selectedText = getCurrencySelectedText();
+      setResults(currency);
+
+      currency.addEventListener('ionChange', function (ev) {
+        currency.selectedText = getCurrencySelectedText();
+      });
+
+      function getCurrencySelectedText() {
+        return currency.value.symbol;
+      }
+
+      function resetGender() {
+        var gender = document.getElementById('gender');
+        gender.value = null;
+      }
+    </script>
+  </ion-app>
+</body>
+
+</html>
