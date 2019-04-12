@@ -1,7 +1,8 @@
-# 0.0.0 (2019-04-12)
+# [4.2.0] (2019-04-12)
 
+### Features
 
+* **autocomplete** Add autocomplete component
+* **select** Add searchable select component
 
-# [0.0.0](https://github.com/gnucoop/gic/commit/a5215f63dfec523a792d30baacfe9e401190ccc2) (2019-04-12)
-
-# [0.0.0](https://github.com/gnucoop/gic/commit/a5215f63dfec523a792d30baacfe9e401190ccc2) (2019-04-12)
+# [0.0.0] (2019-04-12)

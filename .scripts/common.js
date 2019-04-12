@@ -204,7 +204,7 @@ function updatePackageVersion(tasks, package, version) {
     {
       title: `${package}: update package.json ${tc.dim(`(${version})`)}`,
       task: async () => {
-        await execa('yarn', ['version', '--new-version', version], { cwd: projectRoot });
+        await execa('npm', ['version', version], { cwd: projectRoot });
       }
     }
   );
@@ -236,7 +236,7 @@ function publishPackages(tasks, packages, version, tag = 'latest') {
     tasks.push({
       title: `${package}: publish to ${tag} tag`,
       task: async () => {
-        await execa('yarn', ['publish', '--access', 'public', '--tag', tag], { cwd: projectRoot });
+        await execa('yarn', ['publish', '--tag', tag], { cwd: projectRoot });
       },
     });
   });
