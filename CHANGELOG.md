@@ -1,3 +1,7 @@
+# [4.7.0](https://github.com/gnucoop/gic/compare/v4.2.5...v4.7.0) (2019-07-31)
+
+
+
 ## [4.2.5](https://github.com/gnucoop/gic/compare/v4.2.4...v4.2.5) (2019-04-12)
 
 
