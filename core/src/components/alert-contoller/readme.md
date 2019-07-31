@@ -7,15 +7,9 @@
 
 ## Methods
 
-### `create(opts: AlertOptions) => Promise<HTMLIonAlertElement>`
+### `create(opts: import("/Users/trik/Projects/gnucoop/gic/core/node_modules/@ionic/core/dist/types/interface").AlertOptions) => Promise<HTMLIonAlertElement>`
 
 Create an alert overlay with alert options
-
-#### Parameters
-
-| Name   | Type           | Description |
-| ------ | -------------- | ----------- |
-| `opts` | `AlertOptions` |             |
 
 #### Returns
 
@@ -26,14 +20,6 @@ Type: `Promise<HTMLIonAlertElement>`
 ### `dismiss(data?: any, role?: string | undefined, id?: string | undefined) => Promise<boolean>`
 
 Dismiss the open alert overlay.
-
-#### Parameters
-
-| Name   | Type                  | Description |
-| ------ | --------------------- | ----------- |
-| `data` | `any`                 |             |
-| `role` | `string \| undefined` |             |
-| `id`   | `string \| undefined` |             |
 
 #### Returns
 
@@ -51,6 +37,19 @@ Type: `Promise<HTMLIonAlertElement | undefined>`
 
 
 
+
+## Dependencies
+
+### Used by
+
+ - [gic-select](../select)
+
+### Graph
+```mermaid
+graph TD;
+  gic-select --> gic-alert-controller
+  style gic-alert-controller fill:#f9f,stroke:#333,stroke-width:4px
+```
 
 ----------------------------------------------
 

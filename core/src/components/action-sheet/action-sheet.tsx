@@ -1,6 +1,6 @@
-import { Component, ComponentInterface, Element, Event, EventEmitter, Listen, Method, Prop, Watch } from '@stencil/core';
-
 import { ActionSheetButton, Animation, AnimationBuilder, Config, CssClassMap, Mode, OverlayEventDetail, OverlayInterface } from '@ionic/core/dist/types/interface';
+import { Component, ComponentInterface, Element, Event, EventEmitter, Listen, Method, Prop, Watch, h } from '@stencil/core';
+
 import { BACKDROP, dismiss, eventMethod, isCancel, present } from '../../utils/overlays';
 import { getClassMap } from '../../utils/theme';
 
@@ -174,7 +174,7 @@ export class ActionSheet implements ComponentInterface, OverlayInterface {
         if (typeof b !== 'string' && b.role === 'cancel') { return true; }
         const buttonText = typeof b === 'string' ? b : b.text;
         return regex.test(buttonText || '');
-      })
+      });
   }
 
   componentWillLoad() {
@@ -193,18 +193,21 @@ export class ActionSheet implements ComponentInterface, OverlayInterface {
   }
 
   private renderSearchBar() {
-    if (!this.searchBar || this.buttons == null || this.buttons.length === 0) { return null; }
+    if (!this.searchBar || this.buttons.length === 0) { return null; }
     const searchString = this.searchString || '';
     return (
       <ion-item>
         <ion-icon slot="start" icon="search"></ion-icon>
-        <ion-input value={searchString}
-            onIonChange={this.onSearchChange}></ion-input>
+        <ion-input
+            value={searchString}
+            onIonChange={this.onSearchChange}
+        >
+        </ion-input>
         <ion-button slot="end" fill="clear" onClick={this.resetSearch}>
           <ion-icon slot="icon-only" icon="close"></ion-icon>
         </ion-button>
       </ion-item>
-    )
+    );
   }
 
   private async buttonClick(button: ActionSheetButton) {
@@ -311,11 +314,11 @@ export class ActionSheet implements ComponentInterface, OverlayInterface {
   }
 }
 
-function buttonClass(button: ActionSheetButton): CssClassMap {
+const buttonClass = (button: ActionSheetButton): CssClassMap => {
   return {
     'action-sheet-button': true,
     'ion-activatable': true,
     [`action-sheet-${button.role}`]: button.role !== undefined,
     ...getClassMap(button.cssClass),
   };
-}
+};

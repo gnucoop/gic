@@ -31,12 +31,6 @@ async function presentPopover() {
 
 Create a popover overlay with popover options.
 
-#### Parameters
-
-| Name   | Type                | Description |
-| ------ | ------------------- | ----------- |
-| `opts` | `PopoverOptions<T>` |             |
-
 #### Returns
 
 Type: `Promise<HTMLIonPopoverElement>`
@@ -46,14 +40,6 @@ Type: `Promise<HTMLIonPopoverElement>`
 ### `dismiss(data?: any, role?: string | undefined, id?: string | undefined) => Promise<boolean>`
 
 Dismiss the open popover overlay.
-
-#### Parameters
-
-| Name   | Type                  | Description |
-| ------ | --------------------- | ----------- |
-| `data` | `any`                 |             |
-| `role` | `string \| undefined` |             |
-| `id`   | `string \| undefined` |             |
 
 #### Returns
 
@@ -71,6 +57,21 @@ Type: `Promise<HTMLIonPopoverElement | undefined>`
 
 
 
+
+## Dependencies
+
+### Used by
+
+ - [gic-autocomplete](../autocomplete)
+ - [gic-select](../select)
+
+### Graph
+```mermaid
+graph TD;
+  gic-autocomplete --> gic-popover-controller
+  gic-select --> gic-popover-controller
+  style gic-popover-controller fill:#f9f,stroke:#333,stroke-width:4px
+```
 
 ----------------------------------------------
 

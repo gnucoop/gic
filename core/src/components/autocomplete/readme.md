@@ -15,6 +15,19 @@
 | `value`            | `value`             |                                                                                                                                                                                        | `null \| string`      | `null`      |
 
 
+## Dependencies
+
+### Depends on
+
+- [gic-popover-controller](../popover-controller)
+
+### Graph
+```mermaid
+graph TD;
+  gic-autocomplete --> gic-popover-controller
+  style gic-autocomplete fill:#f9f,stroke:#333,stroke-width:4px
+```
+
 ----------------------------------------------
 
 *Built with [StencilJS](https://stenciljs.com/)*

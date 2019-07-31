@@ -5,4 +5,8 @@
     document.documentElement.setAttribute('dir', 'rtl');
   }
 
+  window.Gic = window.Gic || {};
+  window.Gic.config = window.Gic.config || {};
+  window.Gic.config.experimentalTransitionShadow = true;
+
 })();

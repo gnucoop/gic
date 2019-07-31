@@ -1,16 +1,16 @@
-export function hasShadowDom(el: HTMLElement) {
+export const hasShadowDom = (el: HTMLElement) => {
   return !!el.shadowRoot && !!(el as any).attachShadow;
-}
+};
 
-export function findItemLabel(componentEl: HTMLElement) {
+export const findItemLabel = (componentEl: HTMLElement) => {
   const itemEl = componentEl.closest('ion-item');
   if (itemEl) {
     return itemEl.querySelector('ion-label');
   }
   return null;
-}
+};
 
-export function renderHiddenInput(always: boolean, container: HTMLElement, name: string, value: string | undefined | null, disabled: boolean) {
+export const renderHiddenInput = (always: boolean, container: HTMLElement, name: string, value: string | undefined | null, disabled: boolean) => {
   if (always || hasShadowDom(container)) {
     let input = container.querySelector('input.aux-input') as HTMLInputElement | null;
     if (!input) {
@@ -23,4 +23,4 @@ export function renderHiddenInput(always: boolean, container: HTMLElement, name:
     input.name = name;
     input.value = value || '';
   }
-}
+};

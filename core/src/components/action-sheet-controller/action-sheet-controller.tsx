@@ -1,6 +1,6 @@
+import { ActionSheetOptions, OverlayController } from '@ionic/core/dist/types/interface';
 import { Component, ComponentInterface, Method, Prop } from '@stencil/core';
 
-import { ActionSheetOptions, OverlayController } from '@ionic/core/dist/types/interface';
 import { createOverlay, dismissOverlay, getOverlay } from '../../utils/overlays';
 
 @Component({
@@ -15,7 +15,7 @@ export class ActionSheetController implements ComponentInterface, OverlayControl
    */
   @Method()
   create(opts: ActionSheetOptions): Promise<HTMLIonActionSheetElement> {
-    return createOverlay(this.doc.createElement('gic-action-sheet'), opts);
+    return createOverlay('gic-action-sheet', opts);
   }
 
   /**
