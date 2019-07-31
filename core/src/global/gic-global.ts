@@ -1,13 +1,24 @@
-const win = typeof (window as any) !== 'undefined' ? window : {} as Window;
+import { Mode } from '@ionic/core/dist/types/interface';
+import { setMode } from '@stencil/core';
 
 declare const Context: any;
 
-const Ionic = (win as any)['Ionic'] = (win as any)['Ionic'] || {};
-const Gic = (win as any)['Gic'] = (win as any)['Gic'] || {};
+let mode: Mode;
 
-const config = Gic['config'] = Context['config'] = Ionic['config'];
+export default () => {
+  const win = typeof (window as any) !== 'undefined' ? window : {} as Window;
 
-Gic.mode = Context.mode = Ionic.mode;
-if (config.getBoolean('_testing')) {
-  config.set('animated', false);
-}
+  const Ionic = (win as any)['Ionic'] = (win as any)['Ionic'] || {};
+  const Gic = (win as any)['Gic'] = (win as any)['Gic'] || {};
+
+  const config = Gic['config'] = Context['config'] = Ionic['config'];
+
+  mode = Gic.mode = Context.mode = Ionic.mode;
+  if (config.getBoolean('_testing')) {
+    config.set('animated', false);
+  }
+
+  setMode(
+    (elm: any) => (elm as any).mode = (elm as any).mode || elm.getAttribute('mode') || mode
+  );
+};

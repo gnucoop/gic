@@ -1,8 +1,7 @@
-import { Component, ComponentInterface, Element, Event, EventEmitter, Listen, Method, Prop, Watch } from '@stencil/core';
-
 import {
   Animation, AnimationBuilder, Config, CssClassMap, Mode, OverlayEventDetail, OverlayInterface
 } from '@ionic/core/dist/types/interface';
+import { Component, ComponentInterface, Element, Event, EventEmitter, Listen, Method, Prop, Watch, h } from '@stencil/core';
 
 import { AlertButton, AlertInput } from '../../interface';
 import { BACKDROP, dismiss, eventMethod, isCancel, present } from '../../utils/overlays';
@@ -31,7 +30,7 @@ export class Alert implements ComponentInterface, OverlayInterface {
   presented = false;
   animation?: Animation;
 
-  @Element() el!: HTMLStencilElement;
+  @Element() el!: HTMLIonAlertElement;
 
   @Prop({ context: 'config' }) config!: Config;
 
@@ -315,7 +314,7 @@ export class Alert implements ComponentInterface, OverlayInterface {
   }
 
   private renderSearchBar() {
-    if (!this.searchBar || this.inputs == null || this.inputs.length === 0) { return null; }
+    if (!this.searchBar || this.inputs.length === 0) { return null; }
     const inputTypes = new Set(this.inputs.map(i => i.type));
     if (!inputTypes.has('checkbox') && !inputTypes.has('radio')) { return; }
     const searchString = this.searchString || '';
@@ -323,14 +322,17 @@ export class Alert implements ComponentInterface, OverlayInterface {
       <div class="alert-search-bar">
         <ion-item>
           <ion-icon slot="start" icon="search"></ion-icon>
-          <ion-input value={searchString}
-              onIonChange={this.onSearchChange}></ion-input>
+          <ion-input
+              value={searchString}
+              onIonChange={this.onSearchChange}
+          >
+          </ion-input>
           <ion-button slot="end" fill="clear" onClick={this.resetSearch}>
             <ion-icon slot="icon-only" icon="close"></ion-icon>
           </ion-button>
         </ion-item>
       </div>
-    )
+    );
   }
 
   private renderAlertInputs(labelledBy: string | undefined) {
@@ -497,11 +499,11 @@ export class Alert implements ComponentInterface, OverlayInterface {
   }
 }
 
-function buttonClass(button: AlertButton): CssClassMap {
+const buttonClass = (button: AlertButton): CssClassMap => {
   return {
     'alert-button': true,
     'ion-focusable': true,
     'ion-activatable': true,
     ...getClassMap(button.cssClass)
   };
-}
+};

@@ -11,12 +11,6 @@ Action Sheet controllers programmatically control the action sheet component. Ac
 
 Create an action sheet overlay with action sheet options.
 
-#### Parameters
-
-| Name   | Type                 | Description |
-| ------ | -------------------- | ----------- |
-| `opts` | `ActionSheetOptions` |             |
-
 #### Returns
 
 Type: `Promise<HTMLIonActionSheetElement>`
@@ -26,14 +20,6 @@ Type: `Promise<HTMLIonActionSheetElement>`
 ### `dismiss(data?: any, role?: string | undefined, id?: string | undefined) => Promise<boolean>`
 
 Dismiss the open action sheet overlay.
-
-#### Parameters
-
-| Name   | Type                  | Description |
-| ------ | --------------------- | ----------- |
-| `data` | `any`                 |             |
-| `role` | `string \| undefined` |             |
-| `id`   | `string \| undefined` |             |
 
 #### Returns
 
@@ -51,6 +37,19 @@ Type: `Promise<HTMLIonActionSheetElement | undefined>`
 
 
 
+
+## Dependencies
+
+### Used by
+
+ - [gic-select](../select)
+
+### Graph
+```mermaid
+graph TD;
+  gic-select --> gic-action-sheet-controller
+  style gic-action-sheet-controller fill:#f9f,stroke:#333,stroke-width:4px
+```
 
 ----------------------------------------------
 

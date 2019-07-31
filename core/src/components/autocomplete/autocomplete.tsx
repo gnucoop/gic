@@ -1,6 +1,6 @@
-import { Component, Element, ComponentInterface, Prop } from '@stencil/core';
-
 import { Mode, PopoverOptions } from '@ionic/core/dist/types/interface';
+import { Component, ComponentInterface, Element, Prop, h } from '@stencil/core';
+
 import { AutocompletePopoverOption } from '../../interface';
 
 @Component({
@@ -34,9 +34,9 @@ export class AutoComplete implements ComponentInterface {
   private popoverId = `gic-acpopover-${autocompleteId++}`;
   private childOpts: HTMLGicAutocompleteOptionElement[] = [];
   private options: string[] = [];
-  private isOpen: boolean = false;
+  private isOpen = false;
 
-  private searchValue: string = '';
+  private searchValue = '';
   // private filteredOptions: string[] = [];
   // private hasFocus: boolean = false;
   private overlay?: HTMLIonPopoverElement;
@@ -89,13 +89,13 @@ export class AutoComplete implements ComponentInterface {
   }
 
   private async showHints(ev?: CustomEvent<void>) {
-    if (ev != null) {
+    if (ev !== undefined) {
       this.evt = ev;
     }
     if (this.options.indexOf(this.value || '') !== -1) {
       return;
     }
-    if (this.overlay == null && !this.isOpen) {
+    if (this.overlay === undefined && !this.isOpen) {
       this.isOpen = true;
       this.overlay = await this.createOverlay(ev || this.evt);
       this.overlay.onDidDismiss().then(() => {
@@ -104,7 +104,7 @@ export class AutoComplete implements ComponentInterface {
       });
       this.overlay.present();
     }
-    if (this.overlay == null) { return; }
+    if (this.overlay === undefined) { return; }
     const popovers = this.overlay.getElementsByTagName('gic-autocomplete-popover');
     if (popovers.length > 0) {
       const popover = popovers.item(0) as HTMLGicAutocompletePopoverElement;
@@ -149,10 +149,13 @@ export class AutoComplete implements ComponentInterface {
     const value = this.value || '';
 
     return (
-      <ion-input value={value}
+      <ion-input
+          value={value}
           placeholder={this.placeholder}
           onIonFocus={this.onIonFocus}
-          onIonChange={this.onInput}></ion-input>
+          onIonChange={this.onInput}
+      >
+      </ion-input>
     );
   }
 }

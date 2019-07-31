@@ -1,0 +1,6 @@
+{
+  "name": "@gic/core/hydrate",
+  "description": "Gic component hydration app built for a NodeJS environment.",
+  "main": "index.js",
+  "types": "index.d.ts"
+}

@@ -19,10 +19,17 @@ export const config: Config = {
   outputTargets: [
     {
       type: 'dist',
-      esmLoaderPath: '../loader'
+      esmLoaderPath: '../loader',
+      copy: [
+        { src: '**/*.scss' }
+      ]
     },
+    // {
+    //   type: 'experimental-dist-module',
+    //   externalRuntime: true,
+    // },
     {
-      type: 'docs',
+      type: 'docs-readme',
       strict: true
     },
     {
@@ -30,14 +37,14 @@ export const config: Config = {
       file: '../docs/core.json'
     },
     {
-      type: 'stats',
-      file: 'stats.json'
+      type: 'dist-hydrate-script'
     },
+    apiSpecGenerator({
+      file: 'api.txt'
+    }),
     // {
-    //   type: 'docs-custom',
-    //   generator: apiSpecGenerator({
-    //     file: 'api.txt'
-    //   })
+    //   type: 'stats',
+    //   file: 'stats.json'
     // },
     {
       type: 'angular',
@@ -59,6 +66,7 @@ export const config: Config = {
   testing: {
     allowableMismatchedPixels: 200,
     pixelmatchThreshold: 0.05,
+    waitBeforeScreenshot: 20,
     emulate: [
       {
         userAgent: 'iPhone',
@@ -84,7 +92,6 @@ export const config: Config = {
       }
     ]
   },
-  copy: [{ src: '**/*.scss' }],
   preamble: '(C) Gnucoop https://gnucoop.com - AGPLv3 license',
   globalScript: 'src/global/gic-global.ts',
   enableCache: true,

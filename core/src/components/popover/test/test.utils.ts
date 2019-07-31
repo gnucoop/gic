@@ -1,18 +1,14 @@
 import { newE2EPage } from '@stencil/core/testing';
 
-import { cleanScreenshotName, generateE2EUrl } from '../../../utils/test/utils';
+import { generateE2EUrl } from '../../../utils/test/utils';
 
-export async function testPopover(
+export const testPopover = async (
   type: string,
   selector: string,
-  rtl = false,
-  screenshotName: string = cleanScreenshotName(selector)
-) {
+  rtl = false
+) => {
   try {
     const pageUrl = generateE2EUrl('popover', type, rtl);
-    if (rtl) {
-      screenshotName = `${screenshotName} rtl`;
-    }
 
     const page = await newE2EPage({
       url: pageUrl
@@ -23,17 +19,17 @@ export async function testPopover(
     await page.click(selector);
     await page.waitForSelector(selector);
 
-    let popover = await page.find('gic-popover');
+    let popover = await page.find('ion-popover');
     await popover.waitForVisible();
 
-    screenshotCompares.push(await page.compareScreenshot(screenshotName));
+    screenshotCompares.push(await page.compareScreenshot());
 
     await popover.callMethod('dismiss');
     await popover.waitForNotVisible();
 
-    screenshotCompares.push(await page.compareScreenshot(`dismiss ${screenshotName}`));
+    screenshotCompares.push(await page.compareScreenshot('dismiss'));
 
-    popover = await page.find('gic-popover');
+    popover = await page.find('ion-popover');
     expect(popover).toBeNull();
 
     for (const screenshotCompare of screenshotCompares) {
@@ -43,4 +39,4 @@ export async function testPopover(
   } catch (err) {
     throw err;
   }
-}
+};

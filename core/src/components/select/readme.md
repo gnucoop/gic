@@ -771,12 +771,6 @@ export default Example;
 Opens the select overlay, it could be an alert, action-sheet or popover,
 based in `gic-select` settings.
 
-#### Parameters
-
-| Name | Type                   | Description |
-| ---- | ---------------------- | ----------- |
-| `ev` | `UIEvent \| undefined` |             |
-
 #### Returns
 
 Type: `Promise<HTMLIonActionSheetElement | HTMLIonAlertElement | HTMLIonPopoverElement | undefined>`
@@ -793,6 +787,23 @@ Type: `Promise<HTMLIonActionSheetElement | HTMLIonAlertElement | HTMLIonPopoverE
 | `--padding-start`  | Start padding of the select  |
 | `--padding-top`    | Top padding of the select    |
 
+
+## Dependencies
+
+### Depends on
+
+- [gic-action-sheet-controller](../action-sheet-controller)
+- [gic-alert-controller](../alert-contoller)
+- [gic-popover-controller](../popover-controller)
+
+### Graph
+```mermaid
+graph TD;
+  gic-select --> gic-action-sheet-controller
+  gic-select --> gic-alert-controller
+  gic-select --> gic-popover-controller
+  style gic-select fill:#f9f,stroke:#333,stroke-width:4px
+```
 
 ----------------------------------------------
 

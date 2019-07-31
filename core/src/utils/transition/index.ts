@@ -1,18 +1,18 @@
-import { QueueApi } from '@stencil/core';
-
 import { Animation, AnimationBuilder, NavDirection, NavOptions } from '@ionic/core/dist/types/interface';
+import { writeTask } from '@stencil/core';
 
-const LIFECYCLE_WILL_ENTER = 'ionViewWillEnter';
-const LIFECYCLE_DID_ENTER = 'ionViewDidEnter';
-const LIFECYCLE_WILL_LEAVE = 'ionViewWillLeave';
-const LIFECYCLE_DID_LEAVE = 'ionViewDidLeave';
+export const LIFECYCLE_WILL_ENTER = 'ionViewWillEnter';
+export const LIFECYCLE_DID_ENTER = 'ionViewDidEnter';
+export const LIFECYCLE_WILL_LEAVE = 'ionViewWillLeave';
+export const LIFECYCLE_DID_LEAVE = 'ionViewDidLeave';
+export const LIFECYCLE_WILL_UNLOAD = 'ionViewWillUnload';
 
 const iosTransitionAnimation = () => import('./ios.transition');
 const mdTransitionAnimation = () => import('./md.transition');
 
-export function transition(opts: TransitionOptions): Promise<TransitionResult> {
+export const transition = (opts: TransitionOptions): Promise<TransitionResult> => {
   return new Promise((resolve, reject) => {
-    opts.queue.write(() => {
+    writeTask(() => {
       beforeTransition(opts);
       runTransition(opts).then(result => {
         if (result.animation) {
@@ -26,9 +26,9 @@ export function transition(opts: TransitionOptions): Promise<TransitionResult> {
       });
     });
   });
-}
+};
 
-function beforeTransition(opts: TransitionOptions) {
+const beforeTransition = (opts: TransitionOptions) => {
   const enteringEl = opts.enteringEl;
   const leavingEl = opts.leavingEl;
 
@@ -43,27 +43,27 @@ function beforeTransition(opts: TransitionOptions) {
   if (leavingEl) {
     setPageHidden(leavingEl, false);
   }
-}
+};
 
-async function runTransition(opts: TransitionOptions): Promise<TransitionResult> {
+const runTransition = async (opts: TransitionOptions): Promise<TransitionResult> => {
   const animationBuilder = await getAnimationBuilder(opts);
   const ani = (animationBuilder)
     ? animation(animationBuilder, opts)
     : noAnimation(opts); // fast path for no animation
 
   return ani;
-}
+};
 
-function afterTransition(opts: TransitionOptions) {
+const afterTransition = (opts: TransitionOptions) => {
   const enteringEl = opts.enteringEl;
   const leavingEl = opts.leavingEl;
   enteringEl.classList.remove('ion-page-invisible');
   if (leavingEl !== undefined) {
     leavingEl.classList.remove('ion-page-invisible');
   }
-}
+};
 
-async function getAnimationBuilder(opts: TransitionOptions): Promise<AnimationBuilder | undefined> {
+const getAnimationBuilder = async (opts: TransitionOptions): Promise<AnimationBuilder | undefined> => {
   if (!opts.leavingEl || !opts.animated || opts.duration === 0) {
     return undefined;
   }
@@ -75,9 +75,9 @@ async function getAnimationBuilder(opts: TransitionOptions): Promise<AnimationBu
     : (await mdTransitionAnimation()).mdTransitionAnimation;
 
   return builder;
-}
+};
 
-async function animation(animationBuilder: AnimationBuilder, opts: TransitionOptions): Promise<TransitionResult> {
+const animation = async (animationBuilder: AnimationBuilder, opts: TransitionOptions): Promise<TransitionResult> => {
   await waitForReady(opts, true);
 
   const trans = await import('../animation').then(mod => mod.create(animationBuilder, opts.baseEl, opts));
@@ -94,9 +94,9 @@ async function animation(animationBuilder: AnimationBuilder, opts: TransitionOpt
     hasCompleted: trans.hasCompleted,
     animation: trans
   };
-}
+};
 
-async function noAnimation(opts: TransitionOptions): Promise<TransitionResult> {
+const noAnimation = async (opts: TransitionOptions): Promise<TransitionResult> => {
   const enteringEl = opts.enteringEl;
   const leavingEl = opts.leavingEl;
 
@@ -108,29 +108,29 @@ async function noAnimation(opts: TransitionOptions): Promise<TransitionResult> {
   return {
     hasCompleted: true
   };
-}
+};
 
-async function waitForReady(opts: TransitionOptions, defaultDeep: boolean) {
+const waitForReady = async (opts: TransitionOptions, defaultDeep: boolean) => {
   const deep = opts.deepWait !== undefined ? opts.deepWait : defaultDeep;
   const promises = deep ? [
     deepReady(opts.enteringEl),
     deepReady(opts.leavingEl),
   ] : [
-    shallowReady(opts.enteringEl),
-    shallowReady(opts.leavingEl),
-  ];
+      shallowReady(opts.enteringEl),
+      shallowReady(opts.leavingEl),
+    ];
 
   await Promise.all(promises);
   await notifyViewReady(opts.viewIsReady, opts.enteringEl);
-}
+};
 
-async function notifyViewReady(viewIsReady: undefined | ((enteringEl: HTMLElement) => Promise<any>), enteringEl: HTMLElement) {
+const notifyViewReady = async (viewIsReady: undefined | ((enteringEl: HTMLElement) => Promise<any>), enteringEl: HTMLElement) => {
   if (viewIsReady) {
     await viewIsReady(enteringEl);
   }
-}
+};
 
-function playTransition(trans: Animation, opts: TransitionOptions): Promise<Animation> {
+const playTransition = (trans: Animation, opts: TransitionOptions): Promise<Animation> => {
   const progressCallback = opts.progressCallback;
   const promise = new Promise<Animation>(resolve => trans.onFinish(resolve));
 
@@ -149,19 +149,19 @@ function playTransition(trans: Animation, opts: TransitionOptions): Promise<Anim
   }
   // create a callback for when the animation is done
   return promise;
-}
+};
 
-function fireWillEvents(enteringEl: HTMLElement | undefined, leavingEl: HTMLElement | undefined) {
+const fireWillEvents = (enteringEl: HTMLElement | undefined, leavingEl: HTMLElement | undefined) => {
   lifecycle(leavingEl, LIFECYCLE_WILL_LEAVE);
   lifecycle(enteringEl, LIFECYCLE_WILL_ENTER);
-}
+};
 
-function fireDidEvents(enteringEl: HTMLElement | undefined, leavingEl: HTMLElement | undefined) {
+const fireDidEvents = (enteringEl: HTMLElement | undefined, leavingEl: HTMLElement | undefined) => {
   lifecycle(enteringEl, LIFECYCLE_DID_ENTER);
   lifecycle(leavingEl, LIFECYCLE_DID_LEAVE);
-}
+};
 
-export function lifecycle(el: HTMLElement | undefined, eventName: string) {
+export const lifecycle = (el: HTMLElement | undefined, eventName: string) => {
   if (el) {
     const ev = new CustomEvent(eventName, {
       bubbles: false,
@@ -169,16 +169,16 @@ export function lifecycle(el: HTMLElement | undefined, eventName: string) {
     });
     el.dispatchEvent(ev);
   }
-}
+};
 
-function shallowReady(el: Element | undefined): Promise<any> {
+const shallowReady = (el: Element | undefined): Promise<any> => {
   if (el && (el as any).componentOnReady) {
     return (el as any).componentOnReady();
   }
   return Promise.resolve();
-}
+};
 
-export async function deepReady(el: any | undefined): Promise<void> {
+export const deepReady = async (el: any | undefined): Promise<void> => {
   const element = el as any;
   if (element) {
     if (element.componentOnReady != null) {
@@ -189,9 +189,9 @@ export async function deepReady(el: any | undefined): Promise<void> {
     }
     await Promise.all(Array.from(element.children).map(deepReady));
   }
-}
+};
 
-export function setPageHidden(el: HTMLElement, hidden: boolean) {
+export const setPageHidden = (el: HTMLElement, hidden: boolean) => {
   if (hidden) {
     el.setAttribute('aria-hidden', 'true');
     el.classList.add('ion-page-hidden');
@@ -200,13 +200,13 @@ export function setPageHidden(el: HTMLElement, hidden: boolean) {
     el.removeAttribute('aria-hidden');
     el.classList.remove('ion-page-hidden');
   }
-}
+};
 
-function setZIndex(
+const setZIndex = (
   enteringEl: HTMLElement | undefined,
   leavingEl: HTMLElement | undefined,
   direction: NavDirection | undefined,
-) {
+) => {
   if (enteringEl !== undefined) {
     enteringEl.style.zIndex = (direction === 'back')
       ? '99'
@@ -215,12 +215,10 @@ function setZIndex(
   if (leavingEl !== undefined) {
     leavingEl.style.zIndex = '100';
   }
-}
+};
 
 export interface TransitionOptions extends NavOptions {
-  queue: QueueApi;
   progressCallback?: ((ani: Animation | undefined) => void);
-  window: Window;
   baseEl: any;
   enteringEl: HTMLElement;
   leavingEl: HTMLElement | undefined;

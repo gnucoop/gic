@@ -1,6 +1,6 @@
+import { OverlayController } from '@ionic/core/dist/types/interface';
 import { Component, ComponentInterface, Method, Prop } from '@stencil/core';
 
-import { OverlayController } from '@ionic/core/dist/types/interface';
 import { AlertOptions } from '../../interface';
 import { createOverlay, dismissOverlay, getOverlay } from '../../utils/overlays';
 
@@ -16,7 +16,7 @@ export class AlertController implements ComponentInterface, OverlayController {
    */
   @Method()
   create(opts: AlertOptions): Promise<HTMLIonAlertElement> {
-    return createOverlay(this.doc.createElement('gic-alert'), opts);
+    return createOverlay('gic-alert', opts);
   }
 
   /**

@@ -1,6 +1,6 @@
-import { Component, ComponentInterface, Listen, Prop, Watch } from '@stencil/core';
-
 import { Mode } from '@ionic/core/dist/types/interface';
+import { Component, ComponentInterface, Listen, Prop, Watch, h } from '@stencil/core';
+
 import { SelectPopoverOption } from '../../interface';
 
 /**
@@ -55,7 +55,7 @@ export class SelectPopover implements ComponentInterface {
     const regex = new RegExp(search, 'i');
     this.processedOptions = search.length === 0
       ? options
-      : options.filter(o => regex.test(o.text || ''))
+      : options.filter(o => regex.test(o.text || ''));
   }
 
   componentWillLoad() {
@@ -74,18 +74,21 @@ export class SelectPopover implements ComponentInterface {
   }
 
   private renderSearchBar() {
-    if (!this.searchBar || this.options == null || this.options.length === 0) { return null; }
+    if (!this.searchBar || this.options.length === 0) { return null; }
     const searchString = this.searchString || '';
     return (
       <ion-item>
         <ion-icon slot="start" icon="search"></ion-icon>
-        <ion-input value={searchString}
-            onIonChange={this.onSearchChange}></ion-input>
+        <ion-input
+            value={searchString}
+            onIonChange={this.onSearchChange}
+        >
+        </ion-input>
         <ion-button slot="end" fill="clear" onClick={this.resetSearch}>
           <ion-icon slot="icon-only" icon="close"></ion-icon>
         </ion-button>
       </ion-item>
-    )
+    );
   }
 
   render() {

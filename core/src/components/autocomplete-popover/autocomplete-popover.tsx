@@ -1,6 +1,6 @@
-import { Component, ComponentInterface, Prop } from '@stencil/core';
-
 import { Mode } from '@ionic/core/dist/types/interface';
+import { Component, ComponentInterface, Prop, h } from '@stencil/core';
+
 import { AutocompletePopoverOption } from '../../interface';
 
 /**
@@ -18,7 +18,7 @@ export class AutocompletePopover implements ComponentInterface {
   /** Array of options for the popover */
   @Prop({ mutable: true }) options: AutocompletePopoverOption[] = [];
 
-  @Prop({ mutable: true }) searchStr?: string
+  @Prop({ mutable: true }) searchStr?: string;
 
   onClick = (ev: any) => {
     const option = this.options.find(o => o.text === ev.target.textContent);
