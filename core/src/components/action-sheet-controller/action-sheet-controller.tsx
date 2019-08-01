@@ -1,4 +1,4 @@
-import { ActionSheetOptions, OverlayController } from '@ionic/core/dist/types/interface';
+import { ActionSheetOptions, OverlayController } from '@ionic/core';
 import { Component, ComponentInterface, Method, Prop } from '@stencil/core';
 
 import { createOverlay, dismissOverlay, getOverlay } from '../../utils/overlays';

@@ -1,4 +1,4 @@
-import { ActionSheetButton as BaseActionSheetButton, ActionSheetOptions as BaseActionSheetOptions } from '@ionic/core/dist/types/interface';
+import { ActionSheetButton as BaseActionSheetButton, ActionSheetOptions as BaseActionSheetOptions } from '@ionic/core';
 
 export type ActionSheetOptions = BaseActionSheetOptions;
 

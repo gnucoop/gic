@@ -1,4 +1,4 @@
-import { Animation } from '@ionic/core/dist/types/interface';
+import { Animation } from '@ionic/core';
 
 /**
  * Md Popover Enter Animation

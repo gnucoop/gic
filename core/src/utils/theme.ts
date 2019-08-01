@@ -1,4 +1,4 @@
-import { CssClassMap } from '@ionic/core/dist/types/interface';
+import { CssClassMap } from '@ionic/core';
 
 export const getClassList = (classes: string | (string | null | undefined)[] | undefined): string[] => {
   if (classes !== undefined) {

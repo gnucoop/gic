@@ -1,4 +1,4 @@
-import { ActionSheetButton, Animation, AnimationBuilder, Config, CssClassMap, Mode, OverlayEventDetail, OverlayInterface } from '@ionic/core/dist/types/interface';
+import { ActionSheetButton, Animation, AnimationBuilder, Config, CssClassMap, Mode, OverlayEventDetail, OverlayInterface } from '@ionic/core';
 import { Component, ComponentInterface, Element, Event, EventEmitter, Listen, Method, Prop, Watch, h } from '@stencil/core';
 
 import { BACKDROP, dismiss, eventMethod, isCancel, present } from '../../utils/overlays';

@@ -1,4 +1,4 @@
-import { EffectProperty, EffectState, PlayOptions } from '@ionic/core/dist/types/interface';
+import { EffectProperty, EffectState, PlayOptions } from '@ionic/core';
 
 import { transitionEnd } from './transition-end';
 

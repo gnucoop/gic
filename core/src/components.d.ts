@@ -9,6 +9,7 @@ import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
 import {
   ActionSheetButton,
   ActionSheetOptions,
+  AlertOptions,
   AnimationBuilder,
   ComponentProps,
   ComponentRef,
@@ -18,11 +19,10 @@ import {
   OverlaySelect,
   PopoverOptions,
   StyleEventDetail,
-} from '@ionic/core/dist/types/interface';
+} from '@ionic/core';
 import {
   AlertButton,
   AlertInput,
-  AlertOptions,
   AutocompletePopoverOption,
   SelectChangeEventDetail,
   SelectInterface,
@@ -201,7 +201,7 @@ export namespace Components {
     /**
     * Create an alert overlay with alert options
     */
-    'create': (opts: import("/Users/trik/Projects/gnucoop/gic/core/node_modules/@ionic/core/dist/types/interface").AlertOptions) => Promise<HTMLIonAlertElement>;
+    'create': (opts: AlertOptions) => Promise<HTMLIonAlertElement>;
     /**
     * Dismiss the open alert overlay.
     */

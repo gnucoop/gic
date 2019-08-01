@@ -1,4 +1,4 @@
-import { ActionSheetOptions, AlertOptions, AnimationBuilder, BackButtonEvent, HTMLIonOverlayElement, IonicConfig, OverlayInterface, PopoverOptions } from '@ionic/core/dist/types/interface';
+import { ActionSheetOptions, AlertOptions, AnimationBuilder, BackButtonEvent, HTMLIonOverlayElement, IonicConfig, OverlayInterface, PopoverOptions } from '@ionic/core';
 
 import { config } from '../global/config';
 

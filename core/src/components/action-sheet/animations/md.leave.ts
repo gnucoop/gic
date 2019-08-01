@@ -1,4 +1,4 @@
-import { Animation } from '@ionic/core/dist/types/interface';
+import { Animation } from '@ionic/core';
 
 /**
  * MD Action Sheet Leave Animation

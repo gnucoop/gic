@@ -1,4 +1,4 @@
-import { Animation, AnimationBuilder } from '@ionic/core/dist/types/interface';
+import { Animation, AnimationBuilder } from '@ionic/core';
 
 import { Animator } from './animator';
 

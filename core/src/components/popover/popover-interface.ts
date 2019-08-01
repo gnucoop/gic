@@ -1,3 +1,3 @@
-import { PopoverOptions as BasePopoverOptions } from '@ionic/core/dist/types/interface';
+import { PopoverOptions as BasePopoverOptions } from '@ionic/core';
 
 export type PopoverOptions = BasePopoverOptions;

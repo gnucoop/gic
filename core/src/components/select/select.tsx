@@ -1,4 +1,4 @@
-import { ActionSheetButton, ActionSheetOptions, CssClassMap, Mode, OverlaySelect, PopoverOptions, StyleEventDetail } from '@ionic/core/dist/types/interface';
+import { ActionSheetButton, ActionSheetOptions, CssClassMap, Mode, OverlaySelect, PopoverOptions, StyleEventDetail } from '@ionic/core';
 import { Component, ComponentInterface, Element, Event, EventEmitter, Listen, Method, Prop, State, Watch, h } from '@stencil/core';
 
 import { AlertInput, AlertOptions, SelectChangeEventDetail, SelectInterface, SelectPopoverOption } from '../../interface';
