@@ -70,7 +70,7 @@ gic-alert,css-prop,--min-width
 gic-alert,css-prop,--width
 
 gic-alert-controller,none
-gic-alert-controller,method,create,create(opts: import("/Users/trik/Projects/gnucoop/gic/core/node_modules/@ionic/core/dist/types/interface").AlertOptions) => Promise<HTMLIonAlertElement>
+gic-alert-controller,method,create,create(opts: AlertOptions) => Promise<HTMLIonAlertElement>
 gic-alert-controller,method,dismiss,dismiss(data?: any, role?: string | undefined, id?: string | undefined) => Promise<boolean>
 gic-alert-controller,method,getTop,getTop() => Promise<HTMLIonAlertElement | undefined>
 

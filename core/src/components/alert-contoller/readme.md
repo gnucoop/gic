@@ -7,7 +7,7 @@
 
 ## Methods
 
-### `create(opts: import("/Users/trik/Projects/gnucoop/gic/core/node_modules/@ionic/core/dist/types/interface").AlertOptions) => Promise<HTMLIonAlertElement>`
+### `create(opts: AlertOptions) => Promise<HTMLIonAlertElement>`
 
 Create an alert overlay with alert options
 

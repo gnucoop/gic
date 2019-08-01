@@ -1,4 +1,4 @@
-import { ComponentRef, OverlayController, PopoverOptions } from '@ionic/core/dist/types/interface';
+import { ComponentRef, OverlayController, PopoverOptions } from '@ionic/core';
 import { Component, ComponentInterface, Method, Prop } from '@stencil/core';
 
 import { createOverlay, dismissOverlay, getOverlay } from '../../utils/overlays';

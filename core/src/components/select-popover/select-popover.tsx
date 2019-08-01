@@ -1,4 +1,4 @@
-import { Mode } from '@ionic/core/dist/types/interface';
+import { Mode } from '@ionic/core';
 import { Component, ComponentInterface, Listen, Prop, Watch, h } from '@stencil/core';
 
 import { SelectPopoverOption } from '../../interface';

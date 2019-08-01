@@ -1,7 +1,6 @@
-import { OverlayController } from '@ionic/core/dist/types/interface';
+import { AlertOptions, OverlayController } from '@ionic/core';
 import { Component, ComponentInterface, Method, Prop } from '@stencil/core';
 
-import { AlertOptions } from '../../interface';
 import { createOverlay, dismissOverlay, getOverlay } from '../../utils/overlays';
 
 @Component({

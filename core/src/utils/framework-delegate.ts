@@ -1,4 +1,4 @@
-import { ComponentRef, FrameworkDelegate } from '@ionic/core/dist/types/interface';
+import { ComponentRef, FrameworkDelegate } from '@ionic/core';
 
 export const attachComponent = async (
   delegate: FrameworkDelegate | undefined,

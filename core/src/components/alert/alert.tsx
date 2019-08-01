@@ -1,6 +1,6 @@
 import {
   Animation, AnimationBuilder, Config, CssClassMap, Mode, OverlayEventDetail, OverlayInterface
-} from '@ionic/core/dist/types/interface';
+} from '@ionic/core';
 import { Component, ComponentInterface, Element, Event, EventEmitter, Listen, Method, Prop, Watch, h } from '@stencil/core';
 
 import { AlertButton, AlertInput } from '../../interface';

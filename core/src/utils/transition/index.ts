@@ -1,4 +1,4 @@
-import { Animation, AnimationBuilder, NavDirection, NavOptions } from '@ionic/core/dist/types/interface';
+import { Animation, AnimationBuilder, NavDirection, NavOptions } from '@ionic/core';
 import { writeTask } from '@stencil/core';
 
 export const LIFECYCLE_WILL_ENTER = 'ionViewWillEnter';

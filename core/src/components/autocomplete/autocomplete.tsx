@@ -1,4 +1,4 @@
-import { Mode, PopoverOptions } from '@ionic/core/dist/types/interface';
+import { Mode, PopoverOptions } from '@ionic/core';
 import { Component, ComponentInterface, Element, Prop, h } from '@stencil/core';
 
 import { AutocompletePopoverOption } from '../../interface';

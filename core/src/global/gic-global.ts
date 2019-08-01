@@ -1,4 +1,4 @@
-import { Mode } from '@ionic/core/dist/types/interface';
+import { Mode } from '@ionic/core';
 import { setMode } from '@stencil/core';
 
 declare const Context: any;
