@@ -1,6 +1,6 @@
 {
   "name": "@gic/angular",
-  "version": "4.7.0",
+  "version": "4.7.1",
   "description": "Angular specific wrappers for @gic/core",
   "keywords": [
     "ionic",
@@ -50,7 +50,7 @@
   ],
   "dependencies": {
     "@ionic/angular": "4.7.1",
-    "@gic/core": "4.7.0",
+    "@gic/core": "4.7.1",
     "tslib": "^1.9.3"
   },
   "peerDependencies": {

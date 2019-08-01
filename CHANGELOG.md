@@ -1,3 +1,12 @@
+## [4.7.1](https://github.com/gnucoop/gic/compare/v4.7.0...v4.7.1) (2019-08-01)
+
+
+### Bug Fixes
+
+* **core/alert-controller:** bad interface imports ([1b9ea9a](https://github.com/gnucoop/gic/commit/1b9ea9a))
+
+
+
 # [4.7.0](https://github.com/gnucoop/gic/compare/v4.2.5...v4.7.0) (2019-07-31)
 
 
