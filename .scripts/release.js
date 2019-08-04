@@ -23,7 +23,7 @@ async function main() {
     // repo must be clean
     common.checkGit(tasks);
 
-    // publish each package in NPM
+    // publish each package in yarn
     common.publishPackages(tasks, common.packages, version);
 
     // push tag to git remote

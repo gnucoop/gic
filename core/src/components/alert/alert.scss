@@ -184,3 +184,7 @@
 .alert-checkbox-inner {
   box-sizing: border-box;
 }
+
+.alert-checkbox-group-vs {
+  min-height: #{$alert-max-height};
+}

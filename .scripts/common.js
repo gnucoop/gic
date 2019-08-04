@@ -80,10 +80,10 @@ function preparePackage(tasks, package, version, install) {
     });
     if (install) {
       projectTasks.push({
-        title: `${pkg.name}: install node dependencies`,
+        title: `${pkg.name}: install yarn dependencies`,
         task: async () => {
           await fs.remove(path.join(projectRoot, 'node_modules'))
-          await execa('yarn', ['install'], { cwd: projectRoot });
+          await execa('yarn', ['i'], { cwd: projectRoot });
         }
       });
     }

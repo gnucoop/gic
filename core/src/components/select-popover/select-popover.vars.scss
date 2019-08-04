@@ -14,3 +14,6 @@ $select-popover-list-margin-bottom:      -1px !default;
 
 /// @prop - Margin start of the select popover list
 $select-popover-list-margin-start:       0 !default;
+
+/// @prop - Minimum height of the select popover virtual scroll
+$select-popover-vs-min-height:           240px !default;

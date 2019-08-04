@@ -1,4 +1,4 @@
-import { ActionSheetButton, Animation, AnimationBuilder, Config, CssClassMap, Mode, OverlayEventDetail, OverlayInterface } from '@ionic/core';
+import { ActionSheetButton, Animation, AnimationBuilder, Cell, Config, CssClassMap, Mode, OverlayEventDetail, OverlayInterface } from '@ionic/core';
 import { Component, ComponentInterface, Element, Event, EventEmitter, Listen, Method, Prop, Watch, h } from '@stencil/core';
 
 import { BACKDROP, dismiss, eventMethod, isCancel, present } from '../../utils/overlays';
@@ -85,9 +85,14 @@ export class ActionSheet implements ComponentInterface, OverlayInterface {
   @Prop() animated = true;
 
   /**
-   * If `true`, the alert will show a searchbar for radios and checkboxes
+   * If `true`, the action sheet will show a searchbar for radios and checkboxes
    */
-  @Prop() searchBar = true;
+  @Prop() searchBar = false;
+
+  /**
+   * If `true`, the action sheet will use a virtual scroll to render radios and checkboxes
+   */
+  @Prop() useVirtualScroll = false;
 
   /**
    * The current search string
@@ -261,10 +266,46 @@ export class ActionSheet implements ComponentInterface, OverlayInterface {
     };
   }
 
+  private renderButton(b: ActionSheetButton) {
+    return (
+      <button type="button" ion-activatable class={buttonClass(b)} onClick={() => this.buttonClick(b)}>
+        <span class="action-sheet-button-inner">
+          {b.icon && <ion-icon icon={b.icon} lazy={false} class="action-sheet-icon" />}
+          {b.text}
+        </span>
+        {this.mode === 'md' && <ion-ripple-effect></ion-ripple-effect>}
+      </button>
+    );
+  }
+
+  private renderButtonNode(el: HTMLElement | null, cell: Cell) {
+    const hydClass = 'sc-gic-action-sheet-' + this.mode;
+    const b = cell.value as ActionSheetButton;
+    if (el) {
+      const cls = [...Object.keys(buttonClass(b)), hydClass].join(' ');
+      el.setAttribute('class', cls);
+      const inner = el.querySelector('.action-sheet-button-inner')!;
+      inner.textContent = '';
+      if (b.icon !== undefined) {
+        inner.textContent += `<ion-icon icon="${b.icon}" lazy="false" class="action-sheet-icon ${hydClass}"></ion-icon>`;
+      }
+      inner.textContent += `${b.text}`;
+      el.onclick = () => this.buttonClick(b);
+    }
+    return el!;
+  }
+
   render() {
     const allButtons = this.getButtons();
     const cancelButton = allButtons.find(b => b.role === 'cancel');
     const buttons = allButtons.filter(b => b.role !== 'cancel');
+
+    const hydClass = 'sc-gic-action-sheet-' + this.mode;
+    const buttonTemplate = ``
+      + `<button type="button">`
+        + `<span class="action-sheet-button-inner ${hydClass}"></span>`
+        + (this.mode === 'md' ? `<ion-ripple-effect class="${hydClass}"></ion-ripple-effect>` : '')
+      + `</button>`;
 
     return [
       <ion-backdrop tappable={this.backdropDismiss}/>,
@@ -277,16 +318,18 @@ export class ActionSheet implements ComponentInterface, OverlayInterface {
                 {this.subHeader && <div class="action-sheet-sub-title">{this.subHeader}</div>}
               </div>
             }
-            {this.renderSearchBar()}
-            {buttons.map(b =>
-              <button type="button" ion-activatable class={buttonClass(b)} onClick={() => this.buttonClick(b)}>
-                <span class="action-sheet-button-inner">
-                  {b.icon && <ion-icon icon={b.icon} lazy={false} class="action-sheet-icon" />}
-                  {b.text}
-                </span>
-                {this.mode === 'md' && <ion-ripple-effect></ion-ripple-effect>}
-              </button>
-            )}
+            {this.searchBar && this.renderSearchBar()}
+            {this.useVirtualScroll
+            ?
+            <ion-content class="action-sheet-group-vs">
+              <ion-virtual-scroll
+                items={buttons}
+                nodeRender={(el, cell) => this.renderButtonNode(el, cell)}
+              >
+                <template innerHTML={buttonTemplate}></template>
+              </ion-virtual-scroll>
+            </ion-content>
+            : buttons.map(b => this.renderButton(b))}
           </div>
 
           {cancelButton &&

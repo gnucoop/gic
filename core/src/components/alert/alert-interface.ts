@@ -4,4 +4,7 @@ import {
 
 export type AlertButton = BaseAlertButton;
 export type AlertInput = BaseAlertInput;
-export type AlertOptions = BaseAlertOptions;
+export interface AlertOptions extends BaseAlertOptions {
+  searchBar?: boolean;
+  useVirtualScroll?: boolean;
+}
