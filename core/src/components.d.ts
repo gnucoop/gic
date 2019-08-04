@@ -21,6 +21,11 @@ import {
   StyleEventDetail,
 } from '@ionic/core';
 import {
+  AnimationBuilder as AnimationBuilder1,
+  Mode as Mode1,
+  OverlayEventDetail as OverlayEventDetail1,
+} from '@ionic/core/dist/types/interface';
+import {
   AlertButton,
   AlertInput,
   AutocompletePopoverOption,
@@ -88,7 +93,7 @@ export namespace Components {
     */
     'present': () => Promise<void>;
     /**
-    * If `true`, the alert will show a searchbar for radios and checkboxes
+    * If `true`, the action sheet will show a searchbar for radios and checkboxes
     */
     'searchBar': boolean;
     /**
@@ -103,6 +108,10 @@ export namespace Components {
     * If `true`, the action sheet will be translucent. Only applies when the mode is `"ios"` and the device supports backdrop-filter.
     */
     'translucent': boolean;
+    /**
+    * If `true`, the action sheet will use a virtual scroll to render radios and checkboxes
+    */
+    'useVirtualScroll': boolean;
   }
   interface GicActionSheetController {
     /**
@@ -196,6 +205,10 @@ export namespace Components {
     * If `true`, the alert will be translucent.
     */
     'translucent': boolean;
+    /**
+    * If `true`, the alert will use a virtual scroll to render radios and checkboxes
+    */
+    'useVirtualScroll': boolean;
   }
   interface GicAlertController {
     /**
@@ -364,9 +377,17 @@ export namespace Components {
     */
     'placeholder'?: string | null;
     /**
+    * If `true`, the select will show a searchbar for radios and checkboxes
+    */
+    'searchBar': boolean;
+    /**
     * The text to display instead of the selected option's value.
     */
     'selectedText'?: string | null;
+    /**
+    * If `true`, the buttons list will be rendered in a virtual scroll
+    */
+    'useVirtualScroll': boolean;
     /**
     * the value of the select.
     */
@@ -400,7 +421,7 @@ export namespace Components {
     */
     'options': SelectPopoverOption[];
     /**
-    * If `true`, the alert will show a searchbar for radios and checkboxes
+    * If `true`, the select popover will show a searchbar for radios and checkboxes
     */
     'searchBar': boolean;
     /**
@@ -411,6 +432,10 @@ export namespace Components {
     * Subheader text for the popover
     */
     'subHeader'?: string;
+    /**
+    * If `true`, the select popover will use a virtual scroll to render radios and checkboxes
+    */
+    'useVirtualScroll': boolean;
   }
 }
 
@@ -559,7 +584,7 @@ declare namespace LocalJSX {
     */
     'onIonActionSheetWillPresent'?: (event: CustomEvent<void>) => void;
     /**
-    * If `true`, the alert will show a searchbar for radios and checkboxes
+    * If `true`, the action sheet will show a searchbar for radios and checkboxes
     */
     'searchBar'?: boolean;
     /**
@@ -574,6 +599,10 @@ declare namespace LocalJSX {
     * If `true`, the action sheet will be translucent. Only applies when the mode is `"ios"` and the device supports backdrop-filter.
     */
     'translucent'?: boolean;
+    /**
+    * If `true`, the action sheet will use a virtual scroll to render radios and checkboxes
+    */
+    'useVirtualScroll'?: boolean;
   }
   interface GicActionSheetController extends JSXBase.HTMLAttributes<HTMLGicActionSheetControllerElement> {}
   interface GicAlert extends JSXBase.HTMLAttributes<HTMLGicAlertElement> {
@@ -653,6 +682,10 @@ declare namespace LocalJSX {
     * If `true`, the alert will be translucent.
     */
     'translucent'?: boolean;
+    /**
+    * If `true`, the alert will use a virtual scroll to render radios and checkboxes
+    */
+    'useVirtualScroll'?: boolean;
   }
   interface GicAlertController extends JSXBase.HTMLAttributes<HTMLGicAlertControllerElement> {}
   interface GicAutocomplete extends JSXBase.HTMLAttributes<HTMLGicAutocompleteElement> {
@@ -805,9 +838,17 @@ declare namespace LocalJSX {
     */
     'placeholder'?: string | null;
     /**
+    * If `true`, the select will show a searchbar for radios and checkboxes
+    */
+    'searchBar'?: boolean;
+    /**
     * The text to display instead of the selected option's value.
     */
     'selectedText'?: string | null;
+    /**
+    * If `true`, the buttons list will be rendered in a virtual scroll
+    */
+    'useVirtualScroll'?: boolean;
     /**
     * the value of the select.
     */
@@ -841,7 +882,7 @@ declare namespace LocalJSX {
     */
     'options'?: SelectPopoverOption[];
     /**
-    * If `true`, the alert will show a searchbar for radios and checkboxes
+    * If `true`, the select popover will show a searchbar for radios and checkboxes
     */
     'searchBar'?: boolean;
     /**
@@ -852,6 +893,10 @@ declare namespace LocalJSX {
     * Subheader text for the popover
     */
     'subHeader'?: string;
+    /**
+    * If `true`, the select popover will use a virtual scroll to render radios and checkboxes
+    */
+    'useVirtualScroll'?: boolean;
   }
 
   interface IntrinsicElements {

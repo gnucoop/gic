@@ -1,6 +1,6 @@
 import {
-  Animation, AnimationBuilder, Config, CssClassMap, Mode, OverlayEventDetail, OverlayInterface
-} from '@ionic/core';
+  Animation, AnimationBuilder, Cell, Config, CssClassMap, Mode, OverlayEventDetail, OverlayInterface
+} from '@ionic/core/dist/types/interface';
 import { Component, ComponentInterface, Element, Event, EventEmitter, Listen, Method, Prop, Watch, h } from '@stencil/core';
 
 import { AlertButton, AlertInput } from '../../interface';
@@ -106,7 +106,12 @@ export class Alert implements ComponentInterface, OverlayInterface {
   /**
    * If `true`, the alert will show a searchbar for radios and checkboxes
    */
-  @Prop() searchBar = true;
+  @Prop() searchBar = false;
+
+  /**
+   * If `true`, the alert will use a virtual scroll to render radios and checkboxes
+   */
+  @Prop() useVirtualScroll = false;
 
   /**
    * The current search string
@@ -343,65 +348,155 @@ export class Alert implements ComponentInterface, OverlayInterface {
     }
   }
 
+  private renderCheckboxNode(el: HTMLElement | null, cell: Cell) {
+    const i = cell.value as AlertInput;
+    if (el) {
+      el.setAttribute('aria-checked', `${i.checked}`);
+      el.setAttribute('id', `${i.id}`);
+      if (i.disabled) {
+        el.setAttribute('disabled', 'disabled');
+      } else {
+        el.removeAttribute('disabled');
+      }
+      el.querySelector('.alert-checkbox-label')!.textContent = `${i.label}`;
+      el.onclick = () => {
+        this.cbClick(i);
+        el.setAttribute('aria-checked', `${i.checked}`);
+      };
+    }
+    return el!;
+  }
+
+  private renderCheckboxEntry(i: AlertInput) {
+    return (
+      <button
+        type="button"
+        onClick={() => this.cbClick(i)}
+        aria-checked={`${i.checked}`}
+        id={i.id}
+        disabled={i.disabled}
+        tabIndex={0}
+        role="checkbox"
+        class="alert-tappable alert-checkbox alert-checkbox-button ion-focusable"
+      >
+        <div class="alert-button-inner">
+          <div class="alert-checkbox-icon">
+            <div class="alert-checkbox-inner"></div>
+          </div>
+          <div class="alert-checkbox-label">
+            {i.label}
+          </div>
+        </div>
+        {this.mode === 'md' && <ion-ripple-effect></ion-ripple-effect>}
+      </button>
+    );
+  }
+
   private renderCheckbox(labelledby: string | undefined) {
+    const hydClass = 'sc-gic-alert-' + this.mode;
+    const checkboxTemplate = ``
+      + `<button type="button" role="checkbox" class="alert-tappable alert-checkbox alert-checkbox-button ion-focusable ${hydClass}" tabindex="0" role="checkbox">`
+        + `<div class="alert-button-inner ${hydClass}">`
+          + `<div class="alert-checkbox-icon ${hydClass}">`
+            + `<div class="alert-checkbox-inner ${hydClass}"></div>`
+          + `</div>`
+          + `<div class="alert-checkbox-label ${hydClass}"></div>`
+        + `</div>`
+        + (this.mode === 'md' ? `<ion-ripple-effect class="${hydClass}"></ion-ripple-effect>` : '')
+      + `</button>`;
+
     const inputs = this.processedInputs;
     if (inputs.length === 0) {
       return null;
     }
     return (
       <div class="alert-checkbox-group" aria-labelledby={labelledby}>
-        { inputs.map(i => (
-          <button
-            type="button"
-            onClick={() => this.cbClick(i)}
-            aria-checked={`${i.checked}`}
-            id={i.id}
-            disabled={i.disabled}
-            tabIndex={0}
-            role="checkbox"
-            class="alert-tappable alert-checkbox alert-checkbox-button ion-focusable"
+        {this.useVirtualScroll
+        ?
+        <ion-content class="alert-checkbox-group-vs">
+          <ion-virtual-scroll
+            items={inputs}
+            nodeRender={(el, cell) => this.renderCheckboxNode(el, cell)}
           >
-            <div class="alert-button-inner">
-              <div class="alert-checkbox-icon">
-                <div class="alert-checkbox-inner"></div>
-              </div>
-              <div class="alert-checkbox-label">
-                {i.label}
-              </div>
-            </div>
-            {this.mode === 'md' && <ion-ripple-effect></ion-ripple-effect>}
-          </button>
-        ))}
+            <template innerHTML={checkboxTemplate}></template>
+          </ion-virtual-scroll>
+        </ion-content>
+        : inputs.map(i => this.renderCheckboxEntry(i))}
       </div>
     );
   }
 
+  private renderRadioEntry(i: AlertInput) {
+    return (
+      <button
+        type="button"
+        onClick={() => this.rbClick(i)}
+        aria-checked={`${i.checked}`}
+        disabled={i.disabled}
+        id={i.id}
+        tabIndex={0}
+        class="alert-radio-button alert-tappable alert-radio ion-focusable"
+        role="radio"
+      >
+        <div class="alert-button-inner">
+          <div class="alert-radio-icon"><div class="alert-radio-inner"></div></div>
+          <div class="alert-radio-label">
+            {i.label}
+          </div>
+        </div>
+      </button>
+    );
+  }
+
+  private renderRadioNode(el: HTMLElement | null, cell: Cell) {
+    const i = cell.value as AlertInput;
+    if (el) {
+      el.setAttribute('aria-checked', `${i.checked}`);
+      el.setAttribute('id', `${i.id}`);
+      if (i.disabled) {
+        el.setAttribute('disabled', 'disabled');
+      } else {
+        el.removeAttribute('disabled');
+      }
+      el.querySelector('.alert-radio-label')!.textContent = `${i.label}`;
+      el.onclick = () => {
+        this.cbClick(i);
+        el.parentElement!.querySelectorAll('.alert-radio-button')
+          .forEach(b => b.setAttribute('aria-checked', 'false'));
+        el.setAttribute('aria-checked', `${i.checked}`);
+      };
+    }
+    return el!;
+  }
+
   private renderRadio(labelledby: string | undefined) {
+    const hydClass = 'sc-gic-alert-' + this.mode;
+    const radioTemplate = ``
+      + `<button type="button" class="alert-radio-button alert-tappable alert-radio ion-focusable ${hydClass}" tabIndex="0" role="radio">`
+        + `<div class="alert-button-inner ${hydClass}">`
+          + `<div class="alert-radio-icon ${hydClass}">`
+            + `<div class="alert-radio-inner ${hydClass}"></div>`
+          + `</div>`
+          + `<div class="alert-radio-label ${hydClass}"></div>`
+        + `</div>`
+      + `</button>`;
     const inputs = this.processedInputs;
     if (inputs.length === 0) {
       return null;
     }
     return (
       <div class="alert-radio-group" role="radiogroup" aria-labelledby={labelledby} aria-activedescendant={this.activeId}>
-        { inputs.map(i => (
-          <button
-            type="button"
-            onClick={() => this.rbClick(i)}
-            aria-checked={`${i.checked}`}
-            disabled={i.disabled}
-            id={i.id}
-            tabIndex={0}
-            class="alert-radio-button alert-tappable alert-radio ion-focusable"
-            role="radio"
+        {this.useVirtualScroll
+        ?
+        <ion-content class="alert-checkbox-group-vs">
+          <ion-virtual-scroll
+            items={inputs}
+            nodeRender={(el, cell) => this.renderRadioNode(el, cell)}
           >
-            <div class="alert-button-inner">
-              <div class="alert-radio-icon"><div class="alert-radio-inner"></div></div>
-              <div class="alert-radio-label">
-                {i.label}
-              </div>
-            </div>
-          </button>
-        ))}
+            <template innerHTML={radioTemplate}></template>
+          </ion-virtual-scroll>
+        </ion-content>
+        : inputs.map(i => this.renderRadioEntry(i))}
       </div>
     );
   }
@@ -490,7 +585,7 @@ export class Alert implements ComponentInterface, OverlayInterface {
         </div>
 
         <div id={msgId} class="alert-message" innerHTML={this.message}></div>
-        {this.renderSearchBar()}
+        {this.searchBar && this.renderSearchBar()}
         {this.renderAlertInputs(labelledById)}
         {this.renderAlertButtons()}
 

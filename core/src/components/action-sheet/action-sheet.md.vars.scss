@@ -114,3 +114,10 @@ $action-sheet-md-icon-margin-start:                     0 !default;
 
 /// @prop - Color of the icon in the action sheet button
 $action-sheet-md-icon-color:                            $action-sheet-md-title-color !default;
+
+
+// Action Sheet Virtual Scroll
+// --------------------------------------------------
+
+/// @prop - Minimum height of the action-sheet virtual scroll
+$action-sheet-md-vs-min-height:                         240px !default;

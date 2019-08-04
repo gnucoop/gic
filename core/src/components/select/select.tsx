@@ -91,6 +91,16 @@ export class Select implements ComponentInterface {
   @Prop() compareWith?: string | SelectCompareFn | null;
 
   /**
+   * If `true`, the select will show a searchbar for radios and checkboxes
+   */
+  @Prop() searchBar = true;
+
+  /**
+   * If `true`, the buttons list will be rendered in a virtual scroll
+   */
+  @Prop() useVirtualScroll = true;
+
+  /**
    * the value of the select.
    */
   @Prop({ mutable: true }) value?: any | null;
@@ -316,6 +326,8 @@ export class Select implements ComponentInterface {
         subHeader: interfaceOptions.subHeader,
         message: interfaceOptions.message,
         value: this.value,
+        searchBar: this.searchBar,
+        useVirtualScroll: this.useVirtualScroll,
         options: this.createPopoverOptions(this.childOpts)
       }
     };
@@ -329,6 +341,8 @@ export class Select implements ComponentInterface {
       mode: this.mode,
       ...interfaceOptions,
 
+      searchBar: this.searchBar,
+      useVirtualScroll: this.useVirtualScroll,
       buttons: this.createActionSheetButtons(this.childOpts),
       cssClass: ['select-action-sheet', interfaceOptions.cssClass]
     };
@@ -348,6 +362,8 @@ export class Select implements ComponentInterface {
 
       header: interfaceOptions.header ? interfaceOptions.header : labelText,
       inputs: this.createAlertInputs(this.childOpts, inputType),
+      searchBar: this.searchBar,
+      useVirtualScroll: this.useVirtualScroll,
       buttons: [
         {
           text: this.cancelText,

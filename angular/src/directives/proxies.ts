@@ -28,7 +28,7 @@ export class GicAutocompleteOption {
 proxyInputs(GicAutocompleteOption, ['value']);
 
 export declare interface GicSelect extends Components.GicSelect {}
-@Component({ selector: 'gic-select', changeDetection: ChangeDetectionStrategy.OnPush, template: '<ng-content></ng-content>', inputs: ['cancelText', 'compareWith', 'disabled', 'interface', 'interfaceOptions', 'mode', 'multiple', 'name', 'okText', 'placeholder', 'selectedText', 'value'] })
+@Component({ selector: 'gic-select', changeDetection: ChangeDetectionStrategy.OnPush, template: '<ng-content></ng-content>', inputs: ['cancelText', 'compareWith', 'disabled', 'interface', 'interfaceOptions', 'mode', 'multiple', 'name', 'okText', 'placeholder', 'searchBar', 'selectedText', 'useVirtualScroll', 'value'] })
 export class GicSelect {
   ionChange!: EventEmitter<CustomEvent>;
   ionCancel!: EventEmitter<CustomEvent>;
@@ -42,7 +42,7 @@ export class GicSelect {
   }
 }
 proxyMethods(GicSelect, ['open']);
-proxyInputs(GicSelect, ['cancelText', 'compareWith', 'disabled', 'interface', 'interfaceOptions', 'mode', 'multiple', 'name', 'okText', 'placeholder', 'selectedText', 'value']);
+proxyInputs(GicSelect, ['cancelText', 'compareWith', 'disabled', 'interface', 'interfaceOptions', 'mode', 'multiple', 'name', 'okText', 'placeholder', 'searchBar', 'selectedText', 'useVirtualScroll', 'value']);
 
 export declare interface GicSelectOption extends Components.GicSelectOption {}
 @Component({ selector: 'gic-select-option', changeDetection: ChangeDetectionStrategy.OnPush, template: '<ng-content></ng-content>', inputs: ['disabled', 'selected', 'value'] })

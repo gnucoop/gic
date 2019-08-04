@@ -105,6 +105,11 @@
 // iOS Alert Radio/Checkbox Group
 // --------------------------------------------------
 
+.alert-checkbox-group-vs,
+.alert-checkbox-group-vs ion-virtual-scroll {
+  min-height: $alert-ios-content-max-height;
+}
+
 .alert-radio-group,
 .alert-checkbox-group {
   overscroll-behavior: contain;

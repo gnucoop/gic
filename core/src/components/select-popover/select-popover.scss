@@ -8,3 +8,8 @@
 :host ion-label {
   @include margin(0);
 }
+
+.select-popover-vs,
+.select-popover-vs ion-virtual-scroll {
+  min-height: $select-popover-vs-min-height;
+}

@@ -1,6 +1,7 @@
-import { ActionSheetOptions, AlertOptions, AnimationBuilder, BackButtonEvent, HTMLIonOverlayElement, IonicConfig, OverlayInterface, PopoverOptions } from '@ionic/core';
+import { ActionSheetOptions, AlertOptions, AnimationBuilder, BackButtonEvent, HTMLIonOverlayElement, OverlayInterface, PopoverOptions } from '@ionic/core';
 
 import { config } from '../global/config';
+import { GicConfig } from '../interface';
 
 let lastId = 0;
 
@@ -35,7 +36,7 @@ export const createOverlay = <T extends HTMLIonOverlayElement>(tagName: string, 
     const overlayIndex = lastId++;
     element.overlayIndex = overlayIndex;
     if (!element.hasAttribute('id')) {
-      element.id = `ion-overlay-${overlayIndex}`;
+      element.id = `gic-overlay-${overlayIndex}`;
     }
 
     // append the overlay element to the document body
@@ -107,7 +108,7 @@ export const getOverlay = (doc: Document, overlayTag?: string, id?: string): HTM
 
 export const present = async (
   overlay: OverlayInterface,
-  name: keyof IonicConfig,
+  name: keyof GicConfig,
   iosEnterAnimation: AnimationBuilder,
   mdEnterAnimation: AnimationBuilder,
   opts?: any
@@ -133,7 +134,7 @@ export const dismiss = async (
   overlay: OverlayInterface,
   data: any | undefined,
   role: string | undefined,
-  name: keyof IonicConfig,
+  name: keyof GicConfig,
   iosLeaveAnimation: AnimationBuilder,
   mdLeaveAnimation: AnimationBuilder,
   opts?: any

@@ -1,3 +1,6 @@
 import { SelectPopoverOption as BaseSelectPopoverOption } from '@ionic/core';
 
-export type SelectPopoverOption = BaseSelectPopoverOption;
+export interface SelectPopoverOption extends BaseSelectPopoverOption {
+  searchBar?: boolean;
+  useVirtualScroll?: boolean;
+}
