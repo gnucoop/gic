@@ -1,6 +1,6 @@
 {
   "name": "@gic/docs",
-  "version": "4.7.2",
+  "version": "4.7.3",
   "description": "Pre-packaged API documentation for the Gic docs.",
   "main": "core.json",
   "files": [
