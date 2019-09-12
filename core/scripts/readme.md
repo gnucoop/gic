@@ -12,7 +12,7 @@
   yarn install
 
 
-Notice that `@ionic/core` lives in `core`.
+Notice that `@gic/core` lives in `core`.
 
 ### 3. Run `yarn start`
 
