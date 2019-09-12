@@ -860,7 +860,7 @@ function normalizeHydrateOptions(inputOpts) {
         outputOpts.maxHydrateCount = 300;
     }
     if (typeof outputOpts.timeout !== 'number') {
-        outputOpts.timeout = 10000;
+        outputOpts.timeout = 15000;
     }
     return outputOpts;
 }
@@ -1669,9 +1669,13 @@ function escapeName(str) {
 unwrapExports(stringify_1);
 
 var lib = createCommonjsModule(function (module, exports) {
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
 Object.defineProperty(exports, "__esModule", { value: true });
-
-exports.parse = parse_1.default;
+__export(parse_1);
+var parse_1$1 = parse_1;
+exports.parse = parse_1$1.default;
 
 exports.stringify = stringify_1.default;
 });
@@ -2011,6 +2015,25 @@ class MockKeyboardEvent extends MockEvent {
         }
     }
 }
+class MockMouseEvent extends MockEvent {
+    constructor(type, mouseEventInitDic) {
+        super(type);
+        this.screenX = 0;
+        this.screenY = 0;
+        this.clientX = 0;
+        this.clientY = 0;
+        this.ctrlKey = false;
+        this.shiftKey = false;
+        this.altKey = false;
+        this.metaKey = false;
+        this.button = 0;
+        this.buttons = 0;
+        this.relatedTarget = null;
+        if (mouseEventInitDic != null) {
+            Object.assign(this, mouseEventInitDic);
+        }
+    }
+}
 class MockEventListener {
     constructor(type, handler) {
         this.type = type;
@@ -2292,7 +2315,8 @@ function serializeToHtml(node, opts, output, isShadowRoot) {
     else if (node.nodeType === 3) {
         let textContent = node.nodeValue;
         if (typeof textContent === 'string') {
-            if (textContent.trim() === '') {
+            const trimmedTextContent = textContent.trim();
+            if (trimmedTextContent === '') {
                 if (isWithinWhitespaceSensitive(node)) {
                     output.text.push(textContent);
                     output.currentLineWidth += textContent.length;
@@ -2324,7 +2348,13 @@ function serializeToHtml(node, opts, output, isShadowRoot) {
                 if (textContentLength > 0) {
                     const parentTagName = (node.parentNode != null && node.parentNode.nodeType === 1 ? node.parentNode.nodeName : null);
                     if (NON_ESCAPABLE_CONTENT.has(parentTagName)) {
-                        output.text.push(textContent);
+                        if (isWithinWhitespaceSensitive(node)) {
+                            output.text.push(textContent);
+                        }
+                        else {
+                            output.text.push(trimmedTextContent);
+                            textContentLength = trimmedTextContent.length;
+                        }
                         output.currentLineWidth += textContentLength;
                     }
                     else {
@@ -10358,10 +10388,18 @@ class MockNode {
         this.childNodes = [];
     }
     appendChild(newNode) {
-        newNode.remove();
-        newNode.parentNode = this;
-        this.childNodes.push(newNode);
-        connectNode(this.ownerDocument, newNode);
+        if (newNode.nodeType === 11) {
+            const nodes = newNode.childNodes.slice();
+            for (const child of nodes) {
+                this.appendChild(child);
+            }
+        }
+        else {
+            newNode.remove();
+            newNode.parentNode = this;
+            this.childNodes.push(newNode);
+            connectNode(this.ownerDocument, newNode);
+        }
         return newNode;
     }
     cloneNode(deep) {
@@ -10729,7 +10767,7 @@ class MockElement extends MockNode {
                 if (attributes.caseInsensitive) {
                     attrName = attrName.toLowerCase();
                 }
-                attr = new MockAttr(attrName, value);
+                attr = new MockAttr(attrName, String(value));
                 attributes.items.push(attr);
                 if (checkAttrChanged === true) {
                     attributeChanged(this, attrName, null, attr.value);
@@ -11558,6 +11596,7 @@ const sessionStorageMap = new WeakMap();
 const eventClassMap = new WeakMap();
 const customEventClassMap = new WeakMap();
 const keyboardEventClassMap = new WeakMap();
+const mouseEventClassMap = new WeakMap();
 const nativeClearInterval = clearInterval;
 const nativeClearTimeout = clearTimeout;
 const nativeSetInterval = setInterval;
@@ -11625,6 +11664,16 @@ class MockWindow {
     }
     set KeyboardEvent(kbEvClass) {
         keyboardEventClassMap.set(this, kbEvClass);
+    }
+    get MouseEvent() {
+        const mouseEvClass = mouseEventClassMap.get(this);
+        if (mouseEvClass != null) {
+            return mouseEvClass;
+        }
+        return MockMouseEvent;
+    }
+    set MouseEvent(mouseEvClass) {
+        mouseEventClassMap.set(this, mouseEvClass);
     }
     dispatchEvent(ev) {
         return dispatchEvent(this, ev);
@@ -11893,6 +11942,7 @@ function resetWindow(win) {
         eventClassMap.delete(win);
         customEventClassMap.delete(win);
         keyboardEventClassMap.delete(win);
+        mouseEventClassMap.delete(win);
         if (win.document != null) {
             try {
                 win.document.defaultView = win;
@@ -12273,7 +12323,8 @@ const WINDOW_PROPS$1 = [
     'Element',
     'HTMLElement',
     'NodeList',
-    'KeyboardEvent'
+    'KeyboardEvent',
+    'MouseEvent'
 ];
 
 function initializeWindow(win, doc, opts, results) {
