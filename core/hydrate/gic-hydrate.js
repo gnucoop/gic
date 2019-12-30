@@ -218,6 +218,25 @@ const setAccessor = (elm, memberName, oldValue, newValue, isSvg, flags) => {
         classList.remove(...oldClasses.filter(c => c && !newClasses.includes(c)));
         classList.add(...newClasses.filter(c => c && !oldClasses.includes(c)));
     }
+    else if ( memberName === 'style') {
+        // update style attribute, css properties and values
+        {
+            for (const prop in oldValue) {
+                if (!newValue || newValue[prop] == null) {
+                    {
+                        elm.style[prop] = '';
+                    }
+                }
+            }
+        }
+        for (const prop in newValue) {
+            if (!oldValue || newValue[prop] !== oldValue[prop]) {
+                {
+                    elm.style[prop] = newValue[prop];
+                }
+            }
+        }
+    }
     else if ( memberName === 'ref') {
         // minifier will clean this up
         if (newValue) {
@@ -806,6 +825,7 @@ const modeResolutionChain = [];
 const computeMode = (elm) => modeResolutionChain.map(h => h(elm)).find(m => !!m);
 // Public
 const setMode = (handler) => modeResolutionChain.push(handler);
+const getMode = (ref) => getHostRef(ref).$modeName$;
 const initializeComponent = async (elm, hostRef, cmpMeta, hmrVersionId, Cstr) => {
     // initializeComponent
     if ( (hostRef.$flags$ & 32 /* hasInitializedComponent */) === 0) {
@@ -1547,6 +1567,9 @@ const GIC_PREFIX = 'gic:';
 const GIC_SESSION_KEY = 'gic-persist-config';
 
 let mode;
+const getGicMode = (ref) => {
+    return (ref && getMode(ref)) || mode;
+};
 var global0 = () => {
     const doc = document;
     const win = window;
@@ -1598,6 +1621,15 @@ const createOverlay = (tagName, opts) => {
         getAppRoot(doc).appendChild(element);
         return element.componentOnReady();
     });
+};
+const prepareOverlay = (el) => {
+    const doc = document;
+    connectListeners(doc);
+    const overlayIndex = lastId++;
+    el.overlayIndex = overlayIndex;
+    if (!el.hasAttribute('id')) {
+        el.id = `ion-overlay-${overlayIndex}`;
+    }
 };
 const connectListeners = (doc) => {
     if (lastId === 0) {
@@ -1745,6 +1777,21 @@ const isDescendant = (parent, child) => {
     }
     return false;
 };
+const defaultGate = (h) => h();
+const safeCall$1 = (handler, arg) => {
+    if (typeof handler === 'function') {
+        const jmp = config.get('_zoneGate', defaultGate);
+        return jmp(() => {
+            try {
+                return handler(arg);
+            }
+            catch (e) {
+                console.error(e);
+            }
+        });
+    }
+    return undefined;
+};
 const BACKDROP = 'backdrop';
 
 const getClassList = (classes) => {
@@ -1850,16 +1897,23 @@ class ActionSheet {
     constructor(hostRef) {
         registerInstance(this, hostRef);
         this.presented = false;
+        this.mode = getGicMode(this);
         /**
          * If `true`, the keyboard will be automatically dismissed when the overlay is presented.
          */
         this.keyboardClose = true;
         /**
+         * An array of buttons for the action sheet.
+         */
+        this.buttons = [];
+        /**
          * If `true`, the action sheet will be dismissed when the backdrop is clicked.
          */
         this.backdropDismiss = true;
         /**
-         * If `true`, the action sheet will be translucent. Only applies when the mode is `"ios"` and the device supports backdrop-filter.
+         * If `true`, the action sheet will be translucent.
+         * Only applies when the mode is `"ios"` and the device supports
+         * [`backdrop-filter`](https://developer.mozilla.org/en-US/docs/Web/CSS/backdrop-filter#Browser_compatibility).
          */
         this.translucent = false;
         /**
@@ -1888,21 +1942,21 @@ class ActionSheet {
         this.resetSearch = () => {
             this.searchString = '';
         };
+        this.onBackdropTap = () => {
+            this.dismiss(undefined, BACKDROP);
+        };
+        this.dispatchCancelHandler = (ev) => {
+            const role = ev.detail.role;
+            if (isCancel(role)) {
+                const cancelButton = this.getButtons().find(b => b.role === 'cancel');
+                this.callButtonHandler(cancelButton);
+            }
+        };
+        prepareOverlay(this.el);
         this.didPresent = createEvent(this, "ionActionSheetDidPresent", 7);
         this.willPresent = createEvent(this, "ionActionSheetWillPresent", 7);
         this.willDismiss = createEvent(this, "ionActionSheetWillDismiss", 7);
         this.didDismiss = createEvent(this, "ionActionSheetDidDismiss", 7);
-        this.config = getContext(this, "config");
-    }
-    onBackdropTap() {
-        this.dismiss(undefined, BACKDROP);
-    }
-    dispatchCancelHandler(ev) {
-        const role = ev.detail.role;
-        if (isCancel(role)) {
-            const cancelButton = this.getButtons().find(b => b.role === 'cancel');
-            this.callButtonHandler(cancelButton);
-        }
     }
     /**
      * Present the action sheet overlay after it has been created.
@@ -1912,18 +1966,24 @@ class ActionSheet {
     }
     /**
      * Dismiss the action sheet overlay after it has been presented.
+     *
+     * @param data Any data to emit in the dismiss events.
+     * @param role The role of the element that is dismissing the action sheet.
+     * This can be useful in a button handler for determining which button was
+     * clicked to dismiss the action sheet.
+     * Some examples include: ``"cancel"`, `"destructive"`, "selected"`, and `"backdrop"`.
      */
     dismiss(data, role) {
         return dismiss(this, data, role, 'actionSheetLeave', iosLeaveAnimation, mdLeaveAnimation);
     }
     /**
-     * Returns a promise that resolves when the action-sheet did dismiss.
+     * Returns a promise that resolves when the action sheet did dismiss.
      */
     onDidDismiss() {
         return eventMethod(this.el, 'ionActionSheetDidDismiss');
     }
     /**
-     * Returns a promise that resolves when the action-sheet will dismiss.
+     * Returns a promise that resolves when the action sheet will dismiss.
      *
      */
     onWillDismiss() {
@@ -1964,18 +2024,13 @@ class ActionSheet {
         return Promise.resolve();
     }
     async callButtonHandler(button) {
-        if (button && button.handler) {
+        if (button) {
             // a handler has been provided, execute it
             // pass the handler the values from the inputs
-            try {
-                const rtn = await button.handler();
-                if (rtn === false) {
-                    // if the return value of the handler is false then do not dismiss
-                    return false;
-                }
-            }
-            catch (e) {
-                console.error(e);
+            const rtn = await safeCall$1(button.handler);
+            if (rtn === false) {
+                // if the return value of the handler is false then do not dismiss
+                return false;
             }
         }
         return true;
@@ -1987,21 +2042,9 @@ class ActionSheet {
                 : b;
         });
     }
-    hostData() {
-        return {
-            'role': 'dialog',
-            'aria-modal': 'true',
-            style: {
-                zIndex: 20000 + this.overlayIndex,
-            },
-            class: Object.assign(Object.assign({}, getClassMap(this.cssClass)), { 'action-sheet-translucent': this.translucent })
-        };
-    }
-    renderButton(b) {
-        return (h("button", { type: "button", "ion-activatable": true, class: buttonClass(b), onClick: () => this.buttonClick(b) }, h("span", { class: "action-sheet-button-inner" }, b.icon && h("ion-icon", { icon: b.icon, lazy: false, class: "action-sheet-icon" }), b.text), this.mode === 'md' && h("ion-ripple-effect", null)));
-    }
     renderButtonNode(el, cell) {
-        const hydClass = 'sc-gic-action-sheet-' + this.mode;
+        const mode = getGicMode(this);
+        const hydClass = 'sc-gic-action-sheet-' + mode;
         const b = cell.value;
         if (el) {
             const cls = [...Object.keys(buttonClass(b)), hydClass].join(' ');
@@ -2016,26 +2059,26 @@ class ActionSheet {
         }
         return el;
     }
-    __stencil_render() {
+    render() {
+        const mode = getGicMode(this);
         const allButtons = this.getButtons();
         const cancelButton = allButtons.find(b => b.role === 'cancel');
         const buttons = allButtons.filter(b => b.role !== 'cancel');
-        const hydClass = 'sc-gic-action-sheet-' + this.mode;
+        const hydClass = 'sc-gic-action-sheet-' + mode;
         const buttonTemplate = ``
             + `<button type="button">`
             + `<span class="action-sheet-button-inner ${hydClass}"></span>`
-            + (this.mode === 'md' ? `<ion-ripple-effect class="${hydClass}"></ion-ripple-effect>` : '')
+            + (mode === 'md' ? `<ion-ripple-effect class="${hydClass}"></ion-ripple-effect>` : '')
             + `</button>`;
-        return [
-            h("ion-backdrop", { tappable: this.backdropDismiss }),
-            h("div", { class: "action-sheet-wrapper", role: "dialog" }, h("div", { class: "action-sheet-container" }, h("div", { class: "action-sheet-group" }, this.header !== undefined &&
-                h("div", { class: "action-sheet-title" }, this.header, this.subHeader && h("div", { class: "action-sheet-sub-title" }, this.subHeader)), this.searchBar && this.renderSearchBar(), this.useVirtualScroll
-                ?
-                    h("ion-content", { class: "action-sheet-group-vs" }, h("ion-virtual-scroll", { items: buttons, nodeRender: (el, cell) => this.renderButtonNode(el, cell) }, h("template", { innerHTML: buttonTemplate })))
-                : buttons.map(b => this.renderButton(b))), cancelButton &&
-                h("div", { class: "action-sheet-group action-sheet-group-cancel" }, h("button", { type: "button", class: buttonClass(cancelButton), onClick: () => this.buttonClick(cancelButton) }, h("span", { class: "action-sheet-button-inner" }, cancelButton.icon &&
-                    h("ion-icon", { icon: cancelButton.icon, lazy: false, class: "action-sheet-icon" }), cancelButton.text)))))
-        ];
+        return (h(Host, { role: "dialog", "aria-modal": "true", style: {
+                zIndex: `${20000 + this.overlayIndex}`,
+            }, class: Object.assign(Object.assign({ [mode]: true }, getClassMap(this.cssClass)), { 'action-sheet-translucent': this.translucent }), onIonActionSheetWillDismiss: this.dispatchCancelHandler, onIonBackdropTap: this.onBackdropTap }, h("ion-backdrop", { tappable: this.backdropDismiss }), h("div", { class: "action-sheet-wrapper", role: "dialog" }, h("div", { class: "action-sheet-container" }, h("div", { class: "action-sheet-group" }, this.header !== undefined &&
+            h("div", { class: "action-sheet-title" }, this.header, this.subHeader && h("div", { class: "action-sheet-sub-title" }, this.subHeader)), this.searchBar && this.renderSearchBar(), this.useVirtualScroll
+            ?
+                h("ion-content", { class: "action-sheet-group-vs" }, h("ion-virtual-scroll", { items: buttons, nodeRender: (el, cell) => this.renderButtonNode(el, cell) }, h("template", { innerHTML: buttonTemplate })))
+            : buttons.map(b => h("button", { type: "button", "ion-activatable": true, class: buttonClass(b), onClick: () => this.buttonClick(b) }, h("span", { class: "action-sheet-button-inner" }, b.icon && h("ion-icon", { icon: b.icon, lazy: false, class: "action-sheet-icon" }), b.text), mode === 'md' && h("ion-ripple-effect", null)))), cancelButton &&
+            h("div", { class: "action-sheet-group action-sheet-group-cancel" }, h("button", { type: "button", class: buttonClass(cancelButton), onClick: () => this.buttonClick(cancelButton) }, h("span", { class: "action-sheet-button-inner" }, cancelButton.icon &&
+                h("ion-icon", { icon: cancelButton.icon, lazy: false, class: "action-sheet-icon" }), cancelButton.text)))))));
     }
     get el() { return getElement(this); }
     static get watchers() { return {
@@ -2047,11 +2090,10 @@ class ActionSheet {
         "$tagName$": "gic-action-sheet",
         "$members$": {
             "overlayIndex": [2, "overlay-index"],
-            "mode": [1],
             "keyboardClose": [4, "keyboard-close"],
             "enterAnimation": [16],
             "leaveAnimation": [16],
-            "buttons": [1040],
+            "buttons": [16],
             "cssClass": [1, "css-class"],
             "backdropDismiss": [4, "backdrop-dismiss"],
             "header": [1],
@@ -2066,41 +2108,51 @@ class ActionSheet {
             "onDidDismiss": [64],
             "onWillDismiss": [64]
         },
-        "$listeners$": [[0, "ionBackdropTap", "onBackdropTap"], [0, "ionActionSheetWillDismiss", "dispatchCancelHandler"]],
+        "$listeners$": undefined,
         "$lazyBundleIds$": {
             "ios": "-",
             "md": "-"
         },
         "$attrsToReflect$": []
     }; }
-    render() { return h(Host, this.hostData(), this.__stencil_render()); }
 }
 const buttonClass = (button) => {
     return Object.assign({ 'action-sheet-button': true, 'ion-activatable': true, [`action-sheet-${button.role}`]: button.role !== undefined }, getClassMap(button.cssClass));
 };
 
+/**
+ * @deprecated Use the `actionSheetController` exported from core.
+ */
 class ActionSheetController {
     constructor(hostRef) {
         registerInstance(this, hostRef);
-        this.doc = getContext(this, "document");
     }
     /**
      * Create an action sheet overlay with action sheet options.
+     *
+     * @param options The options to use to create the action sheet.
      */
-    create(opts) {
-        return createOverlay('gic-action-sheet', opts);
+    create(options) {
+        return createOverlay('gic-action-sheet', options);
     }
     /**
      * Dismiss the open action sheet overlay.
+     *
+     * @param data Any data to emit in the dismiss events.
+     * @param role The role of the element that is dismissing the action sheet.
+     * This can be useful in a button handler for determining which button was
+     * clicked to dismiss the action sheet.
+     * Some examples include: ``"cancel"`, `"destructive"`, "selected"`, and `"backdrop"`.
+     * @param id The id of the action sheet to dismiss. If an id is not provided, it will dismiss the most recently opened action sheet.
      */
     dismiss(data, role, id) {
-        return dismissOverlay(this.doc, data, role, 'gic-action-sheet', id);
+        return dismissOverlay(document, data, role, 'gic-action-sheet', id);
     }
     /**
      * Get the most recently opened action sheet overlay.
      */
     async getTop() {
-        return getOverlay(this.doc, 'gic-action-sheet');
+        return getOverlay(document, 'gic-action-sheet');
     }
     static get cmpMeta() { return {
         "$flags$": 0,
@@ -2115,6 +2167,117 @@ class ActionSheetController {
         "$attrsToReflect$": []
     }; }
 }
+
+/**
+ * Does a simple sanitization of all elements
+ * in an untrusted string
+ */
+const sanitizeDOMString = (untrustedString) => {
+    try {
+        if (typeof untrustedString !== 'string' || untrustedString === '') {
+            return untrustedString;
+        }
+        /**
+         * Create a document fragment
+         * separate from the main DOM,
+         * create a div to do our work in
+         */
+        const documentFragment = document.createDocumentFragment();
+        const workingDiv = document.createElement('div');
+        documentFragment.appendChild(workingDiv);
+        workingDiv.innerHTML = untrustedString;
+        /**
+         * Remove any elements
+         * that are blocked
+         */
+        blockedTags.forEach(blockedTag => {
+            const getElementsToRemove = documentFragment.querySelectorAll(blockedTag);
+            for (let elementIndex = getElementsToRemove.length - 1; elementIndex >= 0; elementIndex--) {
+                const element = getElementsToRemove[elementIndex];
+                if (element.parentNode) {
+                    element.parentNode.removeChild(element);
+                }
+                else {
+                    documentFragment.removeChild(element);
+                }
+                /**
+                 * We still need to sanitize
+                 * the children of this element
+                 * as they are left behind
+                 */
+                const childElements = getElementChildren(element);
+                /* tslint:disable-next-line */
+                for (let childIndex = 0; childIndex < childElements.length; childIndex++) {
+                    sanitizeElement(childElements[childIndex]);
+                }
+            }
+        });
+        /**
+         * Go through remaining elements and remove
+         * non-allowed attribs
+         */
+        // IE does not support .children on document fragments, only .childNodes
+        const dfChildren = getElementChildren(documentFragment);
+        /* tslint:disable-next-line */
+        for (let childIndex = 0; childIndex < dfChildren.length; childIndex++) {
+            sanitizeElement(dfChildren[childIndex]);
+        }
+        // Append document fragment to div
+        const fragmentDiv = document.createElement('div');
+        fragmentDiv.appendChild(documentFragment);
+        // First child is always the div we did our work in
+        const getInnerDiv = fragmentDiv.querySelector('div');
+        return (getInnerDiv !== null) ? getInnerDiv.innerHTML : fragmentDiv.innerHTML;
+    }
+    catch (err) {
+        console.error(err);
+        return '';
+    }
+};
+/**
+ * Clean up current element based on allowed attributes
+ * and then recursively dig down into any child elements to
+ * clean those up as well
+ */
+const sanitizeElement = (element) => {
+    // IE uses childNodes, so ignore nodes that are not elements
+    if (element.nodeType && element.nodeType !== 1) {
+        return;
+    }
+    for (let i = element.attributes.length - 1; i >= 0; i--) {
+        const attribute = element.attributes.item(i);
+        const attributeName = attribute.name;
+        // remove non-allowed attribs
+        if (!allowedAttributes.includes(attributeName.toLowerCase())) {
+            element.removeAttribute(attributeName);
+            continue;
+        }
+        // clean up any allowed attribs
+        // that attempt to do any JS funny-business
+        const attributeValue = attribute.value;
+        /* tslint:disable-next-line */
+        if (attributeValue != null && attributeValue.toLowerCase().includes('javascript:')) {
+            element.removeAttribute(attributeName);
+        }
+    }
+    /**
+     * Sanitize any nested children
+     */
+    const childElements = getElementChildren(element);
+    /* tslint:disable-next-line */
+    for (let i = 0; i < childElements.length; i++) {
+        sanitizeElement(childElements[i]);
+    }
+};
+/**
+ * IE doesn't always support .children
+ * so we revert to .childNodes instead
+ */
+const getElementChildren = (el) => {
+    return (el.children != null) ? el.children : el.childNodes;
+};
+const allowedAttributes = ['class', 'id', 'href', 'src', 'name', 'slot'];
+const blockedTags = ['script', 'style', 'iframe', 'meta', 'link', 'object', 'embed'];
 
 /**
  * iOS Alert Enter Animation
@@ -2194,12 +2357,16 @@ const mdLeaveAnimation$1 = (AnimationC, baseEl) => {
         .add(wrapperAnimation));
 };
 
+/**
+ * @virtualProp {"ios" | "md"} mode - The mode determines which platform styles to use.
+ */
 class Alert {
     constructor(hostRef) {
         registerInstance(this, hostRef);
         this.processedInputs = [];
         this.processedButtons = [];
         this.presented = false;
+        this.mode = getGicMode(this);
         /**
          * If `true`, the keyboard will be automatically dismissed when the overlay is presented.
          */
@@ -2218,6 +2385,8 @@ class Alert {
         this.backdropDismiss = true;
         /**
          * If `true`, the alert will be translucent.
+         * Only applies when the mode is `"ios"` and the device supports
+         * [`backdrop-filter`](https://developer.mozilla.org/en-US/docs/Web/CSS/backdrop-filter#Browser_compatibility).
          */
         this.translucent = false;
         /**
@@ -2245,11 +2414,21 @@ class Alert {
         this.resetSearch = () => {
             this.searchString = '';
         };
+        this.onBackdropTap = () => {
+            this.dismiss(undefined, BACKDROP);
+        };
+        this.dispatchCancelHandler = (ev) => {
+            const role = ev.detail.role;
+            if (isCancel(role)) {
+                const cancelButton = this.processedButtons.find(b => b.role === 'cancel');
+                this.callButtonHandler(cancelButton);
+            }
+        };
+        prepareOverlay(this.el);
         this.didPresent = createEvent(this, "gicAlertDidPresent", 7);
         this.willPresent = createEvent(this, "gicAlertWillPresent", 7);
         this.willDismiss = createEvent(this, "gicAlertWillDismiss", 7);
         this.didDismiss = createEvent(this, "gicAlertDidDismiss", 7);
-        this.config = getContext(this, "config");
     }
     buttonsChanged() {
         const buttons = this.buttons;
@@ -2289,16 +2468,6 @@ class Alert {
         this.inputsChanged();
         this.buttonsChanged();
     }
-    onBackdropTap() {
-        this.dismiss(undefined, BACKDROP);
-    }
-    dispatchCancelHandler(ev) {
-        const role = ev.detail.role;
-        if (isCancel(role)) {
-            const cancelButton = this.processedButtons.find(b => b.role === 'cancel');
-            this.callButtonHandler(cancelButton);
-        }
-    }
     /**
      * Present the alert overlay after it has been created.
      */
@@ -2307,20 +2476,24 @@ class Alert {
     }
     /**
      * Dismiss the alert overlay after it has been presented.
+     *
+     * @param data Any data to emit in the dismiss events.
+     * @param role The role of the element that is dismissing the alert.
+     * This can be useful in a button handler for determining which button was
+     * clicked to dismiss the alert.
+     * Some examples include: ``"cancel"`, `"destructive"`, "selected"`, and `"backdrop"`.
      */
     dismiss(data, role) {
         return dismiss(this, data, role, 'alertLeave', iosLeaveAnimation$1, mdLeaveAnimation$1);
     }
     /**
      * Returns a promise that resolves when the alert did dismiss.
-     *
      */
     onDidDismiss() {
         return eventMethod(this.el, 'gicAlertDidDismiss');
     }
     /**
      * Returns a promise that resolves when the alert will dismiss.
-     *
      */
     onWillDismiss() {
         return eventMethod(this.el, 'gicAlertWillDismiss');
@@ -2330,16 +2503,12 @@ class Alert {
             input.checked = input === selectedInput;
         }
         this.activeId = selectedInput.id;
-        if (selectedInput.handler) {
-            selectedInput.handler(selectedInput);
-        }
+        safeCall$1(selectedInput.handler, selectedInput);
         this.el.forceUpdate();
     }
     cbClick(selectedInput) {
         selectedInput.checked = !selectedInput.checked;
-        if (selectedInput.handler) {
-            selectedInput.handler(selectedInput);
-        }
+        safeCall$1(selectedInput.handler, selectedInput);
         this.el.forceUpdate();
     }
     buttonClick(button) {
@@ -2358,7 +2527,7 @@ class Alert {
         if (button && button.handler) {
             // a handler has been provided, execute it
             // pass the handler the values from the inputs
-            const returnData = button.handler(data);
+            const returnData = safeCall$1(button.handler, data);
             if (returnData === false) {
                 // if the return value of the handler is false then do not dismiss
                 return false;
@@ -2430,11 +2599,22 @@ class Alert {
         }
         return el;
     }
-    renderCheckboxEntry(i) {
-        return (h("button", { type: "button", onClick: () => this.cbClick(i), "aria-checked": `${i.checked}`, id: i.id, disabled: i.disabled, tabIndex: 0, role: "checkbox", class: "alert-tappable alert-checkbox alert-checkbox-button ion-focusable" }, h("div", { class: "alert-button-inner" }, h("div", { class: "alert-checkbox-icon" }, h("div", { class: "alert-checkbox-inner" })), h("div", { class: "alert-checkbox-label" }, i.label)), this.mode === 'md' && h("ion-ripple-effect", null)));
+    renderCheckboxEntry(i, mode) {
+        return (h("button", { type: "button", onClick: () => this.cbClick(i), "aria-checked": `${i.checked}`, id: i.id, disabled: i.disabled, tabIndex: 0, role: "checkbox", class: {
+                'alert-tappable': true,
+                'alert-checkbox': true,
+                'alert-checkbox-button': true,
+                'ion-focusable': true,
+                'alert-checkbox-button-disabled': i.disabled || false
+            } }, h("div", { class: "alert-button-inner" }, h("div", { class: "alert-checkbox-icon" }, h("div", { class: "alert-checkbox-inner" })), h("div", { class: "alert-checkbox-label" }, i.label)), mode === 'md' && h("ion-ripple-effect", null)));
     }
     renderCheckbox(labelledby) {
-        const hydClass = 'sc-gic-alert-' + this.mode;
+        const inputs = this.processedInputs;
+        const mode = getGicMode(this);
+        if (inputs.length === 0) {
+            return null;
+        }
+        const hydClass = 'sc-gic-alert-' + mode;
         const checkboxTemplate = ``
             + `<button type="button" role="checkbox" class="alert-tappable alert-checkbox alert-checkbox-button ion-focusable ${hydClass}" tabindex="0" role="checkbox">`
             + `<div class="alert-button-inner ${hydClass}">`
@@ -2443,19 +2623,21 @@ class Alert {
             + `</div>`
             + `<div class="alert-checkbox-label ${hydClass}"></div>`
             + `</div>`
-            + (this.mode === 'md' ? `<ion-ripple-effect class="${hydClass}"></ion-ripple-effect>` : '')
+            + (mode === 'md' ? `<ion-ripple-effect class="${hydClass}"></ion-ripple-effect>` : '')
             + `</button>`;
-        const inputs = this.processedInputs;
-        if (inputs.length === 0) {
-            return null;
-        }
         return (h("div", { class: "alert-checkbox-group", "aria-labelledby": labelledby }, this.useVirtualScroll
             ?
                 h("ion-content", { class: "alert-checkbox-group-vs" }, h("ion-virtual-scroll", { items: inputs, nodeRender: (el, cell) => this.renderCheckboxNode(el, cell) }, h("template", { innerHTML: checkboxTemplate })))
-            : inputs.map(i => this.renderCheckboxEntry(i))));
+            : inputs.map(i => this.renderCheckboxEntry(i, mode))));
     }
     renderRadioEntry(i) {
-        return (h("button", { type: "button", onClick: () => this.rbClick(i), "aria-checked": `${i.checked}`, disabled: i.disabled, id: i.id, tabIndex: 0, class: "alert-radio-button alert-tappable alert-radio ion-focusable", role: "radio" }, h("div", { class: "alert-button-inner" }, h("div", { class: "alert-radio-icon" }, h("div", { class: "alert-radio-inner" })), h("div", { class: "alert-radio-label" }, i.label))));
+        return (h("button", { type: "button", onClick: () => this.rbClick(i), "aria-checked": `${i.checked}`, disabled: i.disabled, id: i.id, tabIndex: 0, class: {
+                'alert-radio-button': true,
+                'alert-tappable': true,
+                'alert-radio': true,
+                'ion-focusable': true,
+                'alert-radio-button-disabled': i.disabled || false
+            }, role: "radio" }, h("div", { class: "alert-button-inner" }, h("div", { class: "alert-radio-icon" }, h("div", { class: "alert-radio-inner" })), h("div", { class: "alert-radio-label" }, i.label))));
     }
     renderRadioNode(el, cell) {
         const i = cell.value;
@@ -2479,7 +2661,12 @@ class Alert {
         return el;
     }
     renderRadio(labelledby) {
-        const hydClass = 'sc-gic-alert-' + this.mode;
+        const mode = getGicMode(this);
+        const inputs = this.processedInputs;
+        if (inputs.length === 0) {
+            return null;
+        }
+        const hydClass = 'sc-gic-alert-' + mode;
         const radioTemplate = ``
             + `<button type="button" class="alert-radio-button alert-tappable alert-radio ion-focusable ${hydClass}" tabIndex="0" role="radio">`
             + `<div class="alert-button-inner ${hydClass}">`
@@ -2489,10 +2676,6 @@ class Alert {
             + `<div class="alert-radio-label ${hydClass}"></div>`
             + `</div>`
             + `</button>`;
-        const inputs = this.processedInputs;
-        if (inputs.length === 0) {
-            return null;
-        }
         return (h("div", { class: "alert-radio-group", role: "radiogroup", "aria-labelledby": labelledby, "aria-activedescendant": this.activeId }, this.useVirtualScroll
             ?
                 h("ion-content", { class: "alert-checkbox-group-vs" }, h("ion-virtual-scroll", { items: inputs, nodeRender: (el, cell) => this.renderRadioNode(el, cell) }, h("template", { innerHTML: radioTemplate })))
@@ -2503,41 +2686,46 @@ class Alert {
         if (inputs.length === 0) {
             return null;
         }
-        return (h("div", { class: "alert-input-group", "aria-labelledby": labelledby }, inputs.map(i => (h("div", { class: "alert-input-wrapper" }, h("input", { placeholder: i.placeholder, value: i.value, type: i.type, min: i.min, max: i.max, onInput: e => i.value = e.target.value, id: i.id, disabled: i.disabled, tabIndex: 0, class: "alert-input" }))))));
-    }
-    hostData() {
-        return {
-            'role': 'dialog',
-            'aria-modal': 'true',
-            style: {
-                zIndex: 20000 + this.overlayIndex,
-            },
-            class: Object.assign(Object.assign({}, getClassMap(this.cssClass)), { 'alert-translucent': this.translucent })
-        };
+        return (h("div", { class: "alert-input-group", "aria-labelledby": labelledby }, inputs.map(i => {
+            if (i.type === 'textarea') {
+                return (h("div", { class: "alert-input-wrapper" }, h("textarea", { placeholder: i.placeholder, value: i.value, onInput: e => i.value = e.target.value, id: i.id, disabled: i.disabled, tabIndex: 0, class: {
+                        'alert-input': true,
+                        'alert-input-disabled': i.disabled || false
+                    } })));
+            }
+            else {
+                return (h("div", { class: "alert-input-wrapper" }, h("input", { placeholder: i.placeholder, value: i.value, type: i.type, min: i.min, max: i.max, onInput: e => i.value = e.target.value, id: i.id, disabled: i.disabled, tabIndex: 0, class: {
+                        'alert-input': true,
+                        'alert-input-disabled': i.disabled || false
+                    } })));
+            }
+        })));
     }
     renderAlertButtons() {
         const buttons = this.processedButtons;
+        const mode = getGicMode(this);
         const alertButtonGroupClass = {
             'alert-button-group': true,
             'alert-button-group-vertical': buttons.length > 2
         };
-        return (h("div", { class: alertButtonGroupClass }, buttons.map(button => h("button", { type: "button", class: buttonClass$1(button), tabIndex: 0, onClick: () => this.buttonClick(button) }, h("span", { class: "alert-button-inner" }, button.text), this.mode === 'md' && h("ion-ripple-effect", null)))));
+        return (h("div", { class: alertButtonGroupClass }, buttons.map(button => h("button", { type: "button", class: buttonClass$1(button), tabIndex: 0, onClick: () => this.buttonClick(button) }, h("span", { class: "alert-button-inner" }, button.text), mode === 'md' && h("ion-ripple-effect", null)))));
     }
-    __stencil_render() {
-        const hdrId = `alert-${this.overlayIndex}-hdr`;
-        const subHdrId = `alert-${this.overlayIndex}-sub-hdr`;
-        const msgId = `alert-${this.overlayIndex}-msg`;
+    render() {
+        const { overlayIndex, header, subHeader } = this;
+        const mode = getGicMode(this);
+        const hdrId = `alert-${overlayIndex}-hdr`;
+        const subHdrId = `alert-${overlayIndex}-sub-hdr`;
+        const msgId = `alert-${overlayIndex}-msg`;
         let labelledById;
-        if (this.header !== undefined) {
+        if (header !== undefined) {
             labelledById = hdrId;
         }
-        else if (this.subHeader !== undefined) {
+        else if (subHeader !== undefined) {
             labelledById = subHdrId;
         }
-        return [
-            h("ion-backdrop", { tappable: this.backdropDismiss }),
-            h("div", { class: "alert-wrapper" }, h("div", { class: "alert-head" }, this.header && h("h2", { id: hdrId, class: "alert-title" }, this.header), this.subHeader && h("h2", { id: subHdrId, class: "alert-sub-title" }, this.subHeader)), h("div", { id: msgId, class: "alert-message", innerHTML: this.message }), this.searchBar && this.renderSearchBar(), this.renderAlertInputs(labelledById), this.renderAlertButtons())
-        ];
+        return (h(Host, { role: "dialog", "aria-modal": "true", style: {
+                zIndex: `${20000 + overlayIndex}`,
+            }, class: Object.assign(Object.assign({}, getClassMap(this.cssClass)), { [mode]: true, 'alert-translucent': this.translucent }), onIonAlertWillDismiss: this.dispatchCancelHandler, onIonBackdropTap: this.onBackdropTap }, h("ion-backdrop", { tappable: this.backdropDismiss }), h("div", { class: "alert-wrapper" }, h("div", { class: "alert-head" }, header && h("h2", { id: hdrId, class: "alert-title" }, header), subHeader && h("h2", { id: subHdrId, class: "alert-sub-title" }, subHeader)), h("div", { id: msgId, class: "alert-message", innerHTML: sanitizeDOMString(this.message) }), this.searchBar && this.renderSearchBar(), this.renderAlertInputs(labelledById), this.renderAlertButtons())));
     }
     get el() { return getElement(this); }
     static get watchers() { return {
@@ -2550,7 +2738,6 @@ class Alert {
         "$tagName$": "gic-alert",
         "$members$": {
             "overlayIndex": [2, "overlay-index"],
-            "mode": [1],
             "keyboardClose": [4, "keyboard-close"],
             "enterAnimation": [16],
             "leaveAnimation": [16],
@@ -2571,41 +2758,51 @@ class Alert {
             "onDidDismiss": [64],
             "onWillDismiss": [64]
         },
-        "$listeners$": [[0, "ionBackdropTap", "onBackdropTap"], [0, "gicAlertWillDismiss", "dispatchCancelHandler"]],
+        "$listeners$": undefined,
         "$lazyBundleIds$": {
             "ios": "-",
             "md": "-"
         },
         "$attrsToReflect$": []
     }; }
-    render() { return h(Host, this.hostData(), this.__stencil_render()); }
 }
 const buttonClass$1 = (button) => {
     return Object.assign({ 'alert-button': true, 'ion-focusable': true, 'ion-activatable': true }, getClassMap(button.cssClass));
 };
 
+/**
+ * @deprecated Use the `alertController` exported from core.
+ */
 class AlertController {
     constructor(hostRef) {
         registerInstance(this, hostRef);
-        this.doc = getContext(this, "document");
     }
     /**
-     * Create an alert overlay with alert options
+     * Create an alert overlay with alert options.
+     *
+     * @param options The options to use to create the alert.
      */
-    create(opts) {
-        return createOverlay('gic-alert', opts);
+    create(options) {
+        return createOverlay('gic-alert', options);
     }
     /**
      * Dismiss the open alert overlay.
+     *
+     * @param data Any data to emit in the dismiss events.
+     * @param role The role of the element that is dismissing the alert.
+     * This can be useful in a button handler for determining which button was
+     * clicked to dismiss the alert.
+     * Some examples include: ``"cancel"`, `"destructive"`, "selected"`, and `"backdrop"`.
+     * @param id The id of the alert to dismiss. If an id is not provided, it will dismiss the most recently opened alert.
      */
     dismiss(data, role, id) {
-        return dismissOverlay(this.doc, data, role, 'gic-alert', id);
+        return dismissOverlay(document, data, role, 'gic-alert', id);
     }
     /**
      * Get the most recently opened alert overlay.
      */
     async getTop() {
-        return getOverlay(this.doc, 'gic-alert');
+        return getOverlay(document, 'gic-alert');
     }
     static get cmpMeta() { return {
         "$flags$": 0,
@@ -3038,10 +3235,14 @@ const mdLeaveAnimation$2 = (AnimationC, baseEl) => {
         .add(wrapperAnimation));
 };
 
+/**
+ * @virtualProp {"ios" | "md"} mode - The mode determines which platform styles to use.
+ */
 class Popover {
     constructor(hostRef) {
         registerInstance(this, hostRef);
         this.presented = false;
+        this.mode = getGicMode(this);
         /**
          * If `true`, the keyboard will be automatically dismissed when the overlay is presented.
          */
@@ -3056,37 +3257,39 @@ class Popover {
         this.showBackdrop = true;
         /**
          * If `true`, the popover will be translucent.
+         * Only applies when the mode is `"ios"` and the device supports
+         * [`backdrop-filter`](https://developer.mozilla.org/en-US/docs/Web/CSS/backdrop-filter#Browser_compatibility).
          */
         this.translucent = false;
         /**
          * If `true`, the popover will animate.
          */
         this.animated = true;
+        this.onDismiss = (ev) => {
+            ev.stopPropagation();
+            ev.preventDefault();
+            this.dismiss();
+        };
+        this.onBackdropTap = () => {
+            this.dismiss(undefined, BACKDROP);
+        };
+        this.onLifecycle = (modalEvent) => {
+            const el = this.usersElement;
+            const name = LIFECYCLE_MAP[modalEvent.type];
+            if (el && name) {
+                const event = new CustomEvent(name, {
+                    bubbles: false,
+                    cancelable: false,
+                    detail: modalEvent.detail
+                });
+                el.dispatchEvent(event);
+            }
+        };
+        prepareOverlay(this.el);
         this.didPresent = createEvent(this, "ionPopoverDidPresent", 7);
         this.willPresent = createEvent(this, "ionPopoverWillPresent", 7);
         this.willDismiss = createEvent(this, "ionPopoverWillDismiss", 7);
         this.didDismiss = createEvent(this, "ionPopoverDidDismiss", 7);
-        this.config = getContext(this, "config");
-    }
-    onDismiss(ev) {
-        ev.stopPropagation();
-        ev.preventDefault();
-        this.dismiss();
-    }
-    onBackdropTap() {
-        this.dismiss(undefined, BACKDROP);
-    }
-    lifecycle(modalEvent) {
-        const el = this.usersElement;
-        const name = LIFECYCLE_MAP[modalEvent.type];
-        if (el && name) {
-            const event = new CustomEvent(name, {
-                bubbles: false,
-                cancelable: false,
-                detail: modalEvent.detail
-            });
-            el.dispatchEvent(event);
-        }
     }
     /**
      * Present the popover overlay after it has been created.
@@ -3106,6 +3309,9 @@ class Popover {
     }
     /**
      * Dismiss the popover overlay after it has been presented.
+     *
+     * @param data Any data to emit in the dismiss events.
+     * @param role The role of the element that is dismissing the popover. For example, 'cancel' or 'backdrop'.
      */
     async dismiss(data, role) {
         const shouldDismiss = await dismiss(this, data, role, 'popoverLeave', iosLeaveAnimation$2, mdLeaveAnimation$2, this.event);
@@ -3126,21 +3332,12 @@ class Popover {
     onWillDismiss() {
         return eventMethod(this.el, 'ionPopoverWillDismiss');
     }
-    hostData() {
-        return {
-            'aria-modal': 'true',
-            'no-router': true,
-            style: {
-                zIndex: 20000 + this.overlayIndex,
-            },
-            class: Object.assign(Object.assign({}, getClassMap(this.cssClass)), { 'popover-translucent': this.translucent })
-        };
-    }
-    __stencil_render() {
-        return [
-            h("ion-backdrop", { tappable: this.backdropDismiss, visible: this.showBackdrop }),
-            h("div", { class: "popover-wrapper" }, h("div", { class: "popover-arrow" }), h("div", { class: "popover-content" }))
-        ];
+    render() {
+        const mode = getGicMode(this);
+        const { onLifecycle } = this;
+        return (h(Host, { "aria-modal": "true", "no-router": true, style: {
+                zIndex: `${20000 + this.overlayIndex}`,
+            }, class: Object.assign(Object.assign({}, getClassMap(this.cssClass)), { [mode]: true, 'popover-translucent': this.translucent }), onIonPopoverDidPresent: onLifecycle, onIonPopoverWillPresent: onLifecycle, onIonPopoverWillDismiss: onLifecycle, onIonPopoverDidDismiss: onLifecycle, onIonDismiss: this.onDismiss, onIonBackdropTap: this.onBackdropTap }, h("ion-backdrop", { tappable: this.backdropDismiss, visible: this.showBackdrop }), h("div", { class: "popover-wrapper" }, h("div", { class: "popover-arrow" }), h("div", { class: "popover-content" }))));
     }
     get el() { return getElement(this); }
     static get cmpMeta() { return {
@@ -3149,7 +3346,6 @@ class Popover {
         "$members$": {
             "delegate": [16],
             "overlayIndex": [2, "overlay-index"],
-            "mode": [1],
             "enterAnimation": [16],
             "leaveAnimation": [16],
             "component": [1],
@@ -3166,14 +3362,13 @@ class Popover {
             "onDidDismiss": [64],
             "onWillDismiss": [64]
         },
-        "$listeners$": [[0, "ionDismiss", "onDismiss"], [0, "ionBackdropTap", "onBackdropTap"], [0, "ionPopoverDidPresent", "lifecycle"], [0, "ionPopoverWillPresent", "lifecycle"], [0, "ionPopoverWillDismiss", "lifecycle"], [0, "ionPopoverDidDismiss", "lifecycle"]],
+        "$listeners$": undefined,
         "$lazyBundleIds$": {
             "ios": "-",
             "md": "-"
         },
         "$attrsToReflect$": []
     }; }
-    render() { return h(Host, this.hostData(), this.__stencil_render()); }
 }
 const LIFECYCLE_MAP = {
     'ionPopoverDidPresent': 'ionViewDidEnter',
@@ -3182,28 +3377,39 @@ const LIFECYCLE_MAP = {
     'ionPopoverDidDismiss': 'ionViewDidLeave',
 };
 
+/**
+ * @deprecated Use the `popoverController` exported from core.
+ */
 class PopoverController {
     constructor(hostRef) {
         registerInstance(this, hostRef);
-        this.doc = getContext(this, "document");
     }
     /**
      * Create a popover overlay with popover options.
+     *
+     * @param options The options to use to create the popover.
      */
-    create(opts) {
-        return createOverlay('gic-popover', opts);
+    create(options) {
+        return createOverlay('gic-popover', options);
     }
     /**
      * Dismiss the open popover overlay.
+     *
+     * @param data Any data to emit in the dismiss events.
+     * @param role The role of the element that is dismissing the popover.
+     * This can be useful in a button handler for determining which button was
+     * clicked to dismiss the popover.
+     * Some examples include: ``"cancel"`, `"destructive"`, "selected"`, and `"backdrop"`.
+     * @param id The id of the popover to dismiss. If an id is not provided, it will dismiss the most recently opened popover.
      */
     dismiss(data, role, id) {
-        return dismissOverlay(this.doc, data, role, 'gic-popover', id);
+        return dismissOverlay(document, data, role, 'gic-popover', id);
     }
     /**
      * Get the most recently opened popover overlay.
      */
     async getTop() {
-        return getOverlay(this.doc, 'gic-popover');
+        return getOverlay(document, 'gic-popover');
     }
     static get cmpMeta() { return {
         "$flags$": 0,
@@ -3731,7 +3937,7 @@ let autocompleteOptionIds = 0;
 class SelectOption$1 {
     constructor(hostRef) {
         registerInstance(this, hostRef);
-        this.inputId = `ion-selopt-${selectOptionIds++}`;
+        this.inputId = `gic-selopt-${selectOptionIds++}`;
         /**
          * If `true`, the user cannot interact with the select option.
          */
@@ -3740,25 +3946,9 @@ class SelectOption$1 {
          * If `true`, the element is selected.
          */
         this.selected = false;
-        this.ionSelectOptionDidLoad = createEvent(this, "ionSelectOptionDidLoad", 7);
-        this.ionSelectOptionDidUnload = createEvent(this, "ionSelectOptionDidUnload", 7);
     }
-    componentWillLoad() {
-        if (this.value === undefined) {
-            this.value = this.el.textContent || '';
-        }
-    }
-    componentDidLoad() {
-        this.ionSelectOptionDidLoad.emit();
-    }
-    componentDidUnload() {
-        this.ionSelectOptionDidUnload.emit();
-    }
-    hostData() {
-        return {
-            'role': 'option',
-            'id': this.inputId
-        };
+    render() {
+        return (h(Host, { role: "option", id: this.inputId, class: getGicMode(this) }));
     }
     get el() { return getElement(this); }
     static get cmpMeta() { return {
@@ -3767,13 +3957,12 @@ class SelectOption$1 {
         "$members$": {
             "disabled": [4],
             "selected": [4],
-            "value": [1032]
+            "value": [8]
         },
         "$listeners$": undefined,
         "$lazyBundleIds$": "-",
         "$attrsToReflect$": []
     }; }
-    render() { return h(Host, this.hostData()); }
 }
 let selectOptionIds = 0;
 
@@ -3810,11 +3999,11 @@ class SelectPopover {
     }
     onSelect(ev) {
         const option = this.options.find(o => o.value === ev.target.value);
-        if (option && option.handler) {
-            option.handler();
+        if (option) {
+            safeCall$1(option.handler);
         }
     }
-    optionsChanged() {
+    searchStringChanged() {
         const options = this.options;
         const search = (this.searchString || '').trim();
         const regex = new RegExp(search, 'i');
@@ -3823,7 +4012,7 @@ class SelectPopover {
             : options.filter(o => regex.test(o.text || ''));
     }
     componentWillLoad() {
-        this.optionsChanged();
+        this.searchStringChanged();
     }
     renderSearchBar() {
         if (!this.searchBar || this.options.length === 0) {
@@ -3855,21 +4044,21 @@ class SelectPopover {
         return el;
     }
     render() {
-        const hydClass = 'sc-gic-alert-' + this.mode;
+        const mode = getGicMode(this);
+        const hydClass = 'sc-gic-alert-' + mode;
         const radioTemplate = ``
             + `<ion-item class="${hydClass}">`
             + `<ion-label class="${hydClass}"></ion-label>`
             + `<ion-radio class="${hydClass}"></ion-radio>`
             + `</ion-item>`;
-        return (h("ion-list", null, this.header !== undefined && h("ion-list-header", null, this.header), (this.subHeader !== undefined || this.message !== undefined) &&
-            h("ion-item", null, h("ion-label", { "text-wrap": true }, this.subHeader !== undefined && h("h3", null, this.subHeader), this.message !== undefined && h("p", null, this.message))), this.searchBar && this.renderSearchBar(), h("ion-radio-group", null, this.useVirtualScroll
+        return (h(Host, { class: mode }, h("ion-list", null, this.header !== undefined && h("ion-list-header", null, this.header), (this.subHeader !== undefined || this.message !== undefined) &&
+            h("ion-item", null, h("ion-label", { class: "ion-text-wrap" }, this.subHeader !== undefined && h("h3", null, this.subHeader), this.message !== undefined && h("p", null, this.message))), this.searchBar && this.renderSearchBar(), h("ion-radio-group", null, this.useVirtualScroll
             ?
                 h("ion-content", { class: "select-popover-vs" }, h("ion-virtual-scroll", { items: this.processedOptions, nodeRender: (el, cell) => this.renderRadioNode(el, cell) }, h("template", { innerHTML: radioTemplate })))
-            : this.processedOptions.map(option => h("ion-item", null, h("ion-label", null, option.text), h("ion-radio", { checked: option.checked, value: option.value, disabled: option.disabled }))))));
+            : this.processedOptions.map(option => h("ion-item", null, h("ion-label", null, option.text), h("ion-radio", { checked: option.checked, value: option.value, disabled: option.disabled })))))));
     }
     static get watchers() { return {
-        "options": ["optionsChanged"],
-        "searchString": ["optionsChanged"]
+        "searchString": ["searchStringChanged"]
     }; }
     static get cmpMeta() { return {
         "$flags$": 2,
@@ -3878,7 +4067,7 @@ class SelectPopover {
             "header": [1],
             "subHeader": [1, "sub-header"],
             "message": [1],
-            "options": [1040],
+            "options": [16],
             "searchBar": [4, "search-bar"],
             "useVirtualScroll": [4, "use-virtual-scroll"],
             "searchString": [1025, "search-string"]

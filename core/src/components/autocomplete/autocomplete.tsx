@@ -12,7 +12,7 @@ import { AutocompletePopoverOption } from '../../interface';
   shadow: true
 })
 export class AutoComplete implements ComponentInterface {
-  @Element() el!: HTMLIonSelectElement;
+  @Element() el!: HTMLGicSelectElement;
 
   /**
    * The mode determines which platform styles to use.
@@ -21,7 +21,7 @@ export class AutoComplete implements ComponentInterface {
 
   @Prop({ mutable: true }) value: string | null = null;
   @Prop() placeholder?: string;
-  @Prop({ connect: 'gic-popover-controller' }) popoverCtrl!: HTMLIonPopoverControllerElement;
+  @Prop({ connect: 'gic-popover-controller' }) popoverCtrl!: HTMLGicPopoverControllerElement;
   @Prop({ context: 'window' }) win!: Window;
 
   /**
@@ -39,7 +39,7 @@ export class AutoComplete implements ComponentInterface {
   private searchValue = '';
   // private filteredOptions: string[] = [];
   // private hasFocus: boolean = false;
-  private overlay?: HTMLIonPopoverElement;
+  private overlay?: HTMLGicPopoverElement;
   private evt?: CustomEvent<void>;
 
   async componentDidLoad() {
@@ -112,7 +112,7 @@ export class AutoComplete implements ComponentInterface {
     }
   }
 
-  private createOverlay(ev?: CustomEvent<void>): Promise<HTMLIonPopoverElement> {
+  private createOverlay(ev?: CustomEvent<void>): Promise<HTMLGicPopoverElement> {
     const interfaceOptions = this.interfaceOptions;
 
     const popoverOpts: PopoverOptions = {

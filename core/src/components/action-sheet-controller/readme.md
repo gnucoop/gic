@@ -5,15 +5,17 @@ Action Sheet controllers programmatically control the action sheet component. Ac
 <!-- Auto Generated Below -->
 
 
+> **[DEPRECATED]** Use the `actionSheetController` exported from core.
+
 ## Methods
 
-### `create(opts: ActionSheetOptions) => Promise<HTMLIonActionSheetElement>`
+### `create(options: ActionSheetOptions) => Promise<HTMLGicActionSheetElement>`
 
 Create an action sheet overlay with action sheet options.
 
 #### Returns
 
-Type: `Promise<HTMLIonActionSheetElement>`
+Type: `Promise<HTMLGicActionSheetElement>`
 
 
 
@@ -27,13 +29,13 @@ Type: `Promise<boolean>`
 
 
 
-### `getTop() => Promise<HTMLIonActionSheetElement | undefined>`
+### `getTop() => Promise<HTMLGicActionSheetElement | undefined>`
 
 Get the most recently opened action sheet overlay.
 
 #### Returns
 
-Type: `Promise<HTMLIonActionSheetElement | undefined>`
+Type: `Promise<HTMLGicActionSheetElement | undefined>`
 
 
 

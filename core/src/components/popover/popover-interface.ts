@@ -1,3 +1,3 @@
-import { PopoverOptions as BasePopoverOptions } from '@ionic/core';
+import { ComponentRef, PopoverOptions as BasePopoverOptions } from '@ionic/core';
 
-export type PopoverOptions = BasePopoverOptions;
+export type PopoverOptions<T extends ComponentRef = ComponentRef> = BasePopoverOptions<T>;

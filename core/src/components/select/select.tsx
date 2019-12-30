@@ -17,17 +17,17 @@ import { SelectCompareFn } from './select-interface';
 })
 export class Select implements ComponentInterface {
 
-  private childOpts: HTMLIonSelectOptionElement[] = [];
+  private childOpts: HTMLGicSelectOptionElement[] = [];
   private inputId = `ion-sel-${selectIds++}`;
   private overlay?: OverlaySelect;
   private didInit = false;
   private buttonEl?: HTMLButtonElement;
 
-  @Element() el!: HTMLIonSelectElement;
+  @Element() el!: HTMLGicSelectElement;
 
-  @Prop({ connect: 'gic-action-sheet-controller' }) actionSheetCtrl!: HTMLIonActionSheetControllerElement;
-  @Prop({ connect: 'gic-alert-controller' }) alertCtrl!: HTMLIonAlertControllerElement;
-  @Prop({ connect: 'gic-popover-controller' }) popoverCtrl!: HTMLIonPopoverControllerElement;
+  @Prop({ connect: 'gic-action-sheet-controller' }) actionSheetCtrl!: HTMLGicActionSheetControllerElement;
+  @Prop({ connect: 'gic-alert-controller' }) alertCtrl!: HTMLGicAlertControllerElement;
+  @Prop({ connect: 'gic-popover-controller' }) popoverCtrl!: HTMLGicPopoverControllerElement;
 
   @State() isExpanded = false;
 
@@ -549,7 +549,7 @@ const compareOptions = (currentValue: any, compareValue: any, compareWith?: stri
   }
 };
 
-const generateText = (opts: HTMLIonSelectOptionElement[], value: any | any[], compareWith?: string | SelectCompareFn | null) => {
+const generateText = (opts: HTMLGicSelectOptionElement[], value: any | any[], compareWith?: string | SelectCompareFn | null) => {
   if (value === undefined) {
     return '';
   }
@@ -563,7 +563,7 @@ const generateText = (opts: HTMLIonSelectOptionElement[], value: any | any[], co
   }
 };
 
-const textForValue = (opts: HTMLIonSelectOptionElement[], value: any, compareWith?: string | SelectCompareFn | null): string | null => {
+const textForValue = (opts: HTMLGicSelectOptionElement[], value: any, compareWith?: string | SelectCompareFn | null): string | null => {
   const selectOpt = opts.find(opt => {
     return compareOptions(opt.value, value, compareWith);
   });

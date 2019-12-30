@@ -8,8 +8,6 @@
 import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
 import {
   ActionSheetButton,
-  ActionSheetOptions,
-  AlertOptions,
   AnimationBuilder,
   ComponentProps,
   ComponentRef,
@@ -17,18 +15,15 @@ import {
   Mode,
   OverlayEventDetail,
   OverlaySelect,
-  PopoverOptions,
   StyleEventDetail,
 } from '@ionic/core';
 import {
-  AnimationBuilder as AnimationBuilder1,
-  Mode as Mode1,
-  OverlayEventDetail as OverlayEventDetail1,
-} from '@ionic/core/dist/types/interface';
-import {
+  ActionSheetOptions,
   AlertButton,
   AlertInput,
+  AlertOptions,
   AutocompletePopoverOption,
+  PopoverOptions,
   SelectChangeEventDetail,
   SelectInterface,
   SelectPopoverOption,
@@ -57,6 +52,8 @@ export namespace Components {
     'cssClass'?: string | string[];
     /**
     * Dismiss the action sheet overlay after it has been presented.
+    * @param data Any data to emit in the dismiss events.
+    * @param role The role of the element that is dismissing the action sheet. This can be useful in a button handler for determining which button was clicked to dismiss the action sheet. Some examples include: ``"cancel"`, `"destructive"`, "selected"`, and `"backdrop"`.
     */
     'dismiss': (data?: any, role?: string | undefined) => Promise<boolean>;
     /**
@@ -76,15 +73,11 @@ export namespace Components {
     */
     'leaveAnimation'?: AnimationBuilder;
     /**
-    * The mode determines which platform styles to use.
-    */
-    'mode': Mode;
-    /**
-    * Returns a promise that resolves when the action-sheet did dismiss.
+    * Returns a promise that resolves when the action sheet did dismiss.
     */
     'onDidDismiss': () => Promise<OverlayEventDetail<any>>;
     /**
-    * Returns a promise that resolves when the action-sheet will dismiss.
+    * Returns a promise that resolves when the action sheet will dismiss.
     */
     'onWillDismiss': () => Promise<OverlayEventDetail<any>>;
     'overlayIndex': number;
@@ -105,7 +98,7 @@ export namespace Components {
     */
     'subHeader'?: string;
     /**
-    * If `true`, the action sheet will be translucent. Only applies when the mode is `"ios"` and the device supports backdrop-filter.
+    * If `true`, the action sheet will be translucent. Only applies when the mode is `"ios"` and the device supports [`backdrop-filter`](https://developer.mozilla.org/en-US/docs/Web/CSS/backdrop-filter#Browser_compatibility).
     */
     'translucent': boolean;
     /**
@@ -116,16 +109,20 @@ export namespace Components {
   interface GicActionSheetController {
     /**
     * Create an action sheet overlay with action sheet options.
+    * @param options The options to use to create the action sheet.
     */
-    'create': (opts: ActionSheetOptions) => Promise<HTMLIonActionSheetElement>;
+    'create': (options: ActionSheetOptions) => Promise<HTMLGicActionSheetElement>;
     /**
     * Dismiss the open action sheet overlay.
+    * @param data Any data to emit in the dismiss events.
+    * @param role The role of the element that is dismissing the action sheet. This can be useful in a button handler for determining which button was clicked to dismiss the action sheet. Some examples include: ``"cancel"`, `"destructive"`, "selected"`, and `"backdrop"`.
+    * @param id The id of the action sheet to dismiss. If an id is not provided, it will dismiss the most recently opened action sheet.
     */
     'dismiss': (data?: any, role?: string | undefined, id?: string | undefined) => Promise<boolean>;
     /**
     * Get the most recently opened action sheet overlay.
     */
-    'getTop': () => Promise<HTMLIonActionSheetElement | undefined>;
+    'getTop': () => Promise<HTMLGicActionSheetElement | undefined>;
   }
   interface GicAlert {
     /**
@@ -146,6 +143,8 @@ export namespace Components {
     'cssClass'?: string | string[];
     /**
     * Dismiss the alert overlay after it has been presented.
+    * @param data Any data to emit in the dismiss events.
+    * @param role The role of the element that is dismissing the alert. This can be useful in a button handler for determining which button was clicked to dismiss the alert. Some examples include: ``"cancel"`, `"destructive"`, "selected"`, and `"backdrop"`.
     */
     'dismiss': (data?: any, role?: string | undefined) => Promise<boolean>;
     /**
@@ -169,13 +168,13 @@ export namespace Components {
     */
     'leaveAnimation'?: AnimationBuilder;
     /**
-    * The main message to be displayed in the alert.
+    * The main message to be displayed in the alert. `message` can accept either plaintext or HTML as a string. To display characters normally reserved for HTML, they must be escaped. For example `<Ionic>` would become `&lt;Ionic&gt;`  For more information: [Security Documentation](https://ionicframework.com/docs/faq/security)
     */
     'message'?: string;
     /**
     * The mode determines which platform styles to use.
     */
-    'mode': Mode;
+    'mode'?: "ios" | "md";
     /**
     * Returns a promise that resolves when the alert did dismiss.
     */
@@ -202,7 +201,7 @@ export namespace Components {
     */
     'subHeader'?: string;
     /**
-    * If `true`, the alert will be translucent.
+    * If `true`, the alert will be translucent. Only applies when the mode is `"ios"` and the device supports [`backdrop-filter`](https://developer.mozilla.org/en-US/docs/Web/CSS/backdrop-filter#Browser_compatibility).
     */
     'translucent': boolean;
     /**
@@ -212,17 +211,21 @@ export namespace Components {
   }
   interface GicAlertController {
     /**
-    * Create an alert overlay with alert options
+    * Create an alert overlay with alert options.
+    * @param options The options to use to create the alert.
     */
-    'create': (opts: AlertOptions) => Promise<HTMLIonAlertElement>;
+    'create': (options: AlertOptions) => Promise<HTMLGicAlertElement>;
     /**
     * Dismiss the open alert overlay.
+    * @param data Any data to emit in the dismiss events.
+    * @param role The role of the element that is dismissing the alert. This can be useful in a button handler for determining which button was clicked to dismiss the alert. Some examples include: ``"cancel"`, `"destructive"`, "selected"`, and `"backdrop"`.
+    * @param id The id of the alert to dismiss. If an id is not provided, it will dismiss the most recently opened alert.
     */
     'dismiss': (data?: any, role?: string | undefined, id?: string | undefined) => Promise<boolean>;
     /**
     * Get the most recently opened alert overlay.
     */
-    'getTop': () => Promise<HTMLIonAlertElement | undefined>;
+    'getTop': () => Promise<HTMLGicAlertElement | undefined>;
   }
   interface GicAutocomplete {
     /**
@@ -273,6 +276,8 @@ export namespace Components {
     'delegate'?: FrameworkDelegate;
     /**
     * Dismiss the popover overlay after it has been presented.
+    * @param data Any data to emit in the dismiss events.
+    * @param role The role of the element that is dismissing the popover. For example, 'cancel' or 'backdrop'.
     */
     'dismiss': (data?: any, role?: string | undefined) => Promise<boolean>;
     /**
@@ -294,7 +299,7 @@ export namespace Components {
     /**
     * The mode determines which platform styles to use.
     */
-    'mode': Mode;
+    'mode'?: "ios" | "md";
     /**
     * Returns a promise that resolves when the popover did dismiss.
     */
@@ -313,23 +318,27 @@ export namespace Components {
     */
     'showBackdrop': boolean;
     /**
-    * If `true`, the popover will be translucent.
+    * If `true`, the popover will be translucent. Only applies when the mode is `"ios"` and the device supports [`backdrop-filter`](https://developer.mozilla.org/en-US/docs/Web/CSS/backdrop-filter#Browser_compatibility).
     */
     'translucent': boolean;
   }
   interface GicPopoverController {
     /**
     * Create a popover overlay with popover options.
+    * @param options The options to use to create the popover.
     */
-    'create': <T extends ComponentRef>(opts: PopoverOptions<T>) => Promise<HTMLIonPopoverElement>;
+    'create': <T extends ComponentRef>(options: import("/Users/trik/Projects/gnucoop/gic/core/node_modules/@ionic/core/dist/types/interface").PopoverOptions<T>) => Promise<HTMLGicPopoverElement>;
     /**
     * Dismiss the open popover overlay.
+    * @param data Any data to emit in the dismiss events.
+    * @param role The role of the element that is dismissing the popover. This can be useful in a button handler for determining which button was clicked to dismiss the popover. Some examples include: ``"cancel"`, `"destructive"`, "selected"`, and `"backdrop"`.
+    * @param id The id of the popover to dismiss. If an id is not provided, it will dismiss the most recently opened popover.
     */
     'dismiss': (data?: any, role?: string | undefined, id?: string | undefined) => Promise<boolean>;
     /**
     * Get the most recently opened popover overlay.
     */
-    'getTop': () => Promise<HTMLIonPopoverElement | undefined>;
+    'getTop': () => Promise<HTMLGicPopoverElement | undefined>;
   }
   interface GicSelect {
     /**
@@ -542,7 +551,7 @@ declare namespace LocalJSX {
     /**
     * An array of buttons for the action sheet.
     */
-    'buttons': (ActionSheetButton | string)[];
+    'buttons'?: (ActionSheetButton | string)[];
     /**
     * Additional classes to apply for custom CSS. If multiple classes are provided they should be separated by spaces.
     */
@@ -563,10 +572,6 @@ declare namespace LocalJSX {
     * Animation to use when the action sheet is dismissed.
     */
     'leaveAnimation'?: AnimationBuilder;
-    /**
-    * The mode determines which platform styles to use.
-    */
-    'mode'?: Mode;
     /**
     * Emitted after the alert has dismissed.
     */
@@ -596,7 +601,7 @@ declare namespace LocalJSX {
     */
     'subHeader'?: string;
     /**
-    * If `true`, the action sheet will be translucent. Only applies when the mode is `"ios"` and the device supports backdrop-filter.
+    * If `true`, the action sheet will be translucent. Only applies when the mode is `"ios"` and the device supports [`backdrop-filter`](https://developer.mozilla.org/en-US/docs/Web/CSS/backdrop-filter#Browser_compatibility).
     */
     'translucent'?: boolean;
     /**
@@ -643,13 +648,13 @@ declare namespace LocalJSX {
     */
     'leaveAnimation'?: AnimationBuilder;
     /**
-    * The main message to be displayed in the alert.
+    * The main message to be displayed in the alert. `message` can accept either plaintext or HTML as a string. To display characters normally reserved for HTML, they must be escaped. For example `<Ionic>` would become `&lt;Ionic&gt;`  For more information: [Security Documentation](https://ionicframework.com/docs/faq/security)
     */
     'message'?: string;
     /**
     * The mode determines which platform styles to use.
     */
-    'mode'?: Mode;
+    'mode'?: "ios" | "md";
     /**
     * Emitted after the alert has dismissed.
     */
@@ -679,7 +684,7 @@ declare namespace LocalJSX {
     */
     'subHeader'?: string;
     /**
-    * If `true`, the alert will be translucent.
+    * If `true`, the alert will be translucent. Only applies when the mode is `"ios"` and the device supports [`backdrop-filter`](https://developer.mozilla.org/en-US/docs/Web/CSS/backdrop-filter#Browser_compatibility).
     */
     'translucent'?: boolean;
     /**
@@ -753,7 +758,7 @@ declare namespace LocalJSX {
     /**
     * The mode determines which platform styles to use.
     */
-    'mode'?: Mode;
+    'mode'?: "ios" | "md";
     /**
     * Emitted after the popover has dismissed.
     */
@@ -775,7 +780,7 @@ declare namespace LocalJSX {
     */
     'showBackdrop'?: boolean;
     /**
-    * If `true`, the popover will be translucent.
+    * If `true`, the popover will be translucent. Only applies when the mode is `"ios"` and the device supports [`backdrop-filter`](https://developer.mozilla.org/en-US/docs/Web/CSS/backdrop-filter#Browser_compatibility).
     */
     'translucent'?: boolean;
   }
