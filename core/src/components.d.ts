@@ -530,7 +530,7 @@ declare global {
 }
 
 declare namespace LocalJSX {
-  interface GicActionSheet extends JSXBase.HTMLAttributes<HTMLGicActionSheetElement> {
+  interface GicActionSheet {
     /**
     * If `true`, the action sheet will animate.
     */
@@ -604,8 +604,8 @@ declare namespace LocalJSX {
     */
     'useVirtualScroll'?: boolean;
   }
-  interface GicActionSheetController extends JSXBase.HTMLAttributes<HTMLGicActionSheetControllerElement> {}
-  interface GicAlert extends JSXBase.HTMLAttributes<HTMLGicAlertElement> {
+  interface GicActionSheetController {}
+  interface GicAlert {
     /**
     * If `true`, the alert will animate.
     */
@@ -687,8 +687,8 @@ declare namespace LocalJSX {
     */
     'useVirtualScroll'?: boolean;
   }
-  interface GicAlertController extends JSXBase.HTMLAttributes<HTMLGicAlertControllerElement> {}
-  interface GicAutocomplete extends JSXBase.HTMLAttributes<HTMLGicAutocompleteElement> {
+  interface GicAlertController {}
+  interface GicAutocomplete {
     /**
     * Any additional options that the `popover` interface can take. See the [PopoverController API docs](../../popover/PopoverController/#create) for the create options for each interface.
     */
@@ -700,20 +700,20 @@ declare namespace LocalJSX {
     'placeholder'?: string;
     'value'?: string | null;
   }
-  interface GicAutocompleteOption extends JSXBase.HTMLAttributes<HTMLGicAutocompleteOptionElement> {
+  interface GicAutocompleteOption {
     /**
     * The text value of the option.
     */
     'value'?: any | null;
   }
-  interface GicAutocompletePopover extends JSXBase.HTMLAttributes<HTMLGicAutocompletePopoverElement> {
+  interface GicAutocompletePopover {
     /**
     * Array of options for the popover
     */
     'options'?: AutocompletePopoverOption[];
     'searchStr'?: string;
   }
-  interface GicPopover extends JSXBase.HTMLAttributes<HTMLGicPopoverElement> {
+  interface GicPopover {
     /**
     * If `true`, the popover will animate.
     */
@@ -779,8 +779,8 @@ declare namespace LocalJSX {
     */
     'translucent'?: boolean;
   }
-  interface GicPopoverController extends JSXBase.HTMLAttributes<HTMLGicPopoverControllerElement> {}
-  interface GicSelect extends JSXBase.HTMLAttributes<HTMLGicSelectElement> {
+  interface GicPopoverController {}
+  interface GicSelect {
     /**
     * The text to display on the cancel button.
     */
@@ -854,7 +854,7 @@ declare namespace LocalJSX {
     */
     'value'?: any | null;
   }
-  interface GicSelectOption extends JSXBase.HTMLAttributes<HTMLGicSelectOptionElement> {
+  interface GicSelectOption {
     /**
     * If `true`, the user cannot interact with the select option.
     */
@@ -868,7 +868,7 @@ declare namespace LocalJSX {
     */
     'value'?: any | null;
   }
-  interface GicSelectPopover extends JSXBase.HTMLAttributes<HTMLGicSelectPopoverElement> {
+  interface GicSelectPopover {
     /**
     * Header text for the popover
     */
@@ -920,7 +920,20 @@ export { LocalJSX as JSX };
 
 declare module "@stencil/core" {
   export namespace JSX {
-    interface IntrinsicElements extends LocalJSX.IntrinsicElements {}
+    interface IntrinsicElements {
+      'gic-action-sheet': LocalJSX.GicActionSheet & JSXBase.HTMLAttributes<HTMLGicActionSheetElement>;
+      'gic-action-sheet-controller': LocalJSX.GicActionSheetController & JSXBase.HTMLAttributes<HTMLGicActionSheetControllerElement>;
+      'gic-alert': LocalJSX.GicAlert & JSXBase.HTMLAttributes<HTMLGicAlertElement>;
+      'gic-alert-controller': LocalJSX.GicAlertController & JSXBase.HTMLAttributes<HTMLGicAlertControllerElement>;
+      'gic-autocomplete': LocalJSX.GicAutocomplete & JSXBase.HTMLAttributes<HTMLGicAutocompleteElement>;
+      'gic-autocomplete-option': LocalJSX.GicAutocompleteOption & JSXBase.HTMLAttributes<HTMLGicAutocompleteOptionElement>;
+      'gic-autocomplete-popover': LocalJSX.GicAutocompletePopover & JSXBase.HTMLAttributes<HTMLGicAutocompletePopoverElement>;
+      'gic-popover': LocalJSX.GicPopover & JSXBase.HTMLAttributes<HTMLGicPopoverElement>;
+      'gic-popover-controller': LocalJSX.GicPopoverController & JSXBase.HTMLAttributes<HTMLGicPopoverControllerElement>;
+      'gic-select': LocalJSX.GicSelect & JSXBase.HTMLAttributes<HTMLGicSelectElement>;
+      'gic-select-option': LocalJSX.GicSelectOption & JSXBase.HTMLAttributes<HTMLGicSelectOptionElement>;
+      'gic-select-popover': LocalJSX.GicSelectPopover & JSXBase.HTMLAttributes<HTMLGicSelectPopoverElement>;
+    }
   }
 }
 

@@ -1112,22 +1112,22 @@ function sortAttributes(a, b) {
     return 0;
 }
 class MockAttr {
-    constructor(attrName, attrValue = '', namespaceURI = null) {
+    constructor(attrName, attrValue, namespaceURI = null) {
         this._name = attrName;
-        this._value = String(attrValue || '');
+        this._value = String(attrValue);
         this._namespaceURI = namespaceURI;
     }
     get name() {
         return this._name;
     }
     set name(value) {
-        this._name = value.toLowerCase();
+        this._name = value;
     }
     get value() {
         return this._value;
     }
     set value(value) {
-        this._value = String(value || '');
+        this._value = String(value);
     }
     get nodeName() {
         return this._name;
@@ -1139,7 +1139,7 @@ class MockAttr {
         return this._value;
     }
     set nodeValue(value) {
-        this._value = String(value || '');
+        this._value = String(value);
     }
     get namespaceURI() {
         return this._namespaceURI;
@@ -10402,6 +10402,19 @@ class MockNode {
         }
         return newNode;
     }
+    append(...items) {
+        items.forEach(item => {
+            const isNode = typeof item === 'object' && item !== null && 'nodeType' in item;
+            this.appendChild(isNode ? item : this.ownerDocument.createTextNode(String(item)));
+        });
+    }
+    prepend(...items) {
+        const firstChild = this.firstChild;
+        items.forEach(item => {
+            const isNode = typeof item === 'object' && item !== null && 'nodeType' in item;
+            this.insertBefore(isNode ? item : this.ownerDocument.createTextNode(String(item)), firstChild);
+        });
+    }
     cloneNode(deep) {
         throw new Error(`invalid node type to clone: ${this.nodeType}, deep: ${deep}`);
     }
@@ -10754,20 +10767,20 @@ class MockElement extends MockNode {
             if (attr != null) {
                 if (checkAttrChanged === true) {
                     const oldValue = attr.value;
-                    attr.value = String(value);
+                    attr.value = value;
                     if (oldValue !== attr.value) {
                         attributeChanged(this, attr.name, oldValue, attr.value);
                     }
                 }
                 else {
-                    attr.value = String(value);
+                    attr.value = value;
                 }
             }
             else {
                 if (attributes.caseInsensitive) {
                     attrName = attrName.toLowerCase();
                 }
-                attr = new MockAttr(attrName, String(value));
+                attr = new MockAttr(attrName, value);
                 attributes.items.push(attr);
                 if (checkAttrChanged === true) {
                     attributeChanged(this, attrName, null, attr.value);
@@ -10782,13 +10795,13 @@ class MockElement extends MockNode {
         if (attr != null) {
             if (checkAttrChanged === true) {
                 const oldValue = attr.value;
-                attr.value = String(value);
+                attr.value = value;
                 if (oldValue !== attr.value) {
                     attributeChanged(this, attr.name, oldValue, attr.value);
                 }
             }
             else {
-                attr.value = String(value);
+                attr.value = value;
             }
         }
         else {
@@ -10834,6 +10847,9 @@ class MockElement extends MockNode {
     }
     get title() { return this.getAttributeNS(null, 'title') || ''; }
     set title(value) { this.setAttributeNS(null, 'title', value); }
+    onanimationstart() { }
+    onanimationend() { }
+    onanimationiteration() { }
     onabort() { }
     onauxclick() { }
     onbeforecopy() { }
@@ -10978,6 +10994,12 @@ class MockTextNode extends MockNode {
         return this.nodeValue;
     }
     set textContent(text) {
+        this.nodeValue = text;
+    }
+    get data() {
+        return this.nodeValue;
+    }
+    set data(text) {
         this.nodeValue = text;
     }
     get wholeText() {
@@ -11125,6 +11147,8 @@ class MockButtonElement extends MockHTMLElement {
 }
 patchPropAttributes(MockButtonElement.prototype, {
     type: String
+}, {
+    type: 'submit'
 });
 class MockImgElement extends MockHTMLElement {
     constructor(ownerDocument) {
@@ -11179,6 +11203,8 @@ patchPropAttributes(MockInputElement.prototype, {
     type: String,
     value: String,
     width: Number
+}, {
+    type: 'text'
 });
 class MockFormElement extends MockHTMLElement {
     constructor(ownerDocument) {
@@ -11295,36 +11321,36 @@ class MockCanvasElement extends MockHTMLElement {
     }
     getContext() {
         return {
-            fillRect: function () { },
-            clearRect: function () { },
+            fillRect: function () { return; },
+            clearRect: function () { return; },
             getImageData: function (_, __, w, h) {
                 return {
                     data: new Array(w * h * 4)
                 };
             },
-            putImageData: function () { },
+            putImageData: function () { return; },
             createImageData: function () { return []; },
-            setTransform: function () { },
-            drawImage: function () { },
-            save: function () { },
-            fillText: function () { },
-            restore: function () { },
-            beginPath: function () { },
-            moveTo: function () { },
-            lineTo: function () { },
-            closePath: function () { },
-            stroke: function () { },
-            translate: function () { },
-            scale: function () { },
-            rotate: function () { },
-            arc: function () { },
-            fill: function () { },
+            setTransform: function () { return; },
+            drawImage: function () { return; },
+            save: function () { return; },
+            fillText: function () { return; },
+            restore: function () { return; },
+            beginPath: function () { return; },
+            moveTo: function () { return; },
+            lineTo: function () { return; },
+            closePath: function () { return; },
+            stroke: function () { return; },
+            translate: function () { return; },
+            scale: function () { return; },
+            rotate: function () { return; },
+            arc: function () { return; },
+            fill: function () { return; },
             measureText: function () {
                 return { width: 0 };
             },
-            transform: function () { },
-            rect: function () { },
-            clip: function () { },
+            transform: function () { return; },
+            rect: function () { return; },
+            clip: function () { return; },
         };
     }
 }
@@ -11342,9 +11368,10 @@ function fullUrl(elm, attrName) {
     }
     return val.replace(/\'|\"/g, '').trim();
 }
-function patchPropAttributes(prototype, attrs) {
+function patchPropAttributes(prototype, attrs, defaults = {}) {
     Object.keys(attrs).forEach(propName => {
         const attr = attrs[propName];
+        const defaultValue = defaults[propName];
         if (attr === Boolean) {
             Object.defineProperty(prototype, propName, {
                 get() {
@@ -11364,7 +11391,9 @@ function patchPropAttributes(prototype, attrs) {
             Object.defineProperty(prototype, propName, {
                 get() {
                     const value = this.getAttribute(propName);
-                    return (value ? parseInt(value, 10) : 0);
+                    return (value
+                        ? parseInt(value, 10)
+                        : defaultValue === undefined ? 0 : defaultValue);
                 },
                 set(value) {
                     this.setAttribute(propName, value);
@@ -11374,7 +11403,9 @@ function patchPropAttributes(prototype, attrs) {
         else {
             Object.defineProperty(prototype, propName, {
                 get() {
-                    return this.getAttribute(propName) || '';
+                    return this.hasAttribute(propName)
+                        ? this.getAttribute(propName)
+                        : defaultValue || '';
                 },
                 set(value) {
                     this.setAttribute(propName, value);
@@ -11904,6 +11935,92 @@ class MockWindow {
     get window() {
         return this;
     }
+    onanimationstart() { }
+    onanimationend() { }
+    onanimationiteration() { }
+    onabort() { }
+    onauxclick() { }
+    onbeforecopy() { }
+    onbeforecut() { }
+    onbeforepaste() { }
+    onblur() { }
+    oncancel() { }
+    oncanplay() { }
+    oncanplaythrough() { }
+    onchange() { }
+    onclick() { }
+    onclose() { }
+    oncontextmenu() { }
+    oncopy() { }
+    oncuechange() { }
+    oncut() { }
+    ondblclick() { }
+    ondrag() { }
+    ondragend() { }
+    ondragenter() { }
+    ondragleave() { }
+    ondragover() { }
+    ondragstart() { }
+    ondrop() { }
+    ondurationchange() { }
+    onemptied() { }
+    onended() { }
+    onerror() { }
+    onfocus() { }
+    onformdata() { }
+    onfullscreenchange() { }
+    onfullscreenerror() { }
+    ongotpointercapture() { }
+    oninput() { }
+    oninvalid() { }
+    onkeydown() { }
+    onkeypress() { }
+    onkeyup() { }
+    onload() { }
+    onloadeddata() { }
+    onloadedmetadata() { }
+    onloadstart() { }
+    onlostpointercapture() { }
+    onmousedown() { }
+    onmouseenter() { }
+    onmouseleave() { }
+    onmousemove() { }
+    onmouseout() { }
+    onmouseover() { }
+    onmouseup() { }
+    onmousewheel() { }
+    onpaste() { }
+    onpause() { }
+    onplay() { }
+    onplaying() { }
+    onpointercancel() { }
+    onpointerdown() { }
+    onpointerenter() { }
+    onpointerleave() { }
+    onpointermove() { }
+    onpointerout() { }
+    onpointerover() { }
+    onpointerup() { }
+    onprogress() { }
+    onratechange() { }
+    onreset() { }
+    onresize() { }
+    onscroll() { }
+    onsearch() { }
+    onseeked() { }
+    onseeking() { }
+    onselect() { }
+    onselectstart() { }
+    onstalled() { }
+    onsubmit() { }
+    onsuspend() { }
+    ontimeupdate() { }
+    ontoggle() { }
+    onvolumechange() { }
+    onwaiting() { }
+    onwebkitfullscreenchange() { }
+    onwebkitfullscreenerror() { }
+    onwheel() { }
 }
 function resetWindowDefaults(win) {
     win.__clearInterval = nativeClearInterval;
@@ -12028,6 +12145,21 @@ class MockDocument extends MockHTMLElement {
     get URL() {
         return this.location.href;
     }
+    get styleSheets() {
+        return this.querySelectorAll('style');
+    }
+    get scripts() {
+        return this.querySelectorAll('script');
+    }
+    get forms() {
+        return this.querySelectorAll('form');
+    }
+    get images() {
+        return this.querySelectorAll('img');
+    }
+    get scrollingElement() {
+        return this.documentElement;
+    }
     get documentElement() {
         for (let i = this.childNodes.length - 1; i >= 0; i--) {
             if (this.childNodes[i].nodeName === 'HTML') {
@@ -12105,10 +12237,10 @@ class MockDocument extends MockHTMLElement {
         return new MockComment(this, data);
     }
     createAttribute(attrName) {
-        return new MockAttr(attrName.toLowerCase());
+        return new MockAttr(attrName.toLowerCase(), '');
     }
     createAttributeNS(namespaceURI, attrName) {
-        return new MockAttr(attrName, undefined, namespaceURI);
+        return new MockAttr(attrName, '', namespaceURI);
     }
     createElement(tagName) {
         if (tagName === "#document") {
