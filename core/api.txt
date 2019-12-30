@@ -115,7 +115,7 @@ gic-popover,css-prop,--min-width
 gic-popover,css-prop,--width
 
 gic-popover-controller,none
-gic-popover-controller,method,create,create<T extends ComponentRef>(options: import("/Users/trik/Projects/gnucoop/gic/core/node_modules/@ionic/core/dist/types/interface").PopoverOptions<T>) => Promise<HTMLGicPopoverElement>
+gic-popover-controller,method,create,create(options: any) => Promise<HTMLGicPopoverElement>
 gic-popover-controller,method,dismiss,dismiss(data?: any, role?: string | undefined, id?: string | undefined) => Promise<boolean>
 gic-popover-controller,method,getTop,getTop() => Promise<HTMLGicPopoverElement | undefined>
 

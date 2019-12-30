@@ -6,3 +6,5 @@ export * from './components/autocomplete-popover/autocomplete-popover-interface'
 export * from './components/popover/popover-interface';
 export * from './components/select/select-interface';
 export * from './components/select-popover/select-popover-interface';
+
+export type ComponentRef = Function | HTMLElement | string | null;

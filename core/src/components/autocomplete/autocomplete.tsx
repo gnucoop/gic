@@ -1,7 +1,7 @@
-import { Mode, PopoverOptions } from '@ionic/core';
+import { Mode } from '@ionic/core';
 import { Component, ComponentInterface, Element, Prop, h } from '@stencil/core';
 
-import { AutocompletePopoverOption } from '../../interface';
+import { AutocompletePopoverOption, PopoverOptions } from '../../interface';
 
 @Component({
   tag: 'gic-autocomplete',
