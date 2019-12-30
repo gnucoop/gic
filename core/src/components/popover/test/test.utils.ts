@@ -19,7 +19,7 @@ export const testPopover = async (
     await page.click(selector);
     await page.waitForSelector(selector);
 
-    let popover = await page.find('ion-popover');
+    let popover = await page.find('gic-popover');
     await popover.waitForVisible();
 
     screenshotCompares.push(await page.compareScreenshot());
@@ -29,7 +29,7 @@ export const testPopover = async (
 
     screenshotCompares.push(await page.compareScreenshot('dismiss'));
 
-    popover = await page.find('ion-popover');
+    popover = await page.find('gic-popover');
     expect(popover).toBeNull();
 
     for (const screenshotCompare of screenshotCompares) {

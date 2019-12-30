@@ -19,7 +19,7 @@ export const testAlert = async (
     await page.click(selector);
     await page.waitForSelector(selector);
 
-    let alert = await page.find('ion-alert');
+    let alert = await page.find('gic-alert');
 
     expect(alert).not.toBe(null);
     await alert.waitForVisible();
@@ -31,7 +31,7 @@ export const testAlert = async (
 
     screenshotCompares.push(await page.compareScreenshot('dismiss'));
 
-    alert = await page.find('ion-alert');
+    alert = await page.find('gic-alert');
     expect(alert).toBe(null);
 
     for (const screenshotCompare of screenshotCompares) {
