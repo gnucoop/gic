@@ -29,7 +29,7 @@ async function presentPopover() {
 
 ## Methods
 
-### `create<T extends ComponentRef>(options: import("/Users/trik/Projects/gnucoop/gic/core/node_modules/@ionic/core/dist/types/interface").PopoverOptions<T>) => Promise<HTMLGicPopoverElement>`
+### `create(options: any) => Promise<HTMLGicPopoverElement>`
 
 Create a popover overlay with popover options.
 

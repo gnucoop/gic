@@ -10,7 +10,6 @@ import {
   ActionSheetButton,
   AnimationBuilder,
   ComponentProps,
-  ComponentRef,
   FrameworkDelegate,
   Mode,
   OverlayEventDetail,
@@ -23,7 +22,7 @@ import {
   AlertInput,
   AlertOptions,
   AutocompletePopoverOption,
-  PopoverOptions,
+  ComponentRef,
   SelectChangeEventDetail,
   SelectInterface,
   SelectPopoverOption,
@@ -327,7 +326,7 @@ export namespace Components {
     * Create a popover overlay with popover options.
     * @param options The options to use to create the popover.
     */
-    'create': <T extends ComponentRef>(options: import("/Users/trik/Projects/gnucoop/gic/core/node_modules/@ionic/core/dist/types/interface").PopoverOptions<T>) => Promise<HTMLGicPopoverElement>;
+    'create': (options: any) => Promise<HTMLGicPopoverElement>;
     /**
     * Dismiss the open popover overlay.
     * @param data Any data to emit in the dismiss events.

@@ -1,7 +1,6 @@
-import { ComponentRef, OverlayController } from '@ionic/core';
+import { OverlayController } from '@ionic/core';
 import { Build, Component, ComponentInterface, Method } from '@stencil/core';
 
-import { PopoverOptions } from '../../interface';
 import { createOverlay, dismissOverlay, getOverlay } from '../../utils/overlays';
 
 /**
@@ -26,7 +25,7 @@ export class PopoverController implements ComponentInterface, OverlayController 
    * @param options The options to use to create the popover.
    */
   @Method()
-  create<T extends ComponentRef>(options: PopoverOptions<T>): Promise<HTMLGicPopoverElement> {
+  create(options: any): Promise<HTMLGicPopoverElement> {
     return createOverlay('gic-popover', options);
   }
 

@@ -1,7 +1,7 @@
-import { ActionSheetButton, ActionSheetOptions, CssClassMap, Mode, OverlaySelect, PopoverOptions, StyleEventDetail } from '@ionic/core';
+import { CssClassMap, Mode, OverlaySelect, StyleEventDetail } from '@ionic/core';
 import { Component, ComponentInterface, Element, Event, EventEmitter, Listen, Method, Prop, State, Watch, h } from '@stencil/core';
 
-import { AlertInput, AlertOptions, SelectChangeEventDetail, SelectInterface, SelectPopoverOption } from '../../interface';
+import { ActionSheetButton, ActionSheetOptions, AlertInput, AlertOptions, PopoverOptions, SelectChangeEventDetail, SelectInterface, SelectPopoverOption } from '../../interface';
 import { findItemLabel, renderHiddenInput } from '../../utils/helpers';
 import { hostContext } from '../../utils/theme';
 
