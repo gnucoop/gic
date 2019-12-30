@@ -1,3 +1,12 @@
+## [4.11.2](https://github.com/gnucoop/gic/compare/v4.7.2...v4.11.2) (2019-12-30)
+
+
+### Bug Fixes
+
+* bad import from ionic core ([2de8c24](https://github.com/gnucoop/gic/commit/2de8c24))
+
+
+
 ## [4.11.1](https://github.com/gnucoop/gic/compare/v4.7.2...v4.11.1) (2019-12-30)
 
 
