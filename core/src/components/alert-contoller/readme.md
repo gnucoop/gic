@@ -5,15 +5,17 @@
 <!-- Auto Generated Below -->
 
 
+> **[DEPRECATED]** Use the `alertController` exported from core.
+
 ## Methods
 
-### `create(opts: AlertOptions) => Promise<HTMLIonAlertElement>`
+### `create(options: AlertOptions) => Promise<HTMLGicAlertElement>`
 
-Create an alert overlay with alert options
+Create an alert overlay with alert options.
 
 #### Returns
 
-Type: `Promise<HTMLIonAlertElement>`
+Type: `Promise<HTMLGicAlertElement>`
 
 
 
@@ -27,13 +29,13 @@ Type: `Promise<boolean>`
 
 
 
-### `getTop() => Promise<HTMLIonAlertElement | undefined>`
+### `getTop() => Promise<HTMLGicAlertElement | undefined>`
 
 Get the most recently opened alert overlay.
 
 #### Returns
 
-Type: `Promise<HTMLIonAlertElement | undefined>`
+Type: `Promise<HTMLGicAlertElement | undefined>`
 
 
 

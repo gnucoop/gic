@@ -6,6 +6,8 @@ Popover controllers programmatically control the popover component. Popovers can
 <!-- Auto Generated Below -->
 
 
+> **[DEPRECATED]** Use the `popoverController` exported from core.
+
 ## Usage
 
 ### Javascript
@@ -27,13 +29,13 @@ async function presentPopover() {
 
 ## Methods
 
-### `create<T extends ComponentRef>(opts: PopoverOptions<T>) => Promise<HTMLIonPopoverElement>`
+### `create<T extends ComponentRef>(options: import("/Users/trik/Projects/gnucoop/gic/core/node_modules/@ionic/core/dist/types/interface").PopoverOptions<T>) => Promise<HTMLGicPopoverElement>`
 
 Create a popover overlay with popover options.
 
 #### Returns
 
-Type: `Promise<HTMLIonPopoverElement>`
+Type: `Promise<HTMLGicPopoverElement>`
 
 
 
@@ -47,13 +49,13 @@ Type: `Promise<boolean>`
 
 
 
-### `getTop() => Promise<HTMLIonPopoverElement | undefined>`
+### `getTop() => Promise<HTMLGicPopoverElement | undefined>`
 
 Get the most recently opened popover overlay.
 
 #### Returns
 
-Type: `Promise<HTMLIonPopoverElement | undefined>`
+Type: `Promise<HTMLGicPopoverElement | undefined>`
 
 
 

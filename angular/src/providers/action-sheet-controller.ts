@@ -6,7 +6,7 @@ import { OverlayBaseController } from '../util/overlay';
 @Injectable({
   providedIn: 'root',
 })
-export class ActionSheetController extends OverlayBaseController<ActionSheetOptions, HTMLIonActionSheetElement> {
+export class ActionSheetController extends OverlayBaseController<ActionSheetOptions, HTMLGicActionSheetElement> {
   constructor() {
     super(actionSheetController);
   }

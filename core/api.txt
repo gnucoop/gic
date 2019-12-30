@@ -2,13 +2,12 @@
 gic-action-sheet,scoped
 gic-action-sheet,prop,animated,boolean,true,false,false
 gic-action-sheet,prop,backdropDismiss,boolean,true,false,false
-gic-action-sheet,prop,buttons,(string | ActionSheetButton)[],undefined,true,false
+gic-action-sheet,prop,buttons,(string | ActionSheetButton)[],[],false,false
 gic-action-sheet,prop,cssClass,string | string[] | undefined,undefined,false,false
 gic-action-sheet,prop,enterAnimation,((Animation: Animation, baseEl: any, opts?: any) => Promise<Animation>) | undefined,undefined,false,false
 gic-action-sheet,prop,header,string | undefined,undefined,false,false
 gic-action-sheet,prop,keyboardClose,boolean,true,false,false
 gic-action-sheet,prop,leaveAnimation,((Animation: Animation, baseEl: any, opts?: any) => Promise<Animation>) | undefined,undefined,false,false
-gic-action-sheet,prop,mode,"ios" | "md",undefined,false,false
 gic-action-sheet,prop,searchBar,boolean,false,false,false
 gic-action-sheet,prop,searchString,null | string | undefined,'',false,false
 gic-action-sheet,prop,subHeader,string | undefined,undefined,false,false
@@ -34,9 +33,9 @@ gic-action-sheet,css-prop,--min-width
 gic-action-sheet,css-prop,--width
 
 gic-action-sheet-controller,none
-gic-action-sheet-controller,method,create,create(opts: ActionSheetOptions) => Promise<HTMLIonActionSheetElement>
+gic-action-sheet-controller,method,create,create(options: ActionSheetOptions) => Promise<HTMLGicActionSheetElement>
 gic-action-sheet-controller,method,dismiss,dismiss(data?: any, role?: string | undefined, id?: string | undefined) => Promise<boolean>
-gic-action-sheet-controller,method,getTop,getTop() => Promise<HTMLIonActionSheetElement | undefined>
+gic-action-sheet-controller,method,getTop,getTop() => Promise<HTMLGicActionSheetElement | undefined>
 
 gic-alert,scoped
 gic-alert,prop,animated,boolean,true,false,false
@@ -72,9 +71,9 @@ gic-alert,css-prop,--min-width
 gic-alert,css-prop,--width
 
 gic-alert-controller,none
-gic-alert-controller,method,create,create(opts: AlertOptions) => Promise<HTMLIonAlertElement>
+gic-alert-controller,method,create,create(options: AlertOptions) => Promise<HTMLGicAlertElement>
 gic-alert-controller,method,dismiss,dismiss(data?: any, role?: string | undefined, id?: string | undefined) => Promise<boolean>
-gic-alert-controller,method,getTop,getTop() => Promise<HTMLIonAlertElement | undefined>
+gic-alert-controller,method,getTop,getTop() => Promise<HTMLGicAlertElement | undefined>
 
 gic-autocomplete,shadow
 gic-autocomplete,prop,interfaceOptions,any,{},false,false
@@ -116,9 +115,9 @@ gic-popover,css-prop,--min-width
 gic-popover,css-prop,--width
 
 gic-popover-controller,none
-gic-popover-controller,method,create,create<T extends ComponentRef>(opts: PopoverOptions<T>) => Promise<HTMLIonPopoverElement>
+gic-popover-controller,method,create,create<T extends ComponentRef>(options: import("/Users/trik/Projects/gnucoop/gic/core/node_modules/@ionic/core/dist/types/interface").PopoverOptions<T>) => Promise<HTMLGicPopoverElement>
 gic-popover-controller,method,dismiss,dismiss(data?: any, role?: string | undefined, id?: string | undefined) => Promise<boolean>
-gic-popover-controller,method,getTop,getTop() => Promise<HTMLIonPopoverElement | undefined>
+gic-popover-controller,method,getTop,getTop() => Promise<HTMLGicPopoverElement | undefined>
 
 gic-select,shadow
 gic-select,prop,cancelText,string,'Cancel',false,false

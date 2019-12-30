@@ -19,9 +19,9 @@ const createController = <Opts extends object, HTMLElm extends any>(tagName: str
   };
 };
 
-export const alertController = /*@__PURE__*/createController<AlertOptions, HTMLIonAlertElement>('gic-alert');
-export const actionSheetController = /*@__PURE__*/createController<ActionSheetOptions, HTMLIonActionSheetElement>('gic-action-sheet');
-export const popoverController = /*@__PURE__*/createController<PopoverOptions, HTMLIonPopoverElement>('gic-popover');
+export const alertController = /*@__PURE__*/createController<AlertOptions, HTMLGicAlertElement>('gic-alert');
+export const actionSheetController = /*@__PURE__*/createController<ActionSheetOptions, HTMLGicActionSheetElement>('gic-action-sheet');
+export const popoverController = /*@__PURE__*/createController<PopoverOptions, HTMLGicPopoverElement>('gic-popover');
 
 export const createOverlay = <T extends HTMLIonOverlayElement>(tagName: string, opts: object | undefined): Promise<T> => {
   return customElements.whenDefined(tagName).then(() => {
@@ -44,6 +44,16 @@ export const createOverlay = <T extends HTMLIonOverlayElement>(tagName: string, 
 
     return element.componentOnReady() as any;
   });
+};
+
+export const prepareOverlay = <T extends HTMLIonOverlayElement>(el: T) => {
+  const doc = document;
+  connectListeners(doc);
+  const overlayIndex = lastId++;
+  el.overlayIndex = overlayIndex;
+  if (!el.hasAttribute('id')) {
+    el.id = `ion-overlay-${overlayIndex}`;
+  }
 };
 
 export const connectListeners = (doc: Document) => {

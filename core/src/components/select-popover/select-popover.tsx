@@ -1,7 +1,9 @@
-import { Cell, Mode } from '@ionic/core';
-import { Component, ComponentInterface, Listen, Prop, Watch, h } from '@stencil/core';
+import { Cell } from '@ionic/core';
+import { Component, ComponentInterface, Host, Listen, Prop, Watch, h } from '@stencil/core';
 
+import { getGicMode } from '../../global/gic-global';
 import { SelectPopoverOption } from '../../interface';
+import { safeCall } from '../../utils/overlays';
 
 /**
  * @internal
@@ -13,8 +15,6 @@ import { SelectPopoverOption } from '../../interface';
 })
 export class SelectPopover implements ComponentInterface {
 
-  mode!: Mode;
-
   /** Header text for the popover */
   @Prop() header?: string;
 
@@ -25,7 +25,7 @@ export class SelectPopover implements ComponentInterface {
   @Prop() message?: string;
 
   /** Array of options for the popover */
-  @Prop({ mutable: true }) options: SelectPopoverOption[] = [];
+  @Prop() options: SelectPopoverOption[] = [];
 
   /**
    * If `true`, the select popover will show a searchbar for radios and checkboxes
@@ -47,14 +47,13 @@ export class SelectPopover implements ComponentInterface {
   @Listen('ionSelect')
   onSelect(ev: any) {
     const option = this.options.find(o => o.value === ev.target.value);
-    if (option && option.handler) {
-      option.handler();
+    if (option) {
+      safeCall(option.handler);
     }
   }
 
-  @Watch('options')
   @Watch('searchString')
-  optionsChanged() {
+  searchStringChanged() {
     const options = this.options;
     const search = (this.searchString || '').trim();
     const regex = new RegExp(search, 'i');
@@ -64,7 +63,7 @@ export class SelectPopover implements ComponentInterface {
   }
 
   componentWillLoad() {
-    this.optionsChanged();
+    this.searchStringChanged();
   }
 
   private onSearchChange = (ev: Event) => {
@@ -118,50 +117,53 @@ export class SelectPopover implements ComponentInterface {
   }
 
   render() {
-    const hydClass = 'sc-gic-alert-' + this.mode;
+    const mode = getGicMode(this);
+    const hydClass = 'sc-gic-alert-' + mode;
     const radioTemplate = ``
       + `<ion-item class="${hydClass}">`
         + `<ion-label class="${hydClass}"></ion-label>`
         + `<ion-radio class="${hydClass}"></ion-radio>`
       + `</ion-item>`;
     return (
-      <ion-list>
-        {this.header !== undefined && <ion-list-header>{this.header}</ion-list-header>}
-        { (this.subHeader !== undefined || this.message !== undefined) &&
-          <ion-item>
-            <ion-label text-wrap>
-              {this.subHeader !== undefined && <h3>{this.subHeader}</h3>}
-              {this.message !== undefined && <p>{this.message}</p>}
-            </ion-label>
-          </ion-item>
-        }
-        {this.searchBar && this.renderSearchBar()}
-        <ion-radio-group>
-        {this.useVirtualScroll
-        ?
-        <ion-content class="select-popover-vs">
-          <ion-virtual-scroll
-            items={this.processedOptions}
-            nodeRender={(el, cell) => this.renderRadioNode(el, cell)}
-          >
-            <template innerHTML={radioTemplate}></template>
-          </ion-virtual-scroll>
-        </ion-content>
-        : this.processedOptions.map(option =>
-          <ion-item>
-            <ion-label>
-              {option.text}
-            </ion-label>
-            <ion-radio
-              checked={option.checked}
-              value={option.value}
-              disabled={option.disabled}
+      <Host class={mode}>
+        <ion-list>
+          {this.header !== undefined && <ion-list-header>{this.header}</ion-list-header>}
+          { (this.subHeader !== undefined || this.message !== undefined) &&
+            <ion-item>
+              <ion-label class="ion-text-wrap">
+                {this.subHeader !== undefined && <h3>{this.subHeader}</h3>}
+                {this.message !== undefined && <p>{this.message}</p>}
+              </ion-label>
+            </ion-item>
+          }
+          {this.searchBar && this.renderSearchBar()}
+          <ion-radio-group>
+          {this.useVirtualScroll
+          ?
+          <ion-content class="select-popover-vs">
+            <ion-virtual-scroll
+              items={this.processedOptions}
+              nodeRender={(el, cell) => this.renderRadioNode(el, cell)}
             >
-            </ion-radio>
-          </ion-item>
-        )}
-        </ion-radio-group>
-      </ion-list>
+              <template innerHTML={radioTemplate}></template>
+            </ion-virtual-scroll>
+          </ion-content>
+          : this.processedOptions.map(option =>
+              <ion-item>
+                <ion-label>
+                  {option.text}
+                </ion-label>
+                <ion-radio
+                  checked={option.checked}
+                  value={option.value}
+                  disabled={option.disabled}
+                >
+                </ion-radio>
+              </ion-item>
+            )}
+          </ion-radio-group>
+        </ion-list>
+      </Host>
     );
   }
 }

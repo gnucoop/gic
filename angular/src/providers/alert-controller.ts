@@ -6,7 +6,7 @@ import { OverlayBaseController } from '../util/overlay';
 @Injectable({
   providedIn: 'root',
 })
-export class AlertController extends OverlayBaseController<AlertOptions, HTMLIonAlertElement> {
+export class AlertController extends OverlayBaseController<AlertOptions, HTMLGicAlertElement> {
   constructor() {
     super(alertController);
   }
