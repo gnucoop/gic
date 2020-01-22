@@ -5,7 +5,9 @@
     "flatModuleOutFile": "core.js",
     "flatModuleId": "@gic/angular",
     "skipTemplateCodegen": true,
-    "fullTemplateTypeCheck": false
+    "fullTemplateTypeCheck": false,
+    "enableResourceInlining": true,
+    "enableIvy": false
   },
   "compilerOptions": {
     "alwaysStrict": true,
@@ -32,12 +34,8 @@
     "target": "es2015",
     "baseUrl": ".",
     "paths": {
-      "@gic/core/hydrate": [
-        "../core/hydrate"
-      ],
-      "@gic/core": [
-        "../core"
-      ]
+      "@gic/core/hydrate": ["../core/hydrate"],
+      "@gic/core": ["../core"]
     }
   },
   "exclude": ["node_modules", "src/schematics"],

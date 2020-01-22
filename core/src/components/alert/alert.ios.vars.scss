@@ -1,5 +1,11 @@
-@import "../../../node_modules/@ionic/core/dist/collection/themes/ionic.globals.ios";
-@import "../../../node_modules/@ionic/core/dist/collection/components/item/item.ios.vars";
+@import "../../themes/gic.globals.ios";
+
+// iOS Item
+// --------------------------------------------------
+
+/// @prop - Minimum height of the item
+$item-ios-min-height:                        44px !default;
+
 
 // iOS Alert
 // --------------------------------------------------

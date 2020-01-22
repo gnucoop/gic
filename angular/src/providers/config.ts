@@ -42,12 +42,12 @@ export class Config {
 
 export const ConfigToken = new InjectionToken<any>('USERCONFIG');
 
-function getConfig(): CoreConfig | null {
+const getConfig = (): CoreConfig | null => {
   if (typeof (window as any) !== 'undefined') {
-    const Gic = (window as GicWindow).Gic;
+    const Gic = (window as any as GicWindow).Gic;
     if (Gic && Gic.config) {
       return Gic.config;
     }
   }
   return null;
-}
+};

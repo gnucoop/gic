@@ -19,11 +19,13 @@
 
 ### Depends on
 
+- ion-input
 - [gic-popover-controller](../popover-controller)
 
 ### Graph
 ```mermaid
 graph TD;
+  gic-autocomplete --> ion-input
   gic-autocomplete --> gic-popover-controller
   style gic-autocomplete fill:#f9f,stroke:#333,stroke-width:4px
 ```

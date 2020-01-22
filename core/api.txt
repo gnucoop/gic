@@ -4,10 +4,10 @@ gic-action-sheet,prop,animated,boolean,true,false,false
 gic-action-sheet,prop,backdropDismiss,boolean,true,false,false
 gic-action-sheet,prop,buttons,(string | ActionSheetButton)[],[],false,false
 gic-action-sheet,prop,cssClass,string | string[] | undefined,undefined,false,false
-gic-action-sheet,prop,enterAnimation,((Animation: Animation, baseEl: any, opts?: any) => Promise<Animation>) | undefined,undefined,false,false
+gic-action-sheet,prop,enterAnimation,((baseEl: any, opts?: any) => Animation) | undefined,undefined,false,false
 gic-action-sheet,prop,header,string | undefined,undefined,false,false
 gic-action-sheet,prop,keyboardClose,boolean,true,false,false
-gic-action-sheet,prop,leaveAnimation,((Animation: Animation, baseEl: any, opts?: any) => Promise<Animation>) | undefined,undefined,false,false
+gic-action-sheet,prop,leaveAnimation,((baseEl: any, opts?: any) => Animation) | undefined,undefined,false,false
 gic-action-sheet,prop,searchBar,boolean,false,false,false
 gic-action-sheet,prop,searchString,null | string | undefined,'',false,false
 gic-action-sheet,prop,subHeader,string | undefined,undefined,false,false
@@ -42,11 +42,11 @@ gic-alert,prop,animated,boolean,true,false,false
 gic-alert,prop,backdropDismiss,boolean,true,false,false
 gic-alert,prop,buttons,(string | AlertButton)[],[],false,false
 gic-alert,prop,cssClass,string | string[] | undefined,undefined,false,false
-gic-alert,prop,enterAnimation,((Animation: Animation, baseEl: any, opts?: any) => Promise<Animation>) | undefined,undefined,false,false
+gic-alert,prop,enterAnimation,((baseEl: any, opts?: any) => Animation) | undefined,undefined,false,false
 gic-alert,prop,header,string | undefined,undefined,false,false
 gic-alert,prop,inputs,AlertInput[],[],false,false
 gic-alert,prop,keyboardClose,boolean,true,false,false
-gic-alert,prop,leaveAnimation,((Animation: Animation, baseEl: any, opts?: any) => Promise<Animation>) | undefined,undefined,false,false
+gic-alert,prop,leaveAnimation,((baseEl: any, opts?: any) => Animation) | undefined,undefined,false,false
 gic-alert,prop,message,string | undefined,undefined,false,false
 gic-alert,prop,mode,"ios" | "md",undefined,false,false
 gic-alert,prop,searchBar,boolean,false,false,false
@@ -90,10 +90,10 @@ gic-popover,prop,backdropDismiss,boolean,true,false,false
 gic-popover,prop,component,Function | HTMLElement | null | string,undefined,true,false
 gic-popover,prop,componentProps,undefined | { [key: string]: any; },undefined,false,false
 gic-popover,prop,cssClass,string | string[] | undefined,undefined,false,false
-gic-popover,prop,enterAnimation,((Animation: Animation, baseEl: any, opts?: any) => Promise<Animation>) | undefined,undefined,false,false
+gic-popover,prop,enterAnimation,((baseEl: any, opts?: any) => Animation) | undefined,undefined,false,false
 gic-popover,prop,event,any,undefined,false,false
 gic-popover,prop,keyboardClose,boolean,true,false,false
-gic-popover,prop,leaveAnimation,((Animation: Animation, baseEl: any, opts?: any) => Promise<Animation>) | undefined,undefined,false,false
+gic-popover,prop,leaveAnimation,((baseEl: any, opts?: any) => Animation) | undefined,undefined,false,false
 gic-popover,prop,mode,"ios" | "md",undefined,false,false
 gic-popover,prop,showBackdrop,boolean,true,false,false
 gic-popover,prop,translucent,boolean,false,false,false

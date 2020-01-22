@@ -124,6 +124,8 @@ export class SelectPopover implements ComponentInterface {
         + `<ion-label class="${hydClass}"></ion-label>`
         + `<ion-radio class="${hydClass}"></ion-radio>`
       + `</ion-item>`;
+    const checkedOption = this.options.find(o => o.checked);
+    const checkedValue = checkedOption ? checkedOption.value : undefined;
     return (
       <Host class={mode}>
         <ion-list>
@@ -137,7 +139,7 @@ export class SelectPopover implements ComponentInterface {
             </ion-item>
           }
           {this.searchBar && this.renderSearchBar()}
-          <ion-radio-group>
+          <ion-radio-group value={checkedValue}>
           {this.useVirtualScroll
           ?
           <ion-content class="select-popover-vs">
@@ -154,7 +156,6 @@ export class SelectPopover implements ComponentInterface {
                   {option.text}
                 </ion-label>
                 <ion-radio
-                  checked={option.checked}
                   value={option.value}
                   disabled={option.disabled}
                 >

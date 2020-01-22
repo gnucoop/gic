@@ -1,5 +1,11 @@
-@import "../../../node_modules/@ionic/core/dist/collection/themes/ionic.globals.md";
-@import "../../../node_modules/@ionic/core/dist/collection/components/item/item.md.vars";
+@import "../../themes/gic.globals.md";
+
+// Material Design Item
+// --------------------------------------------------
+
+/// @prop - Minimum height of the item
+$item-md-min-height:                        48px !default;
+
 
 // Material Design Alert
 // --------------------------------------------------

@@ -1,5 +1,20 @@
-@import "../../../node_modules/@ionic/core/dist/collection/themes/ionic.globals.ios";
-@import "../../../node_modules/@ionic/core/dist/collection/components/item/item.ios.vars";
+@import "../../themes/gic.globals.ios";
+
+// iOS Item
+// --------------------------------------------------
+
+/// @prop - Padding top for the item content
+$item-ios-padding-top:                       10px !default;
+
+/// @prop - Padding end for the item content
+$item-ios-padding-end:                       20px !default;
+
+/// @prop - Padding bottom for the item content
+$item-ios-padding-bottom:                    10px !default;
+
+/// @prop - Padding start for the item content
+$item-ios-padding-start:                     20px !default;
+
 
 // iOS Select
 // --------------------------------------------------

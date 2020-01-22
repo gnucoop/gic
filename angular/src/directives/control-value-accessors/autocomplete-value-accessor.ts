@@ -21,7 +21,7 @@ export class AutocompleteValueAccessor extends ValueAccessor {
   }
 
   @HostListener('ionChange', ['$event.target.value'])
-  _handleChangeEvent(value: any) {
-    this.handleChangeEvent(value);
+  _handleChangeEvent(el: any) {
+    this.handleChangeEvent(el, el.value);
   }
 }
