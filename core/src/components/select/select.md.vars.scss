@@ -1,5 +1,17 @@
-@import "../../../node_modules/@ionic/core/dist/collection/themes/ionic.globals.md";
-@import "../../../node_modules/@ionic/core/dist/collection/components/item/item.md.vars";
+@import "../../themes/gic.globals.md";
+
+// Material Design Item
+// --------------------------------------------------
+
+/// @prop - Padding top for the item content
+$item-md-padding-top:                       10px !default;
+
+/// @prop - Padding bottom for the item content
+$item-md-padding-bottom:                    11px !default;
+
+/// @prop - Padding start for the item content
+$item-md-padding-start:                     16px !default;
+
 
 // Material Design Select
 // --------------------------------------------------

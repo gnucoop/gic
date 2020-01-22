@@ -1,11 +1,5 @@
-import { Animation, AnimationBuilder, NavDirection, NavOptions } from '@ionic/core';
+import { Animation, AnimationBuilder, LIFECYCLE_DID_ENTER, LIFECYCLE_DID_LEAVE, LIFECYCLE_WILL_ENTER, LIFECYCLE_WILL_LEAVE, NavDirection, NavOptions } from '@ionic/core';
 import { writeTask } from '@stencil/core';
-
-export const LIFECYCLE_WILL_ENTER = 'ionViewWillEnter';
-export const LIFECYCLE_DID_ENTER = 'ionViewDidEnter';
-export const LIFECYCLE_WILL_LEAVE = 'ionViewWillLeave';
-export const LIFECYCLE_DID_LEAVE = 'ionViewDidLeave';
-export const LIFECYCLE_WILL_UNLOAD = 'ionViewWillUnload';
 
 const iosTransitionAnimation = () => import('./ios.transition');
 const mdTransitionAnimation = () => import('./md.transition');
@@ -47,6 +41,7 @@ const beforeTransition = (opts: TransitionOptions) => {
 
 const runTransition = async (opts: TransitionOptions): Promise<TransitionResult> => {
   const animationBuilder = await getAnimationBuilder(opts);
+
   const ani = (animationBuilder)
     ? animation(animationBuilder, opts)
     : noAnimation(opts); // fast path for no animation
@@ -67,31 +62,37 @@ const getAnimationBuilder = async (opts: TransitionOptions): Promise<AnimationBu
   if (!opts.leavingEl || !opts.animated || opts.duration === 0) {
     return undefined;
   }
+
   if (opts.animationBuilder) {
     return opts.animationBuilder;
   }
-  const builder = (opts.mode === 'ios')
+
+  const getAnimation = (opts.mode === 'ios')
     ? (await iosTransitionAnimation()).iosTransitionAnimation
     : (await mdTransitionAnimation()).mdTransitionAnimation;
 
-  return builder;
+  return getAnimation;
 };
 
 const animation = async (animationBuilder: AnimationBuilder, opts: TransitionOptions): Promise<TransitionResult> => {
   await waitForReady(opts, true);
 
-  const trans = await import('../animation').then(mod => mod.create(animationBuilder, opts.baseEl, opts));
+  const trans = animationBuilder(opts.baseEl, opts);
+
   fireWillEvents(opts.enteringEl, opts.leavingEl);
-  await playTransition(trans, opts);
+
+  const didComplete = await playTransition(trans, opts);
+
   if (opts.progressCallback) {
     opts.progressCallback(undefined);
   }
 
-  if (trans.hasCompleted) {
+  if (didComplete) {
     fireDidEvents(opts.enteringEl, opts.leavingEl);
   }
+
   return {
-    hasCompleted: trans.hasCompleted,
+    hasCompleted: didComplete,
     animation: trans
   };
 };
@@ -130,15 +131,18 @@ const notifyViewReady = async (viewIsReady: undefined | ((enteringEl: HTMLElemen
   }
 };
 
-const playTransition = (trans: Animation, opts: TransitionOptions): Promise<Animation> => {
+const playTransition = (trans: Animation, opts: TransitionOptions): Promise<boolean> => {
   const progressCallback = opts.progressCallback;
-  const promise = new Promise<Animation>(resolve => trans.onFinish(resolve));
+
+  const promise = new Promise<boolean>(resolve => {
+    trans.onFinish((currentStep: any) => resolve(currentStep === 1));
+  });
 
   // cool, let's do this, start the transition
   if (progressCallback) {
     // this is a swipe to go back, just get the transition progress ready
     // kick off the swipe animation start
-    trans.progressStart();
+    trans.progressStart(true);
     progressCallback(trans);
 
   } else {
@@ -215,6 +219,19 @@ const setZIndex = (
   if (leavingEl !== undefined) {
     leavingEl.style.zIndex = '100';
   }
+};
+
+export const getIonPageElement = (element: HTMLElement) => {
+  if (element.classList.contains('ion-page')) {
+    return element;
+  }
+
+  const ionPage = element.querySelector(':scope > .ion-page, :scope > ion-nav, :scope > ion-tabs');
+  if (ionPage) {
+    return ionPage;
+  }
+  // idk, return the original element so at least something animates and we don't have a null pointer
+  return element;
 };
 
 export interface TransitionOptions extends NavOptions {

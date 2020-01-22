@@ -1,6 +1,7 @@
 const fs = require('fs-extra');
 const path = require('path');
 const execa = require('execa');
+const inquirer = require('inquirer');
 const Listr = require('listr');
 const semver = require('semver');
 const tc = require('turbocolor');
@@ -32,37 +33,79 @@ function projectPath(project) {
   return path.join(rootDir, project);
 }
 
+async function askTag() {
+  const prompts = [
+    {
+      type: 'list',
+      name: 'tag',
+      message: 'Select npm tag or specify a new tag',
+      choices: ['latest', 'next']
+        .concat([
+          new inquirer.Separator(),
+          {
+            name: 'Other (specify)',
+            value: null
+          }
+        ])
+    },
+    {
+      type: 'confirm',
+      name: 'confirm',
+      message: answers => {
+        return `Will publish to ${tc.cyan(answers.tag)}. Continue?`;
+      }
+    }
+  ];
+
+  const { tag, confirm } = await inquirer.prompt(prompts);
+  return { tag, confirm };
+}
+
 function checkGit(tasks) {
   tasks.push(
     {
       title: 'Check current branch',
-      task: () => execa.stdout('git', ['symbolic-ref', '--short', 'HEAD']).then(branch => {
-        if (branch.indexOf('release') === -1 && branch.indexOf('hotfix') === -1) {
-          throw new Error(`Must be on a "release" or "hotfix" branch.`);
-        }
-      })
+      task: () =>
+        execa.stdout('git', ['symbolic-ref', '--short', 'HEAD']).then(branch => {
+          if (branch.indexOf('release') === -1 && branch.indexOf('hotfix') === -1) {
+            throw new Error(`Must be on a "release" or "hotfix" branch.`);
+          }
+        })
     },
     {
       title: 'Check local working tree',
-      task: () => execa.stdout('git', ['status', '--porcelain']).then(status => {
-        if (status !== '') {
-          throw new Error(`Unclean working tree. Commit or stash changes first.`);
-        }
-      })
+      task: () =>
+        execa.stdout('git', ['status', '--porcelain']).then(status => {
+          if (status !== '') {
+            throw new Error(`Unclean working tree. Commit or stash changes first.`);
+          }
+        })
     },
     {
       title: 'Check remote history',
-      task: () => execa.stdout('git', ['rev-list', '--count', '--left-only', '@{u}...HEAD']).then(result => {
-        if (result !== '0') {
-          throw new Error(`Remote history differs. Please pull changes.`);
-        }
-      })
+      task: () =>
+        execa.stdout('git', ['rev-list', '--count', '--left-only', '@{u}...HEAD']).then(result => {
+          if (result !== '0') {
+            throw new Error(`Remote history differs. Please pull changes.`);
+          }
+        })
     }
   );
 }
 
-const isValidVersion = input => Boolean(semver.valid(input));
+function checkTestDist(tasks) {
+  tasks.push({
+    title: 'Check dist folders for required files',
+    task: () =>
+      execa.stdout('node', ['.scripts/test-dist.js']).then(status => {
+        if (status.indexOf('✅ test.dist') === -1) {
+          throw new Error(`Test Dist did not find some required files`);
+        }
+      })
+  });
+}
 
+const isValidVersion = input => Boolean(semver.valid(input));
 
 function preparePackage(tasks, package, version, install) {
   const projectRoot = projectPath(package);
@@ -74,7 +117,9 @@ function preparePackage(tasks, package, version, install) {
       title: `${pkg.name}: validate new version`,
       task: () => {
         if (!isVersionGreater(pkg.version, version)) {
-          throw new Error(`New version \`${version}\` should be higher than current version \`${pkg.version}\``);
+          throw new Error(
+            `New version \`${version}\` should be higher than current version \`${pkg.version}\``
+          );
         }
       }
     });
@@ -97,32 +142,27 @@ function preparePackage(tasks, package, version, install) {
       });
     }
 
+    // Lint, Test, Bump Core dependency
     if (version) {
       projectTasks.push({
         title: `${pkg.name}: lint`,
-        task: () => execa('yarn', ['run', 'lint'], { cwd: projectRoot })
-      });
-      projectTasks.push({
-        title: `${pkg.name}: update gic/core dep to ${version}`,
-        task: () => {
-          updateDependency(pkg, "@gic/core", version);
-          writePkg(package, pkg);
-        }
-      });
-      projectTasks.push({
-        title: `${pkg.name}: test`,
-        task: () => execa('npm', ['test'], { cwd: projectRoot })
+        task: () => execa('yarn', ['lint'], { cwd: projectRoot })
       });
     }
 
+    // Build
     projectTasks.push({
       title: `${pkg.name}: build`,
-      task: () => execa('yarn', ['run', 'build'], { cwd: projectRoot })
+      task: () => execa('yarn', ['build'], { cwd: projectRoot })
     });
-    if (package === 'core') {
+
+    if (version) {
       projectTasks.push({
-        title: `${pkg.name}: yarn link`,
-        task: () => execa('yarn', ['link'], { cwd: projectRoot })
+        title: `${pkg.name}: update gic/core dep to ${version}`,
+        task: () => {
+          updateDependency(pkg, '@gic/core', version);
+          writePkg(package, pkg);
+        }
       });
     }
   }
@@ -133,7 +173,6 @@ function preparePackage(tasks, package, version, install) {
     task: () => new Listr(projectTasks)
   });
 }
-
 
 function prepareDevPackage(tasks, package, version) {
   const projectRoot = projectPath(package);
@@ -152,14 +191,14 @@ function prepareDevPackage(tasks, package, version) {
     projectTasks.push({
       title: `${pkg.name}: update gic/core dep to ${version}`,
       task: () => {
-        updateDependency(pkg, "@gic/core", version);
+        updateDependency(pkg, '@gic/core', version);
         writePkg(package, pkg);
       }
     });
 
     projectTasks.push({
       title: `${pkg.name}: build`,
-      task: () => execa('yarn', ['run', 'build'], { cwd: projectRoot })
+      task: () => execa('yarn', ['build'], { cwd: projectRoot })
     });
 
     if (package === 'core') {
@@ -181,33 +220,60 @@ function updatePackageVersions(tasks, packages, version) {
   packages.forEach(package => {
     updatePackageVersion(tasks, package, version);
 
-    tasks.push(
-      {
+    tasks.push({
+      title: `${package} update @gic/core dependency, if present ${tc.dim(`(${version})`)}`,
+      task: async () => {
+        if (package !== 'core') {
+          const pkg = readPkg(package);
+          updateDependency(pkg, '@gic/core', version);
+          writePkg(package, pkg);
+        }
+      }
+    });
+
+    // angular need to update their dist versions
+    if (package === 'angular') {
+      const distPackage = path.join(package, 'dist');
+
+      updatePackageVersion(tasks, distPackage, version);
+
+      tasks.push({
         title: `${package} update @gic/core dependency, if present ${tc.dim(`(${version})`)}`,
         task: async () => {
-          if (package !== 'core') {
-            const pkg = readPkg(package);
-            updateDependency(pkg, '@gic/core', version);
-            writePkg(package, pkg);
-          }
-        },
-      }
-    )
+          const pkg = readPkg(distPackage);
+          updateDependency(pkg, '@gic/core', version);
+          writePkg(distPackage, pkg);
+        }
+      });
+    }
   });
 }
-
 
 function updatePackageVersion(tasks, package, version) {
   const projectRoot = projectPath(package);
 
-  tasks.push(
-    {
-      title: `${package}: update package.json ${tc.dim(`(${version})`)}`,
-      task: async () => {
-        await execa('npm', ['version', version], { cwd: projectRoot });
-      }
+  tasks.push({
+    title: `${package}: update package.json ${tc.dim(`(${version})`)}`,
+    task: async () => {
+      await execa('npm', ['version', version], { cwd: projectRoot });
     }
-  );
+  });
+}
+
+function copyPackageToDist(tasks, packages) {
+  packages.forEach(package => {
+    const projectRoot = projectPath(package);
+
+    // angular is the only packages that publish dist
+    if (package !== 'angular') {
+      return;
+    }
+
+    tasks.push({
+      title: `${package}: Copy package.json to dist`,
+      task: () => execa('node', ['copy-package.js', package], { cwd: path.join(rootDir, '.scripts') })
+    });
+  });
 }
 
 function publishPackages(tasks, packages, version, tag = 'latest') {
@@ -229,15 +295,19 @@ function publishPackages(tasks, packages, version, tag = 'latest') {
     });
   });
 
-  // next publish
+  // Publish
   packages.forEach(package => {
-    const projectRoot = projectPath(package);
+    let projectRoot = projectPath(package);
+
+    if (package === 'angular') {
+      projectRoot = path.join(projectRoot, 'dist')
+    }
 
     tasks.push({
       title: `${package}: publish to ${tag} tag`,
       task: async () => {
         await execa('yarn', ['publish', '--tag', tag], { cwd: projectRoot });
-      },
+      }
     });
   });
 }
@@ -248,6 +318,9 @@ function updateDependency(pkg, dependency, version) {
   }
   if (pkg.devDependencies && pkg.devDependencies[dependency]) {
     pkg.devDependencies[dependency] = version;
+  }
+  if (pkg.peerDependencies && pkg.peerDependencies[dependency]) {
+    pkg.peerDependencies[dependency] = version;
   }
 }
 
@@ -261,15 +334,18 @@ function isVersionGreater(oldVersion, newVersion) {
 function copyCDNLoader(tasks, version) {
   tasks.push({
     title: `Copy CDN loader`,
-    task: () => execa('node', ['copy-cdn-loader.js', version], { cwd: path.join(rootDir, 'core', 'scripts') }),
+    task: () => execa('node', ['copy-cdn-loader.js', version], { cwd: path.join(rootDir, 'core', 'scripts') })
   });
 }
 
 module.exports = {
+  checkTestDist,
   checkGit,
+  askTag,
   isValidVersion,
   isVersionGreater,
   copyCDNLoader,
+  copyPackageToDist,
   packages,
   packagePath,
   prepareDevPackage,
@@ -281,5 +357,5 @@ module.exports = {
   updateDependency,
   updatePackageVersion,
   updatePackageVersions,
-  writePkg,
+  writePkg
 };

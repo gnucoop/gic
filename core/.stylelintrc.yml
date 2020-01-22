@@ -9,9 +9,9 @@ ignoreFiles:
   - src/css/text-alignment.scss
   - src/css/display.scss
   - src/components/slides/slides-vendor.scss
-  - src/themes/ionic.mixins.scss
-  - src/themes/ionic.functions.color.scss
-  - src/themes/ionic.functions.string.scss
+  - src/themes/gic.mixins.scss
+  - src/themes/gic.functions.color.scss
+  - src/themes/gic.functions.string.scss
 
 indentation: 2
 
