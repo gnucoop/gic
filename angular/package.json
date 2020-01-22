@@ -1,6 +1,6 @@
 {
   "name": "@gic/angular",
-  "version": "4.11.3",
+  "version": "5.0.0-beta.0",
   "description": "Angular specific wrappers for @gic/core",
   "keywords": [
     "ionic",
@@ -46,7 +46,7 @@
     "css/"
   ],
   "dependencies": {
-    "@gic/core": "4.11.3",
+    "@gic/core": "5.0.0-beta.0",
     "tslib": "^1.9.3"
   },
   "peerDependencies": {
