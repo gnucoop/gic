@@ -40,10 +40,6 @@
     "tsc": "tsc -p .",
     "validate": "npm i && npm run lint && npm run test && npm run build"
   },
-  "files": [
-    "dist/",
-    "css/"
-  ],
   "dependencies": {
     "@gic/core": "5.0.0-beta.3",
     "tslib": "^1.9.3"
