@@ -1,3 +1,12 @@
+# [5.0.0-beta.3](https://github.com/gnucoop/gic/compare/v4.7.2...v5.0.0-beta.3) (2020-01-24)
+
+
+### Bug Fixes
+
+* bad import from ionic core ([2de8c24](https://github.com/gnucoop/gic/commit/2de8c2463f4605c46f50ccb18f6d93aa76e3068c))
+
+
+
 # [5.0.0-beta.2](https://github.com/gnucoop/gic/compare/v4.7.2...v5.0.0-beta.2) (2020-01-24)
 
 
