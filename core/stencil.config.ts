@@ -1,8 +1,8 @@
 import { Config } from '@stencil/core';
 import { sass } from '@stencil/sass';
 
-// @ts-ignore
 import { RollupExternalPlugin } from './rollup-external';
+// @ts-ignore
 import { apiSpecGenerator } from './scripts/api-spec-generator';
 
 export const config: Config = {
@@ -20,11 +20,13 @@ export const config: Config = {
   ],
   outputTargets: [
     {
+      type: 'docs-vscode',
+      file: 'dist/html.html-data.json',
+      sourceCodeBaseUrl: 'https://github.com/gnucoop/gic/tree/master/core/',
+    },
+    {
       type: 'dist',
-      esmLoaderPath: '../loader',
-      copy: [
-        { src: '**/*.scss' }
-      ]
+      esmLoaderPath: '../loader'
     },
     // {
     //   type: 'experimental-dist-module',

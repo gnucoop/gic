@@ -1,7 +1,7 @@
 {
   "angularCompilerOptions": {
     "annotateForClosureCompiler": true,
-    "strictMetadataEmit" : true,
+    "strictMetadataEmit": true,
     "flatModuleOutFile": "core.js",
     "flatModuleId": "@gic/angular",
     "skipTemplateCodegen": true,

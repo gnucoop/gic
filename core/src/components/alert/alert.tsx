@@ -304,7 +304,7 @@ export class Alert implements ComponentInterface, OverlayInterface {
   private onSearchChange = (ev: Event) => {
     const input = ev.target as HTMLIonInputElement | null;
     if (input) {
-      this.searchString = input.value || '';
+      this.searchString = typeof input.value === 'string' ? input.value : '';
     }
   }
 
