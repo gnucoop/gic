@@ -1,6 +1,6 @@
 {
   "name": "@gic/angular",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "Angular specific wrappers for @gic/core",
   "keywords": [
     "ionic",
@@ -41,7 +41,7 @@
     "validate": "npm i && npm run lint && npm run test && npm run build"
   },
   "dependencies": {
-    "@gic/core": "5.0.0",
+    "@gic/core": "5.0.1",
     "tslib": "^1.9.3"
   },
   "peerDependencies": {
