@@ -63,8 +63,7 @@
     "tslint-react": "^3.6.0"
   },
   "scripts": {
-    "postinstall": "node scripts/patch-stencil.js",
-    "build": "yarn clean && yarn build.css && stencil build --docs && yarn cdnloader",
+    "build": "yarn clean && yarn build.css && node scripts/patch-stencil.js && stencil build --docs && yarn cdnloader",
     "build.css": "yarn css.sass && yarn css.minify",
     "build.debug": "yarn clean && stencil build --debug",
     "build.docs.json": "stencil build --docs-json dist/docs.json",
