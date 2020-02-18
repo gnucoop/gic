@@ -93,36 +93,6 @@ Type: `Promise<void>`
 | `--width`      | Width of the alert          |
 
 
-## Dependencies
-
-### Depends on
-
-- ion-item
-- ion-icon
-- ion-input
-- ion-button
-- ion-ripple-effect
-- ion-content
-- ion-virtual-scroll
-- ion-backdrop
-
-### Graph
-```mermaid
-graph TD;
-  gic-alert --> ion-item
-  gic-alert --> ion-icon
-  gic-alert --> ion-input
-  gic-alert --> ion-button
-  gic-alert --> ion-ripple-effect
-  gic-alert --> ion-content
-  gic-alert --> ion-virtual-scroll
-  gic-alert --> ion-backdrop
-  ion-item --> ion-icon
-  ion-item --> ion-ripple-effect
-  ion-button --> ion-ripple-effect
-  style gic-alert fill:#f9f,stroke:#333,stroke-width:4px
-```
-
 ----------------------------------------------
 
 *Built with [StencilJS](https://stenciljs.com/)*

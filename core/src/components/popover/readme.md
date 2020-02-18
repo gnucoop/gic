@@ -181,19 +181,6 @@ Type: `Promise<void>`
 | `--width`      | Width of the popover          |
 
 
-## Dependencies
-
-### Depends on
-
-- ion-backdrop
-
-### Graph
-```mermaid
-graph TD;
-  gic-popover --> ion-backdrop
-  style gic-popover fill:#f9f,stroke:#333,stroke-width:4px
-```
-
 ----------------------------------------------
 
 *Built with [StencilJS](https://stenciljs.com/)*

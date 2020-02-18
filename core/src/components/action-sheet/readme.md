@@ -343,36 +343,6 @@ Type: `Promise<void>`
 | `--width`                | Width of the action sheet                       |
 
 
-## Dependencies
-
-### Depends on
-
-- ion-item
-- ion-icon
-- ion-input
-- ion-button
-- ion-backdrop
-- ion-content
-- ion-virtual-scroll
-- ion-ripple-effect
-
-### Graph
-```mermaid
-graph TD;
-  gic-action-sheet --> ion-item
-  gic-action-sheet --> ion-icon
-  gic-action-sheet --> ion-input
-  gic-action-sheet --> ion-button
-  gic-action-sheet --> ion-backdrop
-  gic-action-sheet --> ion-content
-  gic-action-sheet --> ion-virtual-scroll
-  gic-action-sheet --> ion-ripple-effect
-  ion-item --> ion-icon
-  ion-item --> ion-ripple-effect
-  ion-button --> ion-ripple-effect
-  style gic-action-sheet fill:#f9f,stroke:#333,stroke-width:4px
-```
-
 ----------------------------------------------
 
 *Built with [StencilJS](https://stenciljs.com/)*

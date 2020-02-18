@@ -4,7 +4,7 @@ const path = require('path');
 
 let prjDir = process.argv[2];
 if (!prjDir) {
-  throw new Error('local path required as last argument to "npm run build.link" command');
+  throw new Error('local path required as last argument to "yarn build.link" command');
 }
 prjDir = path.join(__dirname, '../../../', prjDir);
 
