@@ -136,7 +136,7 @@ export class AutoComplete implements ComponentInterface {
   onInput = (ev: Event) => {
     const input = ev.target as HTMLIonInputElement | null;
     if (input) {
-      this.searchValue = input.value || '';
+      this.searchValue = typeof input.value === 'string' ? input.value : '';
       if (this.options.indexOf(this.searchValue || '') === -1) {
         this.value = null;
       }
