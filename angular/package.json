@@ -24,8 +24,7 @@
     "url": "https://github.com/gnucoop/gic.git"
   },
   "scripts": {
-    "build": "npm run clean && npm run build.ng && npm run build.core && npm run clean-generated",
-    "build.core": "node scripts/build-core.js",
+    "build": "npm run clean && npm run build.ng && npm run clean-generated",
     "build.fesm": "rollup --config ./scripts/rollup.config.js",
     "build.link": "npm run build && node scripts/link-copy.js",
     "build.ng": "ng-packagr -p package.json",
