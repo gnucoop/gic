@@ -1,3 +1,12 @@
+## [5.0.2](https://github.com/gnucoop/gic/compare/v5.0.1...v5.0.2) (2020-05-11)
+
+
+### Bug Fixes
+
+* **angular:** add module generic definition in gic module forRoot ([ec686f5](https://github.com/gnucoop/gic/commit/ec686f51f7bc4dbbfe00321ab89115a857e40172))
+
+
+
 ## [5.0.1](https://github.com/gnucoop/gic/compare/v5.0.0...v5.0.1) (2020-02-18)
 
 
