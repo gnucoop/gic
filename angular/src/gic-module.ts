@@ -29,7 +29,7 @@ const DECLARATIONS = [
   providers: [PopoverController],
 })
 export class GicModule {
-  static forRoot(config?: GicConfig): ModuleWithProviders {
+  static forRoot(config?: GicConfig): ModuleWithProviders<GicModule> {
     return {
       ngModule: GicModule,
       providers: [
