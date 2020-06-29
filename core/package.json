@@ -34,7 +34,7 @@
     "loader/"
   ],
   "dependencies": {
-    "@ionic/core": "^5.0.0",
+    "@ionic/core": "^5.2.0",
     "tslib": "^1.10.0"
   },
   "devDependencies": {
