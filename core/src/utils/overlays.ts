@@ -1,9 +1,12 @@
 import { ActionSheetOptions, AlertOptions, Animation, AnimationBuilder, BackButtonEvent, HTMLIonOverlayElement, OverlayInterface, PopoverOptions } from '@ionic/core';
 
 import { config } from '../global/config';
+import { getGicMode } from '../global/gic-global';
 import { GicConfig } from '../interface';
 
 let lastId = 0;
+
+const OVERLAY_BACK_BUTTON_PRIORITY = 100;
 
 export const activeAnimations = new WeakMap<OverlayInterface, Animation[]>();
 
@@ -70,7 +73,7 @@ export const connectListeners = (doc: Document) => {
     doc.addEventListener('ionBackButton', ev => {
       const lastOverlay = getOverlay(doc);
       if (lastOverlay && lastOverlay.backdropDismiss) {
-        (ev as BackButtonEvent).detail.register(100, () => {
+        (ev as BackButtonEvent).detail.register(OVERLAY_BACK_BUTTON_PRIORITY, () => {
           return lastOverlay.dismiss(undefined, BACKDROP);
         });
       }
@@ -96,13 +99,12 @@ export const dismissOverlay = (doc: Document, data: any, role: string | undefine
   return overlay.dismiss(data, role);
 };
 
-export const getOverlays = (doc: Document, overlayTag?: string): HTMLIonOverlayElement[] => {
-  const overlays = (Array.from(getAppRoot(doc).children) as HTMLIonOverlayElement[]).filter(c => c.overlayIndex > 0);
-  if (overlayTag === undefined) {
-    return overlays;
+export const getOverlays = (doc: Document, selector?: string): HTMLIonOverlayElement[] => {
+  if (selector === undefined) {
+    selector = 'gic-alert,gic-action-sheet,gic-loading,gic-modal,gic-picker,gic-popover,gic-toast';
   }
-  overlayTag = overlayTag.toUpperCase();
-  return overlays.filter(c => c.tagName === overlayTag);
+  return (Array.from(doc.querySelectorAll(selector)) as HTMLIonOverlayElement[])
+    .filter(c => c.overlayIndex > 0);
 };
 
 export const getOverlay = (doc: Document, overlayTag?: string, id?: string): HTMLIonOverlayElement | undefined => {
@@ -125,14 +127,19 @@ export const present = async (
   overlay.presented = true;
   overlay.willPresent.emit();
 
+  const mode = getGicMode(overlay);
   // get the user's animation fn if one was provided
   const animationBuilder = (overlay.enterAnimation)
     ? overlay.enterAnimation
-    : config.get(name, overlay.mode === 'ios' ? iosEnterAnimation : mdEnterAnimation);
+    : config.get(name, mode === 'ios' ? iosEnterAnimation : mdEnterAnimation);
 
   const completed = await overlayAnimation(overlay, animationBuilder, overlay.el, opts);
   if (completed) {
     overlay.didPresent.emit();
+  }
+
+  if (overlay.keyboardClose) {
+    overlay.el.focus();
   }
 };
 
@@ -151,14 +158,21 @@ export const dismiss = async (
   overlay.presented = false;
 
   try {
+    // Overlay contents should not be clickable during dismiss
+    overlay.el.style.setProperty('pointer-events', 'none');
     overlay.willDismiss.emit({ data, role });
-
+    const mode = getGicMode(overlay);
     const animationBuilder = (overlay.leaveAnimation)
       ? overlay.leaveAnimation
-      : config.get(name, overlay.mode === 'ios' ? iosLeaveAnimation : mdLeaveAnimation);
+      : config.get(name, mode === 'ios' ? iosLeaveAnimation : mdLeaveAnimation);
 
-    await overlayAnimation(overlay, animationBuilder, overlay.el, opts);
+    // If dismissed via gesture, no need to play leaving animation again
+    if (role !== 'gesture') {
+      await overlayAnimation(overlay, animationBuilder, overlay.el, opts);
+    }
     overlay.didDismiss.emit({ data, role });
+
+    activeAnimations.delete(overlay);
 
   } catch (err) {
     console.error(err);
