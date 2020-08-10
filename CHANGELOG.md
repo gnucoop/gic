@@ -1,3 +1,7 @@
+# [5.3.0](https://github.com/gnucoop/gic/compare/v5.2.0...v5.3.0) (2020-08-10)
+
+
+
 # [5.2.0](https://github.com/gnucoop/gic/compare/v5.0.2...v5.2.0) (2020-06-29)
 
 
