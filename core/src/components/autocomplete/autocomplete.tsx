@@ -40,7 +40,7 @@ export class AutoComplete implements ComponentInterface {
   // private filteredOptions: string[] = [];
   // private hasFocus: boolean = false;
   private overlay?: HTMLGicPopoverElement;
-  private evt?: CustomEvent<void>;
+  private evt?: CustomEvent<FocusEvent>;
 
   async componentDidLoad() {
     await this.loadOptions();
@@ -84,11 +84,11 @@ export class AutoComplete implements ComponentInterface {
     );
   }
 
-  onIonFocus = (ev: CustomEvent<void>) => {
+  onIonFocus = (ev: CustomEvent<FocusEvent>) => {
     this.showHints(ev);
   }
 
-  private async showHints(ev?: CustomEvent<void>) {
+  private async showHints(ev?: CustomEvent<FocusEvent>) {
     if (ev !== undefined) {
       this.evt = ev;
     }
@@ -112,7 +112,7 @@ export class AutoComplete implements ComponentInterface {
     }
   }
 
-  private createOverlay(ev?: CustomEvent<void>): Promise<HTMLGicPopoverElement> {
+  private createOverlay(ev?: CustomEvent<FocusEvent>): Promise<HTMLGicPopoverElement> {
     const interfaceOptions = this.interfaceOptions;
 
     const popoverOpts: PopoverOptions = {
