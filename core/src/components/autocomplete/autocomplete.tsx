@@ -1,7 +1,8 @@
-import { Mode } from '@ionic/core';
-import { Component, ComponentInterface, Element, Prop, h } from '@stencil/core';
+import { Component, ComponentInterface, Element, Host, Prop, h } from '@stencil/core';
 
+import { getGicMode } from '../../global/gic-global';
 import { AutocompletePopoverOption, PopoverOptions } from '../../interface';
+import { popoverController } from '../../utils/overlays';
 
 @Component({
   tag: 'gic-autocomplete',
@@ -14,15 +15,8 @@ import { AutocompletePopoverOption, PopoverOptions } from '../../interface';
 export class AutoComplete implements ComponentInterface {
   @Element() el!: HTMLGicSelectElement;
 
-  /**
-   * The mode determines which platform styles to use.
-   */
-  @Prop() mode!: Mode;
-
   @Prop({ mutable: true }) value: string | null = null;
   @Prop() placeholder?: string;
-  @Prop({ connect: 'gic-popover-controller' }) popoverCtrl!: HTMLGicPopoverControllerElement;
-  @Prop({ context: 'window' }) win!: Window;
 
   /**
    * Any additional options that the `popover` interface
@@ -113,10 +107,11 @@ export class AutoComplete implements ComponentInterface {
   }
 
   private createOverlay(ev?: CustomEvent<FocusEvent>): Promise<HTMLGicPopoverElement> {
+    const mode = getGicMode(this);
     const interfaceOptions = this.interfaceOptions;
 
     const popoverOpts: PopoverOptions = {
-      mode: this.mode,
+      mode,
       ...interfaceOptions,
       showBackdrop: false,
       backdropDismiss: false,
@@ -130,7 +125,7 @@ export class AutoComplete implements ComponentInterface {
         options: this.createPopoverOptions(this.options)
       }
     };
-    return this.popoverCtrl.create(popoverOpts);
+    return popoverController.create(popoverOpts);
   }
 
   onInput = (ev: Event) => {
@@ -146,16 +141,23 @@ export class AutoComplete implements ComponentInterface {
   }
 
   render() {
+    const mode = getGicMode(this);
     const value = this.value || '';
 
     return (
-      <ion-input
-          value={value}
-          placeholder={this.placeholder}
-          onIonFocus={this.onIonFocus}
-          onIonChange={this.onInput}
+      <Host
+        class={{
+          [mode]: true,
+        }}
       >
-      </ion-input>
+        <ion-input
+            value={value}
+            placeholder={this.placeholder}
+            onIonFocus={this.onIonFocus}
+            onIonChange={this.onInput}
+        >
+        </ion-input>
+      </Host>
     );
   }
 }

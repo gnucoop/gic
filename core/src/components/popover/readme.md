@@ -136,7 +136,7 @@ Type: `Promise<boolean>`
 
 
 
-### `onDidDismiss() => Promise<OverlayEventDetail<any>>`
+### `onDidDismiss() => Promise<OverlayEventDetail>`
 
 Returns a promise that resolves when the popover did dismiss.
 
@@ -146,7 +146,7 @@ Type: `Promise<OverlayEventDetail<any>>`
 
 
 
-### `onWillDismiss() => Promise<OverlayEventDetail<any>>`
+### `onWillDismiss() => Promise<OverlayEventDetail>`
 
 Returns a promise that resolves when the popover will dismiss.
 

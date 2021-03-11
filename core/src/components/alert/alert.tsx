@@ -1,5 +1,5 @@
 import { AnimationBuilder, Cell, CssClassMap, OverlayEventDetail, OverlayInterface } from '@ionic/core';
-import { Component, ComponentInterface, Element, Event, EventEmitter, Host, Method, Prop, Watch, h } from '@stencil/core';
+import { Component, ComponentInterface, Element, Event, EventEmitter, Host, Method, Prop, Watch, forceUpdate, h } from '@stencil/core';
 
 import { getGicMode } from '../../global/gic-global';
 import { AlertButton, AlertInput } from '../../interface';
@@ -235,13 +235,13 @@ export class Alert implements ComponentInterface, OverlayInterface {
     }
     this.activeId = selectedInput.id;
     safeCall(selectedInput.handler, selectedInput);
-    this.el.forceUpdate();
+    forceUpdate(this);
   }
 
   private cbClick(selectedInput: AlertInput) {
     selectedInput.checked = !selectedInput.checked;
     safeCall(selectedInput.handler, selectedInput);
-    this.el.forceUpdate();
+    forceUpdate(this);
   }
 
   private buttonClick(button: AlertButton) {

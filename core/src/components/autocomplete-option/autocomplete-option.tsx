@@ -38,7 +38,7 @@ export class SelectOption implements ComponentInterface {
     this.ionAutocompleteOptionDidLoad.emit();
   }
 
-  componentDidUnload() {
+  disconnectedCallback() {
     this.ionAutocompleteOptionDidUnload.emit();
   }
 

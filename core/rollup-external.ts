@@ -1,4 +1,4 @@
-import { InputOptions, Plugin } from 'rollup';
+import {InputOptions, Plugin} from 'rollup';
 
 export class RollupExternalPlugin implements Plugin {
   name = 'rollup-external';
@@ -7,7 +7,7 @@ export class RollupExternalPlugin implements Plugin {
     const external = Array.isArray(options.external) ? options.external : [];
     return {
       ...options,
-      external: [...external, '@ionic/core', '@ionic/angular'],
+      external: [...external, '@ionic/core', '@ionic/angular', 'ionicons'],
     };
   }
 }

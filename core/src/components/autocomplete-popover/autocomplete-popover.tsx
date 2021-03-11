@@ -1,6 +1,6 @@
-import { Mode } from '@ionic/core';
-import { Component, ComponentInterface, Prop, h } from '@stencil/core';
+import { Component, ComponentInterface, Host, Prop, h } from '@stencil/core';
 
+import { getGicMode } from '../../global/gic-global';
 import { AutocompletePopoverOption } from '../../interface';
 
 /**
@@ -12,9 +12,6 @@ import { AutocompletePopoverOption } from '../../interface';
   scoped: true
 })
 export class AutocompletePopover implements ComponentInterface {
-
-  mode!: Mode;
-
   /** Array of options for the popover */
   @Prop({ mutable: true }) options: AutocompletePopoverOption[] = [];
 
@@ -28,16 +25,19 @@ export class AutocompletePopover implements ComponentInterface {
   }
 
   render() {
+    const mode = getGicMode(this);
     return (
-      <ion-list>
-        {this.options.map(option =>
-          <ion-item onClick={this.onClick}>
-            <ion-label>
-              {option.text}
-            </ion-label>
-          </ion-item>
-        )}
-      </ion-list>
+      <Host class={mode}>
+        <ion-list>
+          {this.options.map(option =>
+            <ion-item onClick={this.onClick}>
+              <ion-label>
+                {option.text}
+              </ion-label>
+            </ion-item>
+          )}
+        </ion-list>
+      </Host>
     );
   }
 }

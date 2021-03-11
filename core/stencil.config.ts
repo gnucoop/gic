@@ -1,18 +1,18 @@
-import { Config } from '@stencil/core';
-import { sass } from '@stencil/sass';
+import {Config} from '@stencil/core';
+import {sass} from '@stencil/sass';
 
-import { RollupExternalPlugin } from './rollup-external';
+import {RollupExternalPlugin} from './rollup-external';
 // @ts-ignore
-import { apiSpecGenerator } from './scripts/api-spec-generator';
+import {apiSpecGenerator} from './scripts/api-spec-generator';
 
 export const config: Config = {
   namespace: 'Gic',
   bundles: [
-    { components: ['gic-action-sheet', 'gic-action-sheet-controller'] },
-    { components: ['gic-alert', 'gic-alert-controller'] },
-    { components: ['gic-autocomplete', 'gic-autocomplete-option', 'gic-autocomplete-popover'] },
-    { components: ['gic-select', 'gic-select-option', 'gic-select-popover'] },
-    { components: ['gic-popover', 'gic-popover-controller'] },
+    {components: ['gic-action-sheet']},
+    {components: ['gic-alert']},
+    {components: ['gic-autocomplete', 'gic-autocomplete-option']},
+    {components: ['gic-select', 'gic-select-option', 'gic-select-popover']},
+    {components: ['gic-popover']},
   ],
   plugins: [
     sass(),
@@ -26,26 +26,32 @@ export const config: Config = {
     },
     {
       type: 'dist',
-      esmLoaderPath: '../loader'
+      esmLoaderPath: '../loader',
     },
-    // {
-    //   type: 'experimental-dist-module',
-    //   externalRuntime: true,
-    // },
+    {
+      type: 'dist-custom-elements',
+      dir: 'components',
+      copy: [{
+        src: '../scripts/custom-elements',
+        dest: 'components',
+        warn: true,
+      }],
+      includeGlobalScripts: false,
+    },
     {
       type: 'docs-readme',
-      strict: true
+      strict: true,
     },
     {
       type: 'docs-json',
-      file: '../docs/core.json'
+      file: '../docs/core.json',
     },
     {
-      type: 'dist-hydrate-script'
+      type: 'dist-hydrate-script',
     },
     apiSpecGenerator({
-      file: 'api.txt'
-    }),
+      file: 'api.txt',
+    }) as any,
     // {
     //   type: 'stats',
     //   file: 'stats.json'
@@ -59,14 +65,49 @@ export const config: Config = {
       excludeComponents: [
         // overlays
         'gic-action-sheet',
-        'gic-action-sheet-controller',
         'gic-alert',
-        'gic-alert-controller',
         'gic-popover',
-        'gic-popover-controller',
       ]
     }
   ],
+  buildEs5: 'prod',
+  extras: {
+    cssVarsShim: true,
+    dynamicImportShim: true,
+    initializeNextTick: true,
+    safari10: true,
+    scriptDataOpts: true,
+    shadowDomShim: true,
+  },
+  testing: {
+    allowableMismatchedPixels: 200,
+    pixelmatchThreshold: 0.05,
+    waitBeforeScreenshot: 20,
+    emulate: [
+      {
+        userAgent: 'iPhone',
+        viewport: {
+          width: 400,
+          height: 800,
+          deviceScaleFactor: 2,
+          isMobile: true,
+          hasTouch: true,
+          isLandscape: false
+        }
+      },
+      {
+        userAgent: 'Android',
+        viewport: {
+          width: 400,
+          height: 800,
+          deviceScaleFactor: 2,
+          isMobile: true,
+          hasTouch: true,
+          isLandscape: false
+        }
+      }
+    ]
+  },
   rollupConfig: {
     outputOptions: {
       globals: {
