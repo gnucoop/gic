@@ -1,3 +1,8 @@
+# [5.6.0](https://github.com/gnucoop/gic/compare/5.3.0...5.6.0) (2021-03-11)
+
+Update to latest ionic / stencil version
+
+
 # [5.3.0](https://github.com/gnucoop/gic/compare/v5.2.0...v5.3.0) (2020-08-10)
 
 
