@@ -4,7 +4,7 @@ const execa = require('execa');
 const inquirer = require('inquirer');
 const Listr = require('listr');
 const semver = require('semver');
-const tc = require('turbocolor');
+const { bold, cyan, dim } = require('colorette');
 
 const rootDir = path.join(__dirname, '../');
 
@@ -33,13 +33,13 @@ function projectPath(project) {
   return path.join(rootDir, project);
 }
 
-async function askTag() {
+async function askNpmTag(version) {
   const prompts = [
     {
       type: 'list',
-      name: 'tag',
+      name: 'npmTag',
       message: 'Select npm tag or specify a new tag',
-      choices: ['latest', 'next']
+      choices: ['latest', 'next', 'v4-lts']
         .concat([
           new inquirer.Separator(),
           {
@@ -52,13 +52,13 @@ async function askTag() {
       type: 'confirm',
       name: 'confirm',
       message: answers => {
-        return `Will publish to ${tc.cyan(answers.tag)}. Continue?`;
+        return `Will publish ${cyan(version)} to ${cyan(answers.npmTag)}. Continue?`;
       }
     }
   ];
 
-  const { tag, confirm } = await inquirer.prompt(prompts);
-  return { tag, confirm };
+  const { npmTag, confirm } = await inquirer.prompt(prompts);
+  return { npmTag, confirm };
 }
 
 function checkGit(tasks) {
@@ -127,7 +127,7 @@ function preparePackage(tasks, package, version, install) {
       projectTasks.push({
         title: `${pkg.name}: install yarn dependencies`,
         task: async () => {
-          await fs.remove(path.join(projectRoot, 'node_modules'))
+          await fs.remove(path.join(projectRoot, 'node_modules'));
           await execa('yarn', ['install'], { cwd: projectRoot });
         }
       });
@@ -140,25 +140,45 @@ function preparePackage(tasks, package, version, install) {
         title: `${pkg.name}: yarn link @gic/core`,
         task: () => execa('yarn', ['link', '@gic/core'], { cwd: projectRoot })
       });
+
+      if (package === 'packages/react-router') {
+        projectTasks.push({
+          title: `${pkg.name}: yarn link @gic/react`,
+          task: () => execa('yarn', ['link', '@gic/react'], { cwd: projectRoot })
+        });
+      }
     }
 
     // Lint, Test, Bump Core dependency
     if (version) {
       projectTasks.push({
         title: `${pkg.name}: lint`,
-        task: () => execa('yarn', ['lint'], { cwd: projectRoot })
+        task: () => execa('yarn', ['run', 'lint'], { cwd: projectRoot })
       });
+      // TODO will not work due to https://github.com/ionic-team/ionic/issues/20136
+      // projectTasks.push({
+      //   title: `${pkg.name}: test`,
+      //   task: async () => await execa('yarn', ['test'], { cwd: projectRoot })
+      // });
     }
 
     // Build
     projectTasks.push({
       title: `${pkg.name}: build`,
-      task: () => execa('yarn', ['build'], { cwd: projectRoot })
+      task: () => execa('yarn', ['run', 'build'], { cwd: projectRoot })
     });
+
+    // Link core or react for sub projects
+    if (package === 'core' || package === 'packages/react') {
+      projectTasks.push({
+        title: `${pkg.name}: yarn link`,
+        task: () => execa('yarn', ['link'], { cwd: projectRoot })
+      });
+    }
 
     if (version) {
       projectTasks.push({
-        title: `${pkg.name}: update gic/core dep to ${version}`,
+        title: `${pkg.name}: update @gic/core dep to ${version}`,
         task: () => {
           updateDependency(pkg, '@gic/core', version);
           writePkg(package, pkg);
@@ -169,7 +189,7 @@ function preparePackage(tasks, package, version, install) {
 
   // Add project tasks
   tasks.push({
-    title: `Prepare ${tc.bold(pkg.name)}`,
+    title: `Prepare ${bold(pkg.name)}`,
     task: () => new Listr(projectTasks)
   });
 }
@@ -186,10 +206,17 @@ function prepareDevPackage(tasks, package, version) {
         title: `${pkg.name}: yarn link @gic/core`,
         task: () => execa('yarn', ['link', '@gic/core'], { cwd: projectRoot })
       });
+
+      if (package === 'packages/react-router') {
+        projectTasks.push({
+          title: `${pkg.name}: yarn link @gic/react`,
+          task: () => execa('yarn', ['link', '@gic/react'], { cwd: projectRoot })
+        });
+      }
     }
 
     projectTasks.push({
-      title: `${pkg.name}: update gic/core dep to ${version}`,
+      title: `${pkg.name}: update ionic/core dep to ${version}`,
       task: () => {
         updateDependency(pkg, '@gic/core', version);
         writePkg(package, pkg);
@@ -198,10 +225,10 @@ function prepareDevPackage(tasks, package, version) {
 
     projectTasks.push({
       title: `${pkg.name}: build`,
-      task: () => execa('yarn', ['build'], { cwd: projectRoot })
+      task: () => execa('yarn', ['run', 'build'], { cwd: projectRoot })
     });
 
-    if (package === 'core') {
+    if (package === 'core' || package === 'packages/react') {
       projectTasks.push({
         title: `${pkg.name}: yarn link`,
         task: () => execa('yarn', ['link'], { cwd: projectRoot })
@@ -211,7 +238,7 @@ function prepareDevPackage(tasks, package, version) {
 
   // Add project tasks
   tasks.push({
-    title: `Prepare dev build: ${tc.bold(pkg.name)}`,
+    title: `Prepare dev build: ${bold(pkg.name)}`,
     task: () => new Listr(projectTasks)
   });
 }
@@ -221,7 +248,7 @@ function updatePackageVersions(tasks, packages, version) {
     updatePackageVersion(tasks, package, version);
 
     tasks.push({
-      title: `${package} update @gic/core dependency, if present ${tc.dim(`(${version})`)}`,
+      title: `${package} update @gic/core dependency, if present ${dim(`(${version})`)}`,
       task: async () => {
         if (package !== 'core') {
           const pkg = readPkg(package);
@@ -231,18 +258,29 @@ function updatePackageVersions(tasks, packages, version) {
       }
     });
 
-    // angular need to update their dist versions
-    if (package === 'angular') {
+    // angular & angular-server need to update their dist versions
+    if (package === 'angular' || package === 'packages/angular-server') {
       const distPackage = path.join(package, 'dist');
 
       updatePackageVersion(tasks, distPackage, version);
 
       tasks.push({
-        title: `${package} update @gic/core dependency, if present ${tc.dim(`(${version})`)}`,
+        title: `${package} update @gic/core dependency, if present ${dim(`(${version})`)}`,
         task: async () => {
           const pkg = readPkg(distPackage);
           updateDependency(pkg, '@gic/core', version);
           writePkg(distPackage, pkg);
+        }
+      });
+    }
+
+    if (package === 'packages/react-router') {
+      tasks.push({
+        title: `${package} update @gic/react dependency, if present ${dim(`(${version})`)}`,
+        task: async () => {
+          const pkg = readPkg(package);
+          updateDependency(pkg, '@gic/react', version);
+          writePkg(package, pkg);
         }
       });
     }
@@ -253,9 +291,9 @@ function updatePackageVersion(tasks, package, version) {
   const projectRoot = projectPath(package);
 
   tasks.push({
-    title: `${package}: update package.json ${tc.dim(`(${version})`)}`,
+    title: `${package}: update package.json ${dim(`(${version})`)}`,
     task: async () => {
-      await execa('npm', ['version', version], { cwd: projectRoot });
+      await execa('yarn', ['version', '--no-git-tag-version', '--new-version', version], { cwd: projectRoot });
     }
   });
 }
@@ -264,8 +302,8 @@ function copyPackageToDist(tasks, packages) {
   packages.forEach(package => {
     const projectRoot = projectPath(package);
 
-    // angular is the only packages that publish dist
-    if (package !== 'angular') {
+    // angular and angular-server are the only packages that publish dist
+    if (package !== 'angular' && package !== 'packages/angular-server') {
       return;
     }
 
@@ -276,7 +314,7 @@ function copyPackageToDist(tasks, packages) {
   });
 }
 
-function publishPackages(tasks, packages, version, tag = 'latest') {
+function publishPackages(tasks, packages, version, npmTag = 'latest') {
   // first verify version
   packages.forEach(package => {
     if (package === 'core') {
@@ -299,14 +337,14 @@ function publishPackages(tasks, packages, version, tag = 'latest') {
   packages.forEach(package => {
     let projectRoot = projectPath(package);
 
-    if (package === 'angular') {
+    if (package === 'packages/angular-server' || package === 'angular') {
       projectRoot = path.join(projectRoot, 'dist')
     }
 
     tasks.push({
-      title: `${package}: publish to ${tag} tag`,
+      title: `${package}: publish to ${npmTag} tag`,
       task: async () => {
-        await execa('yarn', ['publish', '--tag', tag], { cwd: projectRoot });
+        await execa('yarn', ['publish', '--tag', npmTag], { cwd: projectRoot });
       }
     });
   });
@@ -341,7 +379,7 @@ function copyCDNLoader(tasks, version) {
 module.exports = {
   checkTestDist,
   checkGit,
-  askTag,
+  askNpmTag,
   isValidVersion,
   isVersionGreater,
   copyCDNLoader,

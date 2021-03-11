@@ -14,8 +14,8 @@ gic-action-sheet,prop,subHeader,string | undefined,undefined,false,false
 gic-action-sheet,prop,translucent,boolean,false,false,false
 gic-action-sheet,prop,useVirtualScroll,boolean,false,false,false
 gic-action-sheet,method,dismiss,dismiss(data?: any, role?: string | undefined) => Promise<boolean>
-gic-action-sheet,method,onDidDismiss,onDidDismiss() => Promise<OverlayEventDetail<any>>
-gic-action-sheet,method,onWillDismiss,onWillDismiss() => Promise<OverlayEventDetail<any>>
+gic-action-sheet,method,onDidDismiss,onDidDismiss() => Promise<OverlayEventDetail>
+gic-action-sheet,method,onWillDismiss,onWillDismiss() => Promise<OverlayEventDetail>
 gic-action-sheet,method,present,present() => Promise<void>
 gic-action-sheet,event,ionActionSheetDidDismiss,OverlayEventDetail<any>,true
 gic-action-sheet,event,ionActionSheetDidPresent,void,true
@@ -31,11 +31,6 @@ gic-action-sheet,css-prop,--max-width
 gic-action-sheet,css-prop,--min-height
 gic-action-sheet,css-prop,--min-width
 gic-action-sheet,css-prop,--width
-
-gic-action-sheet-controller,none
-gic-action-sheet-controller,method,create,create(options: ActionSheetOptions) => Promise<HTMLGicActionSheetElement>
-gic-action-sheet-controller,method,dismiss,dismiss(data?: any, role?: string | undefined, id?: string | undefined) => Promise<boolean>
-gic-action-sheet-controller,method,getTop,getTop() => Promise<HTMLGicActionSheetElement | undefined>
 
 gic-alert,scoped
 gic-alert,prop,animated,boolean,true,false,false
@@ -55,8 +50,8 @@ gic-alert,prop,subHeader,string | undefined,undefined,false,false
 gic-alert,prop,translucent,boolean,false,false,false
 gic-alert,prop,useVirtualScroll,boolean,false,false,false
 gic-alert,method,dismiss,dismiss(data?: any, role?: string | undefined) => Promise<boolean>
-gic-alert,method,onDidDismiss,onDidDismiss() => Promise<OverlayEventDetail<any>>
-gic-alert,method,onWillDismiss,onWillDismiss() => Promise<OverlayEventDetail<any>>
+gic-alert,method,onDidDismiss,onDidDismiss() => Promise<OverlayEventDetail>
+gic-alert,method,onWillDismiss,onWillDismiss() => Promise<OverlayEventDetail>
 gic-alert,method,present,present() => Promise<void>
 gic-alert,event,gicAlertDidDismiss,OverlayEventDetail<any>,true
 gic-alert,event,gicAlertDidPresent,void,true
@@ -70,14 +65,8 @@ gic-alert,css-prop,--min-height
 gic-alert,css-prop,--min-width
 gic-alert,css-prop,--width
 
-gic-alert-controller,none
-gic-alert-controller,method,create,create(options: AlertOptions) => Promise<HTMLGicAlertElement>
-gic-alert-controller,method,dismiss,dismiss(data?: any, role?: string | undefined, id?: string | undefined) => Promise<boolean>
-gic-alert-controller,method,getTop,getTop() => Promise<HTMLGicAlertElement | undefined>
-
 gic-autocomplete,shadow
 gic-autocomplete,prop,interfaceOptions,any,{},false,false
-gic-autocomplete,prop,mode,"ios" | "md",undefined,false,false
 gic-autocomplete,prop,placeholder,string | undefined,undefined,false,false
 gic-autocomplete,prop,value,null | string,null,false,false
 
@@ -98,8 +87,8 @@ gic-popover,prop,mode,"ios" | "md",undefined,false,false
 gic-popover,prop,showBackdrop,boolean,true,false,false
 gic-popover,prop,translucent,boolean,false,false,false
 gic-popover,method,dismiss,dismiss(data?: any, role?: string | undefined) => Promise<boolean>
-gic-popover,method,onDidDismiss,onDidDismiss() => Promise<OverlayEventDetail<any>>
-gic-popover,method,onWillDismiss,onWillDismiss() => Promise<OverlayEventDetail<any>>
+gic-popover,method,onDidDismiss,onDidDismiss() => Promise<OverlayEventDetail>
+gic-popover,method,onWillDismiss,onWillDismiss() => Promise<OverlayEventDetail>
 gic-popover,method,present,present() => Promise<void>
 gic-popover,event,ionPopoverDidDismiss,OverlayEventDetail<any>,true
 gic-popover,event,ionPopoverDidPresent,void,true
@@ -114,18 +103,12 @@ gic-popover,css-prop,--min-height
 gic-popover,css-prop,--min-width
 gic-popover,css-prop,--width
 
-gic-popover-controller,none
-gic-popover-controller,method,create,create(options: any) => Promise<HTMLGicPopoverElement>
-gic-popover-controller,method,dismiss,dismiss(data?: any, role?: string | undefined, id?: string | undefined) => Promise<boolean>
-gic-popover-controller,method,getTop,getTop() => Promise<HTMLGicPopoverElement | undefined>
-
 gic-select,shadow
 gic-select,prop,cancelText,string,'Cancel',false,false
 gic-select,prop,compareWith,((currentValue: any, compareValue: any) => boolean) | null | string | undefined,undefined,false,false
 gic-select,prop,disabled,boolean,false,false,false
 gic-select,prop,interface,"action-sheet" | "alert" | "popover",'alert',false,false
 gic-select,prop,interfaceOptions,any,{},false,false
-gic-select,prop,mode,"ios" | "md",undefined,false,false
 gic-select,prop,multiple,boolean,false,false,false
 gic-select,prop,name,string,this.inputId,false,false
 gic-select,prop,okText,string,'OK',false,false
@@ -134,10 +117,10 @@ gic-select,prop,searchBar,boolean,true,false,false
 gic-select,prop,selectedText,null | string | undefined,undefined,false,false
 gic-select,prop,useVirtualScroll,boolean,true,false,false
 gic-select,prop,value,any,undefined,false,false
-gic-select,method,open,open(ev?: UIEvent | undefined) => Promise<HTMLIonActionSheetElement | HTMLIonAlertElement | HTMLIonPopoverElement | undefined>
+gic-select,method,open,open(ev?: UIEvent | undefined) => Promise<any>
 gic-select,event,ionBlur,void,true
 gic-select,event,ionCancel,void,true
-gic-select,event,ionChange,SelectChangeEventDetail,true
+gic-select,event,ionChange,SelectChangeEventDetail<any>,true
 gic-select,event,ionFocus,void,true
 gic-select,css-prop,--padding-bottom
 gic-select,css-prop,--padding-end
@@ -146,5 +129,4 @@ gic-select,css-prop,--padding-top
 
 gic-select-option,shadow
 gic-select-option,prop,disabled,boolean,false,false,false
-gic-select-option,prop,selected,boolean,false,false,false
 gic-select-option,prop,value,any,undefined,false,false

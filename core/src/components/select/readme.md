@@ -745,7 +745,6 @@ export default Example;
 | `disabled`         | `disabled`           | If `true`, the user cannot interact with the select.                                                                                                                                                                                                                                                                                                                              | `boolean`                                                                            | `false`        |
 | `interface`        | `interface`          | The interface the select should use: `action-sheet`, `popover` or `alert`.                                                                                                                                                                                                                                                                                                        | `"action-sheet" \| "alert" \| "popover"`                                             | `'alert'`      |
 | `interfaceOptions` | `interface-options`  | Any additional options that the `alert`, `action-sheet` or `popover` interface can take. See the [AlertController API docs](../../alert/AlertController/#create), the [ActionSheetController API docs](../../action-sheet/ActionSheetController/#create) and the [PopoverController API docs](../../popover/PopoverController/#create) for the create options for each interface. | `any`                                                                                | `{}`           |
-| `mode`             | `mode`               | The mode determines which platform styles to use.                                                                                                                                                                                                                                                                                                                                 | `"ios" \| "md"`                                                                      | `undefined`    |
 | `multiple`         | `multiple`           | If `true`, the select can accept multiple values.                                                                                                                                                                                                                                                                                                                                 | `boolean`                                                                            | `false`        |
 | `name`             | `name`               | The name of the control, which is submitted with the form data.                                                                                                                                                                                                                                                                                                                   | `string`                                                                             | `this.inputId` |
 | `okText`           | `ok-text`            | The text to display on the ok button.                                                                                                                                                                                                                                                                                                                                             | `string`                                                                             | `'OK'`         |
@@ -758,26 +757,33 @@ export default Example;
 
 ## Events
 
-| Event       | Description                              | Type                                   |
-| ----------- | ---------------------------------------- | -------------------------------------- |
-| `ionBlur`   | Emitted when the select loses focus.     | `CustomEvent<void>`                    |
-| `ionCancel` | Emitted when the selection is cancelled. | `CustomEvent<void>`                    |
-| `ionChange` | Emitted when the value has changed.      | `CustomEvent<SelectChangeEventDetail>` |
-| `ionFocus`  | Emitted when the select has focus.       | `CustomEvent<void>`                    |
+| Event       | Description                              | Type                                        |
+| ----------- | ---------------------------------------- | ------------------------------------------- |
+| `ionBlur`   | Emitted when the select loses focus.     | `CustomEvent<void>`                         |
+| `ionCancel` | Emitted when the selection is cancelled. | `CustomEvent<void>`                         |
+| `ionChange` | Emitted when the value has changed.      | `CustomEvent<SelectChangeEventDetail<any>>` |
+| `ionFocus`  | Emitted when the select has focus.       | `CustomEvent<void>`                         |
 
 
 ## Methods
 
-### `open(ev?: UIEvent | undefined) => Promise<HTMLIonActionSheetElement | HTMLIonAlertElement | HTMLIonPopoverElement | undefined>`
+### `open(ev?: UIEvent | undefined) => Promise<any>`
 
 Opens the select overlay, it could be an alert, action-sheet or popover,
 based in `gic-select` settings.
 
 #### Returns
 
-Type: `Promise<HTMLIonActionSheetElement | HTMLIonAlertElement | HTMLIonPopoverElement | undefined>`
+Type: `Promise<any>`
 
 
+
+
+## Shadow Parts
+
+| Part     | Description |
+| -------- | ----------- |
+| `"icon"` |             |
 
 
 ## CSS Custom Properties
@@ -789,23 +795,6 @@ Type: `Promise<HTMLIonActionSheetElement | HTMLIonAlertElement | HTMLIonPopoverE
 | `--padding-start`  | Start padding of the select  |
 | `--padding-top`    | Top padding of the select    |
 
-
-## Dependencies
-
-### Depends on
-
-- [gic-action-sheet-controller](../action-sheet-controller)
-- [gic-alert-controller](../alert-contoller)
-- [gic-popover-controller](../popover-controller)
-
-### Graph
-```mermaid
-graph TD;
-  gic-select --> gic-action-sheet-controller
-  gic-select --> gic-alert-controller
-  gic-select --> gic-popover-controller
-  style gic-select fill:#f9f,stroke:#333,stroke-width:4px
-```
 
 ----------------------------------------------
 

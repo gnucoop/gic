@@ -1,8 +1,8 @@
 
-import * as d from './proxies';
+import type * as d from './proxies';
 
 export const DIRECTIVES = [
-d.GicAutocomplete,
+  d.GicAutocomplete,
   d.GicAutocompleteOption,
   d.GicSelect,
   d.GicSelectOption
