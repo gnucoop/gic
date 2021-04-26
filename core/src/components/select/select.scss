@@ -42,6 +42,16 @@
   opacity: .33;
 }
 
+label {
+  @include input-cover();
+
+  display: flex;
+
+  align-items: center;
+
+  opacity: 0;
+}
+
 button {
   @include input-cover();
 }
