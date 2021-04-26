@@ -466,7 +466,7 @@ export class Alert implements ComponentInterface, OverlayInterface {
       }
       el.querySelector('.alert-radio-label')!.textContent = `${i.label}`;
       el.onclick = () => {
-        this.cbClick(i);
+        this.rbClick(i);
         el.parentElement!.querySelectorAll('.alert-radio-button')
           .forEach(b => b.setAttribute('aria-checked', 'false'));
         el.setAttribute('aria-checked', `${i.checked}`);
