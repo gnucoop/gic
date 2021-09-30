@@ -1,3 +1,7 @@
+## [5.8.1](https://github.com/gnucoop/gic/compare/v5.6.1...v5.8.1) (2021-09-30)
+
+
+
 ## [5.6.1](https://github.com/gnucoop/gic/compare/v5.6.0...v5.6.1) (2021-04-26)
 
 
