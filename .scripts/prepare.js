@@ -1,3 +1,7 @@
+/**
+ * Deploy script adopted from https://github.com/sindresorhus/np
+ * MIT License (c) Sindre Sorhus (sindresorhus.com)
+ */
 const { cyan, dim, red, reset } = require('colorette');
 const execa = require('execa');
 const inquirer = require('inquirer');

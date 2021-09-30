@@ -1,3 +1,7 @@
+/**
+ * Deploy script adopted from https://github.com/sindresorhus/np
+ * MIT License (c) Sindre Sorhus (sindresorhus.com)
+ */
 const { cyan, dim, green, red, yellow } = require('colorette');
 const execa = require('execa');
 const Listr = require('listr');
