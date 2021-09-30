@@ -8,14 +8,10 @@ const fs = require('fs');
   // core
   {
     files: [
-      '../core/css/core.css', 
-      '../core/css/core.css.map', 
-      '../core/css/normalize.css', 
-      '../core/css/normalize.css.map', 
-      '../core/components/index.js', 
-      '../core/components/index.d.ts', 
+      '../core/components/index.js',
+      '../core/components/index.d.ts',
       '../core/components/package.json',
-      '../core/dist/index.js', 
+      '../core/dist/index.js',
       '../core/dist/gic/index.esm.js',
     ]
   },
