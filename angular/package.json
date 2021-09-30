@@ -62,6 +62,7 @@
     "@angular/core": "8.2.13",
     "@angular/forms": "8.2.13",
     "@angular/router": "8.2.13",
+    "@ionic/angular": "5.8.1",
     "@types/node": "12.12.5",
     "fs-extra": "^7.0.0",
     "glob": "^7.1.4",
