@@ -126,6 +126,7 @@ gic-select,css-prop,--padding-bottom
 gic-select,css-prop,--padding-end
 gic-select,css-prop,--padding-start
 gic-select,css-prop,--padding-top
+gic-select,part,icon
 
 gic-select-option,shadow
 gic-select-option,prop,disabled,boolean,false,false,false
