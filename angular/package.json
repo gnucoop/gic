@@ -1,6 +1,6 @@
 {
   "name": "@gic/angular",
-  "version": "5.3.0",
+  "version": "5.8.1",
   "description": "Angular specific wrappers for @gic/core",
   "keywords": [
     "ionic",
@@ -42,7 +42,7 @@
     "validate": "npm i && npm run lint && npm run test && npm run build"
   },
   "dependencies": {
-    "@gic/core": "5.3.0",
+    "@gic/core": "5.8.1",
     "tslib": "^2.1.0"
   },
   "peerDependencies": {
@@ -62,6 +62,7 @@
     "@angular/core": "8.2.13",
     "@angular/forms": "8.2.13",
     "@angular/router": "8.2.13",
+    "@ionic/angular": "5.8.1",
     "@types/node": "12.12.5",
     "fs-extra": "^7.0.0",
     "glob": "^7.1.4",

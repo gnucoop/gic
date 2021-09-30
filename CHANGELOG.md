@@ -1,3 +1,21 @@
+## [5.8.1](https://github.com/gnucoop/gic/compare/v5.6.1...v5.8.1) (2021-09-30)
+
+
+
+## [5.6.1](https://github.com/gnucoop/gic/compare/v5.6.0...v5.6.1) (2021-04-26)
+
+
+### Bug Fixes
+
+* select options not correctly initialized ([23a9ed7](https://github.com/gnucoop/gic/commit/23a9ed79735154cf305ba9059f0c6c52bd2b337b))
+
+
+
+# [5.6.0](https://github.com/gnucoop/gic/compare/5.3.0...5.6.0) (2021-03-11)
+
+Update to latest ionic / stencil version
+
+
 # [5.3.0](https://github.com/gnucoop/gic/compare/v5.2.0...v5.3.0) (2020-08-10)
 
 
