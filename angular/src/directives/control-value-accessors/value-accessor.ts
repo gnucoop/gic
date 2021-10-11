@@ -1,12 +1,12 @@
-import { ElementRef, HostListener } from '@angular/core';
-import { ControlValueAccessor } from '@angular/forms';
+import {Directive, ElementRef, HostListener} from '@angular/core';
+import {ControlValueAccessor} from '@angular/forms';
 
-import { raf } from '../../util/util';
+import {raf} from '../../util/util';
 
+@Directive()
 export class ValueAccessor implements ControlValueAccessor {
-
-  private onChange: (value: any) => void = () => {/**/};
-  private onTouched: () => void = () => {/**/};
+  private onChange: (value: any) => void = () => { /**/ };
+  private onTouched: () => void = () => { /**/ };
   protected lastValue: any;
 
   constructor(protected el: ElementRef) {}
@@ -74,14 +74,9 @@ const getClasses = (element: HTMLElement) => {
 
 const setClasses = (element: HTMLElement, classes: string[]) => {
   const classList = element.classList;
-  [
-    'ion-valid',
-    'ion-invalid',
-    'ion-touched',
-    'ion-untouched',
-    'ion-dirty',
-    'ion-pristine'
-  ].forEach(c => classList.remove(c));
+  ['ion-valid', 'ion-invalid', 'ion-touched', 'ion-untouched', 'ion-dirty',
+   'ion-pristine']
+      .forEach(c => classList.remove(c));
 
   classes.forEach(c => classList.add(c));
 };

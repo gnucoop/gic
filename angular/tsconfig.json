@@ -1,43 +1,45 @@
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
 {
-  "angularCompilerOptions": {
-    "annotateForClosureCompiler": true,
-    "strictMetadataEmit": true,
-    "flatModuleOutFile": "core.js",
-    "flatModuleId": "@gic/angular",
-    "skipTemplateCodegen": true,
-    "fullTemplateTypeCheck": false,
-    "enableResourceInlining": true,
-    "enableIvy": false
-  },
+  "compileOnSave": false,
   "compilerOptions": {
-    "alwaysStrict": true,
-    "strict": true,
-    "allowSyntheticDefaultImports": true,
-    "allowUnreachableCode": false,
-    "declaration": true,
-    "declarationDir": "dist",
-    "experimentalDecorators": true,
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
-    "lib": ["dom", "es2017"],
-    "module": "es2015",
-    "moduleResolution": "node",
-    "noImplicitAny": true,
+    "strict": true,
     "noImplicitReturns": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "outDir": "build/es2015",
-    "pretty": true,
-    "removeComments": false,
-    "importHelpers": true,
-    "rootDir": "src",
-    "strictPropertyInitialization": false,
-    "target": "es2015",
-    "baseUrl": ".",
+    "noFallthroughCasesInSwitch": true,
+    "sourceMap": true,
+    "declaration": true,
+    "downlevelIteration": true,
     "paths": {
-      "@gic/core/hydrate": ["../core/hydrate"],
-      "@gic/core": ["../core"]
-    }
+      "lib": [
+        "dist/lib/src",
+        "dist/lib"
+      ]
+    },
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "es2020",
+    "declarationMap": false,
+    "inlineSources": true,
+    "types": [],
+    "lib": [
+      "es2018",
+      "dom"
+    ]
   },
-  "exclude": ["node_modules", "src/schematics"],
-  "files": ["src/index.ts"]
+  "exclude": [
+    "src/schematics/**/*.ts",
+    "test/**/*.ts"
+  ],
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true,
+    "enableIvy": true,
+    "compilationMode": "partial"
+  }
 }
