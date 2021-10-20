@@ -1,22 +1,26 @@
-import { ElementRef, HostListener } from '@angular/core';
+import { Directive, ElementRef, HostListener } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 
 import { raf } from '../../util/util';
 
-export class ValueAccessor implements ControlValueAccessor {
-
-  private onChange: (value: any) => void = () => {/**/};
-  private onTouched: () => void = () => {/**/};
+@Directive()
+export class ValueAccessorDirective implements ControlValueAccessor {
+  private onChange: (value: any) => void = () => {
+    /**/
+  };
+  private onTouched: () => void = () => {
+    /**/
+  };
   protected lastValue: any;
 
   constructor(protected el: ElementRef) {}
 
-  writeValue(value: any) {
+  writeValue(value: any): void {
     this.el.nativeElement.value = this.lastValue = value == null ? '' : value;
     setIonicClasses(this.el);
   }
 
-  handleChangeEvent(el: HTMLElement, value: any) {
+  handleChangeEvent(el: HTMLElement, value: any): void {
     if (el === this.el.nativeElement) {
       if (value !== this.lastValue) {
         this.lastValue = value;
@@ -27,27 +31,27 @@ export class ValueAccessor implements ControlValueAccessor {
   }
 
   @HostListener('ionBlur', ['$event.target'])
-  _handleBlurEvent(el: any) {
+  _handleBlurEvent(el: any): void {
     if (el === this.el.nativeElement) {
       this.onTouched();
       setIonicClasses(this.el);
     }
   }
 
-  registerOnChange(fn: (value: any) => void) {
+  registerOnChange(fn: (value: any) => void): void {
     this.onChange = fn;
   }
 
-  registerOnTouched(fn: () => void) {
+  registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
   }
 
-  setDisabledState(isDisabled: boolean) {
+  setDisabledState(isDisabled: boolean): void {
     this.el.nativeElement.disabled = isDisabled;
   }
 }
 
-export const setIonicClasses = (element: ElementRef) => {
+export const setIonicClasses = (element: ElementRef): void => {
   raf(() => {
     const input = element.nativeElement as HTMLElement;
     const classes = getClasses(input);
@@ -74,16 +78,11 @@ const getClasses = (element: HTMLElement) => {
 
 const setClasses = (element: HTMLElement, classes: string[]) => {
   const classList = element.classList;
-  [
-    'ion-valid',
-    'ion-invalid',
-    'ion-touched',
-    'ion-untouched',
-    'ion-dirty',
-    'ion-pristine'
-  ].forEach(c => classList.remove(c));
+  ['ion-valid', 'ion-invalid', 'ion-touched', 'ion-untouched', 'ion-dirty', 'ion-pristine'].forEach((c) =>
+    classList.remove(c)
+  );
 
-  classes.forEach(c => classList.add(c));
+  classes.forEach((c) => classList.add(c));
 };
 
 const startsWith = (input: string, search: string): boolean => {

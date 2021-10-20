@@ -1,5 +1,6 @@
 // PROVIDERS
-export { SelectValueAccessor } from './directives/control-value-accessors/select-value-accessor';
+export { AutocompleteValueAccessorDirective } from './directives/control-value-accessors/autocomplete-value-accessor';
+export { SelectValueAccessorDirective } from './directives/control-value-accessors/select-value-accessor';
 export * from './directives/proxies';
 
 // PROVIDERS

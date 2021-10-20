@@ -32,6 +32,15 @@ const fs = require('fs');
       '../angular/dist/gic-angular.metadata.json'
     ]
   },
+  // angular-server
+  {
+    files: [
+      '../packages/angular-server/dist/fesm5/gic-angular-server.js',
+      '../packages/angular-server/dist/fesm2015/gic-angular-server.js',
+      '../packages/angular-server/dist/gic-angular-server.d.ts',
+      '../packages/angular-server/dist/gic-angular-server.metadata.json'
+    ]
+  },
 ].forEach(testPackage);
 
 function testPackage(testPkg) {

@@ -6,11 +6,10 @@ import { OverlayBaseController } from '../util/overlay';
 
 @Injectable()
 export class PopoverController extends OverlayBaseController<PopoverOptions, HTMLGicPopoverElement> {
-
   constructor(
     private angularDelegate: AngularDelegate,
     private resolver: ComponentFactoryResolver,
-    private injector: Injector,
+    private injector: Injector
   ) {
     super(popoverController);
   }
@@ -18,7 +17,7 @@ export class PopoverController extends OverlayBaseController<PopoverOptions, HTM
   create(opts: PopoverOptions): Promise<HTMLGicPopoverElement> {
     return super.create({
       ...opts,
-      delegate: this.angularDelegate.create(this.resolver, this.injector)
+      delegate: this.angularDelegate.create(this.resolver, this.injector),
     });
   }
 }

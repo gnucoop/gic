@@ -4,10 +4,9 @@ import { Config as CoreConfig, GicConfig } from '@gic/core';
 import { GicWindow } from '../types/interfaces';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class Config {
-
   get(key: keyof GicConfig, fallback?: any): any {
     const c = getConfig();
     if (c) {
@@ -32,7 +31,7 @@ export class Config {
     return 0;
   }
 
-  set(key: keyof GicConfig, value?: any) {
+  set(key: keyof GicConfig, value?: any): void {
     const c = getConfig();
     if (c) {
       c.set(key, value);
@@ -45,7 +44,7 @@ export const ConfigToken = new InjectionToken<any>('USERCONFIG');
 const getConfig = (): CoreConfig | null => {
   if (typeof (window as any) !== 'undefined') {
     const Gic = (window as any as GicWindow).Gic;
-    if (Gic && Gic.config) {
+    if (Gic?.config) {
       return Gic.config;
     }
   }
