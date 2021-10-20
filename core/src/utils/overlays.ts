@@ -74,7 +74,7 @@ const focusableQueryString =
 const innerFocusableQueryString =
     'input:not([type=hidden]), textarea, button, select';
 
-const focusFirstDescendant = (ref: Element, overlay: HTMLIonOverlayElement) => {
+export const focusFirstDescendant = (ref: Element, overlay: HTMLIonOverlayElement) => {
   let firstInput =
       ref.querySelector(focusableQueryString) as HTMLElement | null;
 

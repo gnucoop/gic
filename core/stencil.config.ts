@@ -1,120 +1,88 @@
-import {Config} from '@stencil/core';
-import {sass} from '@stencil/sass';
+import { Config } from "@stencil/core";
+import { sass } from "@stencil/sass";
+import { angularOutputTarget } from "@stencil/angular-output-target";
 
-import {RollupExternalPlugin} from './rollup-external';
+import { RollupExternalPlugin } from "./rollup-external";
+
 // @ts-ignore
-import {apiSpecGenerator} from './scripts/api-spec-generator';
+import { apiSpecGenerator } from "./scripts/api-spec-generator";
 
 export const config: Config = {
-  namespace: 'Gic',
+  autoprefixCss: true,
+  namespace: "Gic",
   bundles: [
-    {components: ['gic-action-sheet']},
-    {components: ['gic-alert']},
-    {components: ['gic-autocomplete', 'gic-autocomplete-option']},
-    {components: ['gic-select', 'gic-select-option', 'gic-select-popover']},
-    {components: ['gic-popover']},
+    { components: ["gic-action-sheet"] },
+    { components: ["gic-alert"] },
+    { components: ["gic-autocomplete", "gic-autocomplete-option"] },
+    { components: ["gic-select", "gic-select-option", "gic-select-popover"] },
+    { components: ["gic-popover"] },
   ],
-  plugins: [
-    sass(),
-    new RollupExternalPlugin(),
-  ],
+  plugins: [new RollupExternalPlugin(), sass()],
   outputTargets: [
     {
-      type: 'docs-vscode',
-      file: 'dist/html.html-data.json',
-      sourceCodeBaseUrl: 'https://github.com/gnucoop/gic/tree/master/core/',
+      type: "docs-vscode",
+      file: "dist/html.html-data.json",
+      sourceCodeBaseUrl: "https://github.com/gnucoop/gic/tree/master/core/",
     },
     {
-      type: 'dist',
-      esmLoaderPath: '../loader',
+      type: "dist",
+      esmLoaderPath: "../loader",
     },
     {
-      type: 'dist-custom-elements',
-      dir: 'components',
-      copy: [{
-        src: '../scripts/custom-elements',
-        dest: 'components',
-        warn: true,
-      }],
+      type: "dist-custom-elements",
+      dir: "components",
+      copy: [
+        {
+          src: "../scripts/custom-elements",
+          dest: "components",
+          warn: true,
+        },
+      ],
       includeGlobalScripts: false,
     },
     {
-      type: 'docs-readme',
+      type: "docs-readme",
       strict: true,
     },
     {
-      type: 'docs-json',
-      file: '../docs/core.json',
+      type: "docs-json",
+      file: "../docs/core.json",
     },
     {
-      type: 'dist-hydrate-script',
+      type: "dist-hydrate-script",
     },
     apiSpecGenerator({
-      file: 'api.txt',
+      file: "api.txt",
     }) as any,
     // {
     //   type: 'stats',
     //   file: 'stats.json'
     // },
-    {
-      type: 'angular',
-      componentCorePackage: '@gic/core',
-      directivesProxyFile: '../angular/src/directives/proxies.ts',
-      directivesUtilsFile: '../angular/src/directives/proxies-utils.ts',
-      directivesArrayFile: '../angular/src/directives/proxies-list.txt',
+    angularOutputTarget({
+      componentCorePackage: "@gic/core",
+      directivesProxyFile: "../angular/src/directives/proxies.ts",
+      directivesArrayFile: "../angular/src/directives/proxies-list.txt",
       excludeComponents: [
         // overlays
-        'gic-action-sheet',
-        'gic-alert',
-        'gic-popover',
-      ]
-    }
+        "gic-action-sheet",
+        "gic-alert",
+        "gic-popover",
+      ],
+    }),
   ],
-  buildEs5: 'prod',
+  buildEs5: "prod",
   extras: {
-    cssVarsShim: true,
     dynamicImportShim: true,
     initializeNextTick: true,
-    safari10: true,
     scriptDataOpts: true,
-    shadowDomShim: true,
-  },
-  testing: {
-    allowableMismatchedPixels: 200,
-    pixelmatchThreshold: 0.05,
-    waitBeforeScreenshot: 20,
-    emulate: [
-      {
-        userAgent: 'iPhone',
-        viewport: {
-          width: 400,
-          height: 800,
-          deviceScaleFactor: 2,
-          isMobile: true,
-          hasTouch: true,
-          isLandscape: false
-        }
-      },
-      {
-        userAgent: 'Android',
-        viewport: {
-          width: 400,
-          height: 800,
-          deviceScaleFactor: 2,
-          isMobile: true,
-          hasTouch: true,
-          isLandscape: false
-        }
-      }
-    ]
   },
   rollupConfig: {
     outputOptions: {
       globals: {
-        '@ionic/core': 'ion.core',
-        '@ionic/angular': 'ion.angular',
-      }
-    }
+        "@ionic/core": "ion.core",
+        "@ionic/angular": "ion.angular",
+      },
+    },
   },
   testing: {
     allowableMismatchedPixels: 200,
@@ -122,30 +90,30 @@ export const config: Config = {
     waitBeforeScreenshot: 20,
     emulate: [
       {
-        userAgent: 'iPhone',
+        userAgent: "iPhone",
         viewport: {
           width: 400,
           height: 800,
           deviceScaleFactor: 2,
           isMobile: true,
           hasTouch: true,
-          isLandscape: false
-        }
+          isLandscape: false,
+        },
       },
       {
-        userAgent: 'Android',
+        userAgent: "Android",
         viewport: {
           width: 400,
           height: 800,
           deviceScaleFactor: 2,
           isMobile: true,
           hasTouch: true,
-          isLandscape: false
-        }
-      }
-    ]
+          isLandscape: false,
+        },
+      },
+    ],
   },
-  preamble: '(C) Gnucoop https://gnucoop.com - AGPLv3 license',
-  globalScript: 'src/global/gic-global.ts',
+  preamble: "(C) Gnucoop https://gnucoop.com - AGPLv3 license",
+  globalScript: "src/global/gic-global.ts",
   enableCache: true,
 };

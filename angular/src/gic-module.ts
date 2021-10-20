@@ -4,8 +4,8 @@ import { GicConfig } from '@gic/core';
 import { IonicModule } from '@ionic/angular';
 
 import { appInitialize } from './app-initialize';
-import { AutocompleteValueAccessor } from './directives/control-value-accessors/autocomplete-value-accessor';
-import { SelectValueAccessor } from './directives/control-value-accessors/select-value-accessor';
+import { AutocompleteValueAccessorDirective } from './directives/control-value-accessors/autocomplete-value-accessor';
+import { SelectValueAccessorDirective } from './directives/control-value-accessors/select-value-accessor';
 import { GicAutocomplete, GicAutocompleteOption, GicSelect, GicSelectOption } from './directives/proxies';
 import { ConfigToken } from './providers/config';
 import { PopoverController } from './providers/popover-controller';
@@ -18,8 +18,8 @@ const DECLARATIONS = [
   GicSelectOption,
 
   // ngModel accessors
-  AutocompleteValueAccessor,
-  SelectValueAccessor,
+  AutocompleteValueAccessorDirective,
+  SelectValueAccessorDirective,
 ];
 
 @NgModule({
@@ -35,19 +35,15 @@ export class GicModule {
       providers: [
         {
           provide: ConfigToken,
-          useValue: config
+          useValue: config,
         },
         {
           provide: APP_INITIALIZER,
           useFactory: appInitialize,
           multi: true,
-          deps: [
-            ConfigToken,
-            DOCUMENT,
-            NgZone
-          ]
-        }
-      ]
+          deps: [ConfigToken, DOCUMENT, NgZone],
+        },
+      ],
     };
   }
 }

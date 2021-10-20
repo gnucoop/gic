@@ -1,45 +1,46 @@
-/* To learn more about this file see: https://angular.io/config/tsconfig. */
 {
-  "compileOnSave": false,
+  "angularCompilerOptions": {
+    "annotateForClosureCompiler": true,
+    "strictMetadataEmit": true,
+    "skipTemplateCodegen": true,
+    "fullTemplateTypeCheck": false,
+    "enableResourceInlining": true,
+    "compilationMode": "partial"
+  },
   "compilerOptions": {
-    "baseUrl": "./",
-    "outDir": "./dist/out-tsc",
-    "forceConsistentCasingInFileNames": true,
+    "alwaysStrict": true,
     "strict": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "sourceMap": true,
+    "allowSyntheticDefaultImports": true,
+    "allowUnreachableCode": false,
     "declaration": true,
-    "downlevelIteration": true,
-    "paths": {
-      "lib": [
-        "dist/lib/src",
-        "dist/lib"
-      ]
-    },
+    "declarationDir": "dist",
     "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["dom", "es2017"],
+    "module": "es2015",
     "moduleResolution": "node",
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "outDir": "build/es2015",
+    "pretty": true,
+    "removeComments": false,
     "importHelpers": true,
+    "rootDir": "src",
+    "strictPropertyInitialization": false,
     "target": "es2015",
-    "module": "es2020",
-    "declarationMap": false,
-    "inlineSources": true,
-    "types": [],
-    "lib": [
-      "es2018",
-      "dom"
+    "baseUrl": ".",
+    "paths": {
+      "@gic/core/hydrate": ["../core/hydrate"],
+      "@gic/core": ["../core"]
+    },
+    "plugins": [
+      {
+        "name": "typescript-eslint-language-service"
+      }
     ]
   },
-  "exclude": [
-    "src/schematics/**/*.ts",
-    "test/**/*.ts"
-  ],
-  "angularCompilerOptions": {
-    "enableI18nLegacyMessageIdFormat": false,
-    "strictInjectionParameters": true,
-    "strictInputAccessModifiers": true,
-    "strictTemplates": true,
-    "enableIvy": true,
-    "compilationMode": "partial"
-  }
+  "exclude": ["node_modules", "src/schematics"],
+  "files": ["src/index.ts"]
 }

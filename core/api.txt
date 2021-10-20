@@ -2,7 +2,7 @@
 gic-action-sheet,scoped
 gic-action-sheet,prop,animated,boolean,true,false,false
 gic-action-sheet,prop,backdropDismiss,boolean,true,false,false
-gic-action-sheet,prop,buttons,(string | ActionSheetButton)[],[],false,false
+gic-action-sheet,prop,buttons,(string | ActionSheetButton<any>)[],[],false,false
 gic-action-sheet,prop,cssClass,string | string[] | undefined,undefined,false,false
 gic-action-sheet,prop,enterAnimation,((baseEl: any, opts?: any) => Animation) | undefined,undefined,false,false
 gic-action-sheet,prop,header,string | undefined,undefined,false,false
@@ -73,27 +73,40 @@ gic-autocomplete,prop,value,null | string,null,false,false
 gic-autocomplete-option,shadow
 gic-autocomplete-option,prop,value,any,undefined,false,false
 
-gic-popover,scoped
+gic-popover,shadow
+gic-popover,prop,alignment,"center" | "end" | "start",'start',false,false
 gic-popover,prop,animated,boolean,true,false,false
+gic-popover,prop,arrow,boolean,true,false,false
 gic-popover,prop,backdropDismiss,boolean,true,false,false
-gic-popover,prop,component,Function | HTMLElement | null | string,undefined,true,false
+gic-popover,prop,component,Function | HTMLElement | null | string | undefined,undefined,false,false
 gic-popover,prop,componentProps,undefined | { [key: string]: any; },undefined,false,false
-gic-popover,prop,cssClass,string | string[] | undefined,undefined,false,false
+gic-popover,prop,dismissOnSelect,boolean,false,false,false
 gic-popover,prop,enterAnimation,((baseEl: any, opts?: any) => Animation) | undefined,undefined,false,false
 gic-popover,prop,event,any,undefined,false,false
+gic-popover,prop,htmlAttributes,PopoverAttributes | undefined,undefined,false,false
+gic-popover,prop,isOpen,boolean,false,false,false
 gic-popover,prop,keyboardClose,boolean,true,false,false
 gic-popover,prop,leaveAnimation,((baseEl: any, opts?: any) => Animation) | undefined,undefined,false,false
 gic-popover,prop,mode,"ios" | "md",undefined,false,false
+gic-popover,prop,reference,"event" | "trigger",'trigger',false,false
 gic-popover,prop,showBackdrop,boolean,true,false,false
+gic-popover,prop,side,"bottom" | "end" | "left" | "right" | "start" | "top",'bottom',false,false
+gic-popover,prop,size,"auto" | "cover",'auto',false,false
 gic-popover,prop,translucent,boolean,false,false,false
-gic-popover,method,dismiss,dismiss(data?: any, role?: string | undefined) => Promise<boolean>
-gic-popover,method,onDidDismiss,onDidDismiss() => Promise<OverlayEventDetail>
-gic-popover,method,onWillDismiss,onWillDismiss() => Promise<OverlayEventDetail>
-gic-popover,method,present,present() => Promise<void>
+gic-popover,prop,trigger,string | undefined,undefined,false,false
+gic-popover,prop,triggerAction,"click" | "context-menu" | "hover",'click',false,false
+gic-popover,method,dismiss,dismiss(data?: any, role?: string | undefined, dismissParentPopover?: boolean) => Promise<boolean>
+gic-popover,method,onDidDismiss,onDidDismiss<T = any>() => Promise<OverlayEventDetail<T>>
+gic-popover,method,onWillDismiss,onWillDismiss<T = any>() => Promise<OverlayEventDetail<T>>
+gic-popover,method,present,present(event?: MouseEvent | TouchEvent | PointerEvent | undefined) => Promise<void>
+gic-popover,event,didDismiss,OverlayEventDetail<any>,true
+gic-popover,event,didPresent,void,true
 gic-popover,event,ionPopoverDidDismiss,OverlayEventDetail<any>,true
 gic-popover,event,ionPopoverDidPresent,void,true
 gic-popover,event,ionPopoverWillDismiss,OverlayEventDetail<any>,true
 gic-popover,event,ionPopoverWillPresent,void,true
+gic-popover,event,willDismiss,OverlayEventDetail<any>,true
+gic-popover,event,willPresent,void,true
 gic-popover,css-prop,--background
 gic-popover,css-prop,--box-shadow
 gic-popover,css-prop,--height
@@ -102,6 +115,9 @@ gic-popover,css-prop,--max-width
 gic-popover,css-prop,--min-height
 gic-popover,css-prop,--min-width
 gic-popover,css-prop,--width
+gic-popover,part,arrow
+gic-popover,part,backdrop
+gic-popover,part,content
 
 gic-select,shadow
 gic-select,prop,cancelText,string,'Cancel',false,false
