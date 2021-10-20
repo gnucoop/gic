@@ -1,6 +1,6 @@
 {
   "name": "@gic/angular",
-  "version": "5.8.1",
+  "version": "6.0.0-rc.0",
   "description": "Angular specific wrappers for @gic/core",
   "keywords": [
     "ionic",
@@ -40,8 +40,8 @@
     "validate": "npm i && npm run lint && npm run test && npm run build"
   },
   "dependencies": {
-    "@ionic/angular": "6.0.0-rc.0",
-    "@gic/core": "5.8.1"
+    "@gic/core": "6.0.0-rc.0",
+    "@ionic/angular": "6.0.0-rc.0"
   },
   "peerDependencies": {
     "@angular/core": ">=12.0.0",

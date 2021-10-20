@@ -1,3 +1,12 @@
+# [6.0.0-rc.0](https://github.com/gnucoop/gic/compare/v5.8.1...v6.0.0-rc.0) (2021-10-20)
+
+
+### Features
+
+* angular 12 support ([5399328](https://github.com/gnucoop/gic/commit/539932845b4ed9d20c1accd19d18a36b8f77a49a))
+
+
+
 ## [5.8.1](https://github.com/gnucoop/gic/compare/v5.6.1...v5.8.1) (2021-09-30)
 
 
